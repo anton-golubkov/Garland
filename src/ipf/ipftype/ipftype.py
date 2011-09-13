@@ -46,7 +46,7 @@ class IPFType(object):
     
     @classmethod
     def is_image(cls):
-        return False;
+        return False
     
     @classmethod
     def channel_count(cls):

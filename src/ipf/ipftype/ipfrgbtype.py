@@ -24,7 +24,7 @@ class IPFRGBType(ipftype.IPFType):
     
     @classmethod
     def is_image(cls):
-        return False;
+        return False
     
     @classmethod
     def channel_count(cls):

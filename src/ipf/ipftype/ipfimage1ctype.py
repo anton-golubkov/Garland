@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import ipftype
+import cv
 
-class IPFFloatType(ipftype.IPFType):
-    """ Float data type class for use in image processing flow
+class IPFImage3cType(ipftype.IPFType):
+    """ 1 channel image data type class for use in image processing flow
     
     """
 
-    name = "IPFFloatType"
-    this_type = type(1.1)
+    name = "IPFImage1cType"
+    this_type = cv.iplimage
         
     def __init__(self):
         pass
@@ -16,23 +17,20 @@ class IPFFloatType(ipftype.IPFType):
     @classmethod
     def default_value(cls):
         """ Return default value for this type """
-        return 0.0  
+        return cv.CreateMat(1, 1, cv.CV_8UC1)  
     
     @classmethod
     def is_numeric(cls):
-        return True
-    
-    @classmethod
-    def is_image(cls):
         return False
     
     @classmethod
+    def is_image(cls):
+        return True
+    
+    @classmethod
     def channel_count(cls):
-        return 0
+        return 1
     
     @classmethod
     def is_array(cls):
         return False
-    
-        
-        
