@@ -15,6 +15,12 @@ class IPFBlock(object):
         self.c_code = u""           # C code of image processing
         self.c_function = u""       # Name of C function
         
+    def execute(self):
+        """ Execute IPFBlock process. Sets results to output ports values 
+        
+        """
+        pass
+        
     
     
 
