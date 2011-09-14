@@ -16,8 +16,8 @@ class ImageInput(ipfblock.IPFBlock):
     """
     
     def __init__(self):
-        super(ImageInput).__init__()
-        self.output_ports["output_image"] = ioport.OPort(IPFImage3cType)
+        super(ImageInput, self).__init__()
+        self.output_ports["output_image"] = ioport.OPort(self, IPFImage3cType)
         self.type = "ImageInput"
         self.processing_function = processing.load_image
         self.properties["file_name"] = StringProperty()

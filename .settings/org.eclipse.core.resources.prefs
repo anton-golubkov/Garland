@@ -1,4 +1,4 @@
-#Wed Sep 14 19:39:33 OMSST 2011
+#Wed Sep 14 20:23:48 OMSST 2011
 eclipse.preferences.version=1
 encoding//src/ipf/ipf.py=utf-8
 encoding//src/ipf/ipfblock/connection.py=utf-8
@@ -18,5 +18,6 @@ encoding//src/ipf/ipftype/ipfimage3ctype.py=utf-8
 encoding//src/ipf/ipftype/ipfinttype.py=utf-8
 encoding//src/ipf/ipftype/ipfrgbtype.py=utf-8
 encoding//src/ipf/ipftype/ipftype.py=utf-8
+encoding//src/test/test_imageinputblock.py=utf-8
 encoding//src/test/test_ipfgraph.py=utf-8
 encoding//src/test/test_rgb2grayblock.py=utf-8
