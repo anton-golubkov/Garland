@@ -10,9 +10,10 @@
 import cv
 
 def rgb2gray(input):
-    input_image = input("input_image")
+    input_image = input["input_image"]
     gray_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
     cv.CvtColor(input_image, gray_image, cv.CV_RGB2GRAY)
-    return (gray_image)
+    output = {"gray_image":gray_image}
+    return output
     
     

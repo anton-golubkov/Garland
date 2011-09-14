@@ -3,7 +3,7 @@
 import ipftype
 import cv
 
-class IPFImage3cType(ipftype.IPFType):
+class IPFImage1cType(ipftype.IPFType):
     """ 1 channel image data type class for use in image processing flow
     
     """
@@ -13,6 +13,20 @@ class IPFImage3cType(ipftype.IPFType):
         
     def __init__(self):
         pass
+    
+    @classmethod
+    def is_compatible(cls, value):
+        """ Return True if type can be converted to this Image
+        
+        """
+        return type(value) == cv.iplimage and value.nChannels == 1
+        
+    @classmethod
+    def convert(cls, value):
+        """ Converting not performing, returns passed value
+                
+        """ 
+        return value
     
     @classmethod
     def default_value(cls):

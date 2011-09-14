@@ -14,6 +14,23 @@ class IPFImage3cType(ipftype.IPFType):
     def __init__(self):
         pass
     
+    
+    @classmethod
+    def is_compatible(cls, value):
+        """ Return True if type can be converted to this Image
+        
+        """
+        return type(value) == cv.iplimage and value.nChannels == 3
+            
+    
+    @classmethod
+    def convert(cls, value):
+        """ Converting not performing, returns passed value
+                
+        """ 
+        return value
+    
+    
     @classmethod
     def default_value(cls):
         """ Return default value for this type """
@@ -33,4 +50,4 @@ class IPFImage3cType(ipftype.IPFType):
     
     @classmethod
     def is_array(cls):
-        return False;
+        return False

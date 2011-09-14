@@ -19,6 +19,9 @@ class Port(object):
         """
         self._value = self._data_type.convert(value)
         
+    def _get_value(self):
+        return self._value
+        
 
 class IPort(Port):
     """ Input port class for IPFBlock
@@ -26,7 +29,7 @@ class IPort(Port):
     """
     
     def __init__(self, ipfblock, data_type):
-        super(Port, self).__init__(ipfblock, data_type)
+        super(IPort, self).__init__(ipfblock, data_type)
         self._port_free = True
         self._valid = False # Indicate valid state of port value
         
@@ -65,7 +68,7 @@ class OPort(Port):
     """
     
     def __init__(self, ipfblock, data_type):
-        super(Port, self).__init__(ipfblock, data_type)
+        super(OPort, self).__init__(ipfblock, data_type)
         self._binded_count = 0
         
     def get_value(self):

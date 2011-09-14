@@ -23,13 +23,13 @@ class IPFBlock(object):
         
         """
         input = dict()
-        for key, iport in self.input_ports.keys():
-            input[key] = iport.get_value()
-            if self.processing_function is not None:
-                output = self.processing_function(input)
-                for key, value in output:
-                    if self.output_ports.has_key(key):
-                        self.output_ports[key]._set_value(value)
+        for key in self.input_ports:
+            input[key] = self.input_ports[key]._get_value()
+        if self.processing_function is not None:
+            output = self.processing_function(input)
+            for key in output:
+                if self.output_ports.has_key(key):
+                    self.output_ports[key]._set_value(output[key])
             
         
         
