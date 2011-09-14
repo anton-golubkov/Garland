@@ -25,6 +25,8 @@ class IPFBlock(object):
         input = dict()
         for key in self.input_ports:
             input[key] = self.input_ports[key]._get_value()
+        for key in self.properties:
+            input[key] = self.properties[key].value 
         if self.processing_function is not None:
             output = self.processing_function(input)
             for key in output:
