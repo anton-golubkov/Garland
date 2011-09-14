@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 class IPFBlock(object):
     """ Base image processing flow block class
     
@@ -11,15 +12,26 @@ class IPFBlock(object):
         self.type = "IPFBlock"
         self.properties = dict()    # {"name" : Property object}
         self.python_code = u""      # Python code of image processing
-        self.python_function = u""  # Name of python function
+        self.processing_function = None # Image processing function
         self.c_code = u""           # C code of image processing
         self.c_function = u""       # Name of C function
         
     def execute(self):
-        """ Execute IPFBlock process. Sets results to output ports values 
+        """ Execute IPFBlock process. Sets results to output ports values
+        
+            Input ports names binded to processing function named arguments
         
         """
-        pass
+        input = dict()
+        for key, iport in self.input_ports.keys():
+            input[key] = iport.get_value()
+            if self.processing_function is not None:
+                output = self.processing_function(input)
+                for key, value in output:
+                    if self.output_ports.has_key(key):
+                        self.output_ports[key]._set_value(value)
+            
+        
         
     
     

@@ -11,7 +11,14 @@ class Port(object):
         self._owner_block = ipfblock
         self._data_type = data_type
         self._value = data_type.default_value()
-
+        
+    
+    def _set_value(self, value):
+        """ Protected function for use in IPFBlock
+        
+        """
+        self._value = self._data_type.convert(value)
+        
 
 class IPort(Port):
     """ Input port class for IPFBlock
