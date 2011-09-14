@@ -13,16 +13,14 @@ class IPFType(object):
         pass
     
     @classmethod
-    def is_compatible(cls, value):
+    def is_compatible(cls, type):
         """ Return True if type can be converted to this IPFType
         
         """
-        try:
-            cls.this_type(value)
-        except Exception:
-            return False
-        else:
-            return True
+        return cls.is_numeric() == type.is_numeric() and \
+               cls.is_array() == type.is_array() and \
+               cls.is_image() == type.is_image() and \
+               cls.channel_count() == type.channel_count()
     
     @classmethod
     def convert(cls, value):

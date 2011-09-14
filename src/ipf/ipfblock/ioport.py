@@ -90,15 +90,10 @@ class OPort(Port):
 def compatible(oport, iport):
     """ Check ports types compatibility
     
-        If output port value can be converted to input port data type
+        If output port type has similar properties as input port data type
         then ports assuming compatible.
     
     """
-    try:
-        iport._data_type(oport._value)
-    except Exception:
-        return False
-    else:
-        return True
+    return oport._data_type.is_compatible(iport._data_type)
     
         

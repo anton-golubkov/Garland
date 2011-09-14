@@ -16,13 +16,12 @@ class IPFImage3cType(ipftype.IPFType):
     
     
     @classmethod
-    def is_compatible(cls, value):
+    def is_compatible(cls, type):
         """ Return True if type can be converted to this Image
         
         """
-        return type(value) == cv.iplimage and value.nChannels == 3
+        return type.this_type == cv.iplimage and type.channel_count() == 3
             
-    
     @classmethod
     def convert(cls, value):
         """ Converting not performing, returns passed value

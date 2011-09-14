@@ -15,11 +15,11 @@ class IPFImage1cType(ipftype.IPFType):
         pass
     
     @classmethod
-    def is_compatible(cls, value):
+    def is_compatible(cls, type):
         """ Return True if type can be converted to this Image
         
         """
-        return type(value) == cv.iplimage and value.nChannels == 1
+        return type.this_type == cv.iplimage and type.channel_count() == 1
         
     @classmethod
     def convert(cls, value):

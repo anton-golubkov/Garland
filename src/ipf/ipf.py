@@ -4,6 +4,7 @@ from pygraph.classes.digraph import digraph
 from pygraph.algorithms.sorting import topological_sorting
 
 import ipfblock
+import ipfblock.connection
 
 class IPFGraph(object):
     """ Image processing flow graph
