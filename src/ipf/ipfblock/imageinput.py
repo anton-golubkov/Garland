@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+
+
+
+import ipfblock
+import ioport
+from ipf.ipfproperty.stringproperty import StringProperty
+from ipf.ipftype.ipfimage3ctype import IPFImage3cType
+
+
+class ImageInput(ipfblock.IPFBlock):
+    """ Image input block 
+    
+        Block have 1 output port with type IPFImage3cType
+    """
+    
+    def __init__(self):
+        super(ImageInput).__init__()
+        self.output_ports["output_image"] = ioport.OPort(IPFImage3cType)
+        self.type = "ImageInput"
+        self.properties["file_name"] = StringProperty()
+        
