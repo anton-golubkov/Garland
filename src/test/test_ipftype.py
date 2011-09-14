@@ -28,13 +28,25 @@ class TestIPFType(unittest.TestCase):
         self.image1c1 = ipf.ipftype.ipfimage1ctype.IPFImage1cType()
         self.image1c2 = ipf.ipftype.ipfimage1ctype.IPFImage1cType()
         
-    def test_compatible_same_types(self):
+    def test_compatible_types(self):
         self.assertTrue(self.int1.is_compatible(self.int2))
         self.assertTrue(self.float1.is_compatible(self.float2))
         self.assertTrue(self.rgb1.is_compatible(self.rgb2))
         self.assertTrue(self.image3c1.is_compatible(self.image3c2))
-        self.assertTrue(self.image1c1.is_compatible(self.image1c2))    
-            
+        self.assertTrue(self.image1c1.is_compatible(self.image1c2))
+        self.assertTrue(self.int1.is_compatible(self.float1))
+        self.assertTrue(self.float1.is_compatible(self.int1))
+        
+    def test_uncompatible_types(self):
+        self.assertFalse(self.image3c1.is_compatible(self.image1c1))
+        self.assertFalse(self.int1.is_compatible(self.rgb1))
+        self.assertFalse(self.int1.is_compatible(self.image1c1))
+        self.assertFalse(self.int1.is_compatible(self.image3c1))
+        self.assertFalse(self.rgb1.is_compatible(self.float1))
+        self.assertFalse(self.rgb1.is_compatible(self.image1c1))
+        self.assertFalse(self.rgb1.is_compatible(self.image3c1))
+    
+    
 
 if __name__ == '__main__':
     unittest.main()
