@@ -51,7 +51,12 @@ class TestIPFGraph(unittest.TestCase):
         
     
     def test_process(self):
-        pass
+        self.ipf_graph.add_block("input_image", self.input_block)
+        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
+        oport = self.input_block.output_ports["output_image"]
+        iport = self.rgb2gray_block.input_ports["input_image"]
+        self.ipf_graph.add_connection(oport, iport)
+        self.ipf_graph.process()
 
 
 if __name__ == "__main__":
