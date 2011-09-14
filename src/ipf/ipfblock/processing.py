@@ -13,7 +13,13 @@ def rgb2gray(input):
     input_image = input["input_image"]
     gray_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
     cv.CvtColor(input_image, gray_image, cv.CV_RGB2GRAY)
-    output = {"gray_image":gray_image}
+    output = {"gray_image" : gray_image}
+    return output
+
+def load_image(input):
+    file_name = input["file_name"]
+    output_image = cv.LoadImage(file_name)
+    output = {"output_image" : output_image}
     return output
     
     
