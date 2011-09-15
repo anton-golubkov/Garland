@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-
+import cv
 
 import os, sys
 cmd_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
@@ -57,6 +57,12 @@ class TestIPFGraph(unittest.TestCase):
         iport = self.rgb2gray_block.input_ports["input_image"]
         self.ipf_graph.add_connection(oport, iport)
         self.ipf_graph.process()
+        # This flow must return gray image
+        test_image = cv.LoadImage("test.png")
+        gray_image = cv.CreateImage(cv.GetSize(test_image), cv.IPL_DEPTH_8U, 1)
+        cv.CvtColor(test_image, gray_image, cv.CV_RGB2GRAY)
+        processed_image = self.rgb2gray_block.output_ports["gray_image"].get_value() 
+        self.assertEqual(processed_image.tostring(), gray_image.tostring())
 
 
 if __name__ == "__main__":
