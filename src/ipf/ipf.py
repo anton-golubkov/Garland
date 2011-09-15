@@ -43,17 +43,17 @@ class IPFGraph(object):
         
         graph = digraph()
         for block in self.blocks:
-            graph.add_node(block)
-            for iport in block.input_ports.values():
+            graph.add_node(self.blocks[block])
+            for iport in self.blocks[block].input_ports.values():
                 graph.add_node(iport)
-                graph.add_edge((iport, block))
-            for oport in block.output_ports.values():
+                graph.add_edge( (iport, self.blocks[block]) )
+            for oport in self.blocks[block].output_ports.values():
                 graph.add_node(oport)
-                graph.add_edge(block, oport)
+                graph.add_edge( (self.blocks[block], oport) )
         for connection in self.connections:
             graph.add_node(connection)
-            graph.add_edge(connection._iport, connection)
-            graph.add_edge(connection, connection._oport)
+            graph.add_edge( (connection._oport, connection) )
+            graph.add_edge( (connection, connection._iport) )
         
         sorted_graph = topological_sorting(graph)
         for node in sorted_graph:
