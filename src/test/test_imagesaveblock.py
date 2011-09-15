@@ -27,6 +27,9 @@ class TestImageSaveBlock(unittest.TestCase):
         self.block.process()
         saved_image = cv.LoadImage("test_saved.png")
         self.assertEqual(saved_image.tostring(), image.tostring())
+        
+    def tearDown(self):
+        os.remove("test_saved.png")
             
 
 if __name__ == '__main__':
