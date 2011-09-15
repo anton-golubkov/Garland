@@ -22,7 +22,7 @@ class TestRGB2GrayBlock(unittest.TestCase):
         """ Test return to output port 1 channel image of same size
         
         """
-        self.block.execute()
+        self.block.process()
         gray_image = self.block.output_ports["gray_image"].get_value()
         self.assertEqual(gray_image.nChannels, 1)
         
@@ -30,7 +30,7 @@ class TestRGB2GrayBlock(unittest.TestCase):
         """ Test return to output port image of same size
         
         """
-        self.block.execute()
+        self.block.process()
         gray_image = self.block.output_ports["gray_image"].get_value()
         self.assertEqual((gray_image.width, gray_image.height), 
                          (self.test_image.width, self.test_image.height))

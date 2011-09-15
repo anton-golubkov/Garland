@@ -22,7 +22,7 @@ class TestImageInputBlock(unittest.TestCase):
         """ Test load image from file 
         
         """
-        self.block.execute()
+        self.block.process()
         loaded_image = self.block.output_ports["output_image"].get_value()
         test_image = cv.LoadImage("test.png")
         self.assertEqual(loaded_image.tostring(), test_image.tostring())

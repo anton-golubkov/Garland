@@ -35,19 +35,10 @@ class IPort(Port):
         
     def pass_value(self, value):
         """ Pass value to input port
-        
-            If value data type not compatible with port data type,
-            function raises exception TypeError.
         """
-        if self._data_type.is_compatible(value):
-            self._value = self._data_type.convert(value)
-            self._valid = True
-        else:
-            raise TypeError(u"Port value type '{1}' is not compatible "
-                            "with passing value type '{2}'".format(
-                            self._data_type.name,
-                            value.__class__) )
-    
+        self._value = self._data_type.convert(value)
+        self._valid = True
+        
     def is_free(self):
         return self._port_free
     
