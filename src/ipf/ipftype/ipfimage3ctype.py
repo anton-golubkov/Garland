@@ -19,15 +19,22 @@ class IPFImage3cType(ipftype.IPFType):
     def is_compatible(cls, type):
         """ Return True if type can be converted to this Image
         
+            Converting from 1 channel image to 3 channel is accepted
         """
-        return type.this_type == cv.iplimage and type.channel_count() == 3
+        return type.this_type == cv.iplimage and \
+               (type.channel_count() == 3 or type.channel_count() == 1) 
             
     @classmethod
     def convert(cls, value):
-        """ Converting not performing, returns passed value
-                
+        """ If necessary convert 1 channel image to 3 channel
+        
         """ 
-        return value
+        if( value.nChannels == 1):
+            image3c = cv.CreateImage(value.size, cv.IPL_DEPTH_8U, 3)
+            cv.Merge(src0=value, src1=value, src2=value, dst=image3c)
+            return image3c
+        else:
+            return value
     
     
     @classmethod
