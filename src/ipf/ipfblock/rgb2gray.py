@@ -15,7 +15,7 @@ class RGB2Gray(ipfblock.IPFBlock):
     def __init__(self):
         super(RGB2Gray, self).__init__()
         self.input_ports["input_image"] = ioport.IPort(self, IPFImage3cType)
-        self.output_ports["gray_image"] = ioport.OPort(self, IPFImage1cType)
+        self.output_ports["output_image"] = ioport.OPort(self, IPFImage1cType)
         self.type = "RGB2Gray"
         self.processing_function = ipf.ipfblock.processing.rgb2gray
 

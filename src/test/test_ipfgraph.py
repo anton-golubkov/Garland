@@ -61,7 +61,7 @@ class TestIPFGraph(unittest.TestCase):
         test_image = cv.LoadImage("test.png")
         gray_image = cv.CreateImage(cv.GetSize(test_image), cv.IPL_DEPTH_8U, 1)
         cv.CvtColor(test_image, gray_image, cv.CV_RGB2GRAY)
-        processed_image = self.rgb2gray_block.output_ports["gray_image"].get_value() 
+        processed_image = self.rgb2gray_block.output_ports["output_image"].get_value() 
         self.assertEqual(processed_image.tostring(), gray_image.tostring())
 
 
