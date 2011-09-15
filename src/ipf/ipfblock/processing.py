@@ -21,5 +21,10 @@ def load_image(input):
     output_image = cv.LoadImage(file_name)
     output = {"output_image" : output_image}
     return output
-    
+
+def save_image(input):
+    file_name = input["file_name"]
+    saving_image = input["input_image"]
+    cv.SaveImage(file_name, saving_image)
+    return {}
     
