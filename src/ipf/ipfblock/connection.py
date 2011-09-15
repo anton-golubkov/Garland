@@ -25,6 +25,6 @@ class Connection(object):
         
     def process(self):
         """ Send value from output port to input port """
-        self._iport.pass_value(self._oport.get_valure())
+        self._iport.pass_value(self._oport.get_value())
         
         

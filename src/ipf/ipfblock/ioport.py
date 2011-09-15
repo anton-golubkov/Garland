@@ -21,6 +21,13 @@ class Port(object):
         
     def _get_value(self):
         return self._value
+    
+    def process(self):
+        """ Empty function for using in IPFGraph 
+        
+            This function must be in all classes which stored in IPFGraph 
+        """
+        pass
         
 
 class IPort(Port):

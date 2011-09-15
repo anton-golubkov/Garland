@@ -58,6 +58,7 @@ class IPFGraph(object):
         sorted_graph = topological_sorting(graph)
         for node in sorted_graph:
             print node
+            node.process()
         
     
     
