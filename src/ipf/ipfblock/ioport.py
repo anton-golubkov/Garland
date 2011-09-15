@@ -38,13 +38,11 @@ class IPort(Port):
     def __init__(self, ipfblock, data_type):
         super(IPort, self).__init__(ipfblock, data_type)
         self._port_free = True
-        self._valid = False # Indicate valid state of port value
         
     def pass_value(self, value):
         """ Pass value to input port
         """
         self._value = self._data_type.convert(value)
-        self._valid = True
         
     def is_free(self):
         return self._port_free
