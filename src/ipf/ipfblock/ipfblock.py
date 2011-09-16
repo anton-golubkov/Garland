@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import xml.etree.ElementTree
+from xml.etree.ElementTree import Element 
+from xml.etree.ElementTree import SubElement
+
+from ipf.keyfromvalue import dict_key_from_value
+
 
 class IPFBlock(object):
     """ Base image processing flow block class
@@ -33,11 +39,35 @@ class IPFBlock(object):
                 if self.output_ports.has_key(key):
                     self.output_ports[key]._set_value(output[key])
                     
-    def tostring(self):
-        """ Return block object in XML string representation 
+    def xml(self):
+        """ Return block object in XML element 
         
         """
-        pass
+        block = Element(self.type)
+        
+        input_ports_tree = SubElement(block, "InputPorts")
+        for port in self.input_ports:
+            port_element = SubElement(input_ports_tree, "InputPort", {"name" : port})
+            port_element.append(self.input_ports[port].xml())
+        
+        output_ports_tree = SubElement(block, "OutputPorts")
+        for port in self.output_ports:
+            port_element = SubElement(output_ports_tree, "OutputPort", {"name" : port})
+            port_element.append(self.output_ports[port].xml())
+        
+        properties_tree = SubElement(block, "Properties")
+        for property in self.properties:
+            property_element = SubElement(properties_tree, "Property", {"name" : property})
+            property_element.append(self.properties[property].xml())
+            
+        return block
+    
+    def get_port_name(self, port):
+        iport_name = dict_key_from_value(self.input_ports, port)
+        if iport_name is not None:
+            return iport_name
+        oport_name = dict_key_from_value(self.output_ports, port)
+        return oport_name
             
         
         

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import xml.etree.ElementTree
+from xml.etree.ElementTree import Element 
+from xml.etree.ElementTree import SubElement
 
 class Port(object):
     """ Base IPFBlock port class
@@ -28,6 +31,15 @@ class Port(object):
             This function must be in all classes which stored in IPFGraph 
         """
         pass
+    
+    def xml(self):
+        """ Return port object as XML element 
+        
+        """
+        port_element = Element("Port")
+        port_element.attrib["DataType"] = self._data_type.name
+        #port_element.attrib["Value"] = self._value
+        return port_element
         
 
 class IPort(Port):

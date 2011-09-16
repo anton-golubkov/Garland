@@ -2,7 +2,11 @@
 
 from pygraph.classes.digraph import digraph
 from pygraph.algorithms.sorting import topological_sorting
+import xml.etree.ElementTree
+from xml.etree.ElementTree import Element 
+from xml.etree.ElementTree import SubElement
 
+from keyfromvalue import dict_key_from_value
 import ipfblock
 import ipfblock.connection
 
@@ -57,21 +61,52 @@ class IPFGraph(object):
         
         sorted_graph = topological_sorting(graph)
         for node in sorted_graph:
-            print node
             node.process()
     
-    def tostring(self):
-        """ Return IPFGraph as XML string representation
+    def get_block_name(self, block):
+        return dict_key_from_value(self.blocks, block)
+    
+    def xml(self):
+        """ Return IPFGraph as XML element
         
         """
-        pass
-    
+        graph = Element("IPFGraph")
+        block_tree = SubElement(graph, "Blocks")
+        for name in self.blocks:
+            block_element = SubElement(block_tree, "Block", {"name": name})
+            block_element.append(self.blocks[name].xml())
+        
+        connection_tree = SubElement(graph, "Connections")
+        for connection in self.connections:
+            oport = connection._oport
+            iport = connection._iport
+            oblock = oport._owner_block
+            iblock = iport._owner_block
+            oblock_name = self.get_block_name(oblock)
+            iblock_name = self.get_block_name(iblock)
+            oport_name = oblock.get_port_name(oport)
+            iport_name = iblock.get_port_name(iport)
+            conection_element = SubElement(connection_tree, "Connection")
+            con_output = SubElement(conection_element, 
+                                   "ConnectionOutput",
+                                   {"block" : oblock_name,
+                                    "port" : oport_name})
+            con_input = SubElement(conection_element, 
+                                   "ConnectionInput",
+                                   {"block" : iblock_name,
+                                    "port" : iport_name})
+        return graph
+            
     def save(self, file_name):
         """ Save IPFGraph as XML file 
         
         """
-        with  open(file_name) as file:
-            file.write(self.tostring())
+        root = Element("Garland")
+        root.attrib["Version"] = "1.0"
+        root.append(self.xml())
+        str_root = xml.etree.ElementTree.tostring(root, encoding='utf-8')
+        with  open(file_name, "w") as file:
+            file.write(str_root)
         
     def load(self, file_name):
         pass

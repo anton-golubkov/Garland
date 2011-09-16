@@ -3,6 +3,7 @@
 
 import unittest
 import cv
+import filecmp
 
 import os, sys
 cmd_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
@@ -63,6 +64,16 @@ class TestIPFGraph(unittest.TestCase):
         cv.CvtColor(test_image, gray_image, cv.CV_RGB2GRAY)
         processed_image = self.rgb2gray_block.output_ports["output_image"].get_value() 
         self.assertEqual(processed_image.tostring(), gray_image.tostring())
+        
+    def test_save(self):
+        self.ipf_graph.add_block("input_image", self.input_block)
+        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
+        oport = self.input_block.output_ports["output_image"]
+        iport = self.rgb2gray_block.input_ports["input_image"]
+        self.ipf_graph.add_connection(oport, iport)
+        self.ipf_graph.process()
+        self.ipf_graph.save("test.xml")
+        self.assertTrue(filecmp.cmp("test.xml", "test_file_reference.xml"))
 
 
 if __name__ == "__main__":
