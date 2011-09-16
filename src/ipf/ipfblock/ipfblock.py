@@ -32,6 +32,12 @@ class IPFBlock(object):
             for key in output:
                 if self.output_ports.has_key(key):
                     self.output_ports[key]._set_value(output[key])
+                    
+    def tostring(self):
+        """ Return block object in XML string representation 
+        
+        """
+        pass
             
         
         

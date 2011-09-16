@@ -59,9 +59,22 @@ class IPFGraph(object):
         for node in sorted_graph:
             print node
             node.process()
+    
+    def tostring(self):
+        """ Return IPFGraph as XML string representation
         
+        """
+        pass
     
-    
+    def save(self, file_name):
+        """ Save IPFGraph as XML file 
+        
+        """
+        with  open(file_name) as file:
+            file.write(self.tostring())
+        
+    def load(self, file_name):
+        pass
         
         
         
