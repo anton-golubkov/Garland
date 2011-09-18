@@ -22,7 +22,9 @@ class TestIPFGraphLoader(unittest.TestCase):
         block_classes = ipf.ipfgraphloader.get_ipfblock_classes()
         self.assertEqual(block_classes['RGB2Gray'], RGB2Gray)
         self.assertEqual(block_classes['ImageInput'], ImageInput)
-        
+    
+    def test_load_file(self):
+        ipf.ipfgraphloader.load("test.xml")
         
 if __name__ == "__main__":
     unittest.main()
