@@ -71,7 +71,6 @@ def load(file):
         block_name = block_node.attrib["name"]
         block_class_node = list(block_node)[0]
         class_name = block_class_node.tag
-        print class_name
         block = ipfblock_classes[class_name]()
         properties_node = block_class_node.find("Properties")
         
@@ -83,7 +82,6 @@ def load(file):
             max_value = value_node.attrib["max_value"]
             min_value = value_node.attrib["min_value"]
             value = value_node.attrib["value"]
-            print property_type, max_value, min_value, value
             property = Property(type_classes[property_type]())
             property.max_value = max_value
             property.min_value = min_value
@@ -92,7 +90,7 @@ def load(file):
             
         # Add ports to block
         # !!! In this version we don`t load ports information 
-        # because ports created with block and can`t be deleted or created
+        # because ports created in block constructor and can`t be deleted or created
         
         # Add block to graph
         graph.add_block(block_name, block) 

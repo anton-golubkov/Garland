@@ -19,7 +19,7 @@ class Property(object):
         """ Set value to property (use data_type.convert() function)
         
         """
-        self._value = self._data_type.convert(value)
+        self.value = self._data_type.convert(value)
     
 
     def xml(self):

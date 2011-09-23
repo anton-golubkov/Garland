@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+import filecmp
 
 import os, sys
 cmd_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
@@ -12,6 +13,7 @@ if cmd_folder not in sys.path:
 import ipf.ipfgraphloader
 from ipf.ipfblock.rgb2gray import RGB2Gray
 from ipf.ipfblock.imageinput import ImageInput
+import ipf.ipfblock
 
 class TestIPFGraphLoader(unittest.TestCase):
 
@@ -23,8 +25,11 @@ class TestIPFGraphLoader(unittest.TestCase):
         self.assertEqual(block_classes['RGB2Gray'], RGB2Gray)
         self.assertEqual(block_classes['ImageInput'], ImageInput)
     
-    def test_load_file(self):
-        ipf.ipfgraphloader.load("test.xml")
+    def test_load_and_save_file(self):
+        graph = ipf.ipfgraphloader.load("test.xml")
+        graph.save("test_load_save.xml")
+        self.assertTrue(filecmp.cmp("test_load_save.xml", "test.xml"))
+        
         
 if __name__ == "__main__":
     unittest.main()
