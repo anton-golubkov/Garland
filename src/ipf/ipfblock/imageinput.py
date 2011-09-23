@@ -5,8 +5,9 @@
 import ipfblock
 import ioport
 import processing
-from ipf.ipfproperty.stringproperty import StringProperty
+from ipf.ipfproperty.property import Property
 from ipf.ipftype.ipfimage3ctype import IPFImage3cType
+from ipf.ipftype.ipfstringtype import IPFStringType
 
 
 class ImageInput(ipfblock.IPFBlock):
@@ -20,6 +21,6 @@ class ImageInput(ipfblock.IPFBlock):
         self.output_ports["output_image"] = ioport.OPort(self, IPFImage3cType)
         self.type = "ImageInput"
         self.processing_function = processing.load_image
-        self.properties["file_name"] = StringProperty()
+        self.properties["file_name"] = Property(IPFStringType)
         
         

@@ -9,9 +9,9 @@ class Property(object):
     
     """
 
-    def __init__(self):
-        self.type = None
-        self.value = None
+    def __init__(self, data_type):
+        self._data_type = data_type 
+        self.value = data_type.default_value()
         self.min_value = None
         self.max_value = None
 
@@ -19,7 +19,8 @@ class Property(object):
         """ Return property object in XML element 
         
         """
-        property_element = Element(self.type)
+        property_element = Element("PropertyValue")
+        property_element.attrib["data_type"] = self._data_type.name
         if self.value is not None:
             property_element.attrib["value"] = str(self.value)
         else:
