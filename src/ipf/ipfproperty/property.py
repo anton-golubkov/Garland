@@ -14,6 +14,13 @@ class Property(object):
         self.value = data_type.default_value()
         self.min_value = None
         self.max_value = None
+        
+    def set_value(self, value):
+        """ Set value to property (use data_type.convert() function)
+        
+        """
+        self._value = self._data_type.convert(value)
+    
 
     def xml(self):
         """ Return property object in XML element 

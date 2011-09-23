@@ -1,4 +1,4 @@
-#Sun Sep 18 17:48:14 OMSST 2011
+#Fri Sep 23 16:38:57 OMSST 2011
 eclipse.preferences.version=1
 encoding//src/ipf/ipf.py=utf-8
 encoding//src/ipf/ipfblock/connection.py=utf-8
@@ -9,11 +9,7 @@ encoding//src/ipf/ipfblock/ipfblock.py=utf-8
 encoding//src/ipf/ipfblock/processing.py=utf-8
 encoding//src/ipf/ipfblock/rgb2gray.py=utf-8
 encoding//src/ipf/ipfgraphloader.py=utf-8
-encoding//src/ipf/ipfproperty/floatproperty.py=utf-8
-encoding//src/ipf/ipfproperty/intproperty.py=utf-8
 encoding//src/ipf/ipfproperty/property.py=utf-8
-encoding//src/ipf/ipfproperty/rgbproperty.py=utf-8
-encoding//src/ipf/ipfproperty/stringproperty.py=utf-8
 encoding//src/ipf/ipftype/ipffloattype.py=utf-8
 encoding//src/ipf/ipftype/ipfimage1ctype.py=utf-8
 encoding//src/ipf/ipftype/ipfimage3ctype.py=utf-8
