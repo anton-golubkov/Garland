@@ -13,7 +13,7 @@ if cmd_folder not in sys.path:
 import ipf.ipfgraphloader
 from ipf.ipfblock.rgb2gray import RGB2Gray
 from ipf.ipfblock.imageinput import ImageInput
-import ipf.ipfblock
+
 
 class TestIPFGraphLoader(unittest.TestCase):
 

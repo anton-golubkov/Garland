@@ -11,7 +11,7 @@ if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
 
-import ipf.ipf
+import ipf.ipfgraph
 import ipf.ipfblock.rgb2gray
 import ipf.ipfblock.imageinput
 
@@ -19,7 +19,7 @@ import ipf.ipfblock.imageinput
 class TestIPFGraph(unittest.TestCase):
 
     def setUp(self):
-        self.ipf_graph = ipf.ipf.IPFGraph()
+        self.ipf_graph = ipf.ipfgraph.IPFGraph()
         self.input_block = ipf.ipfblock.imageinput.ImageInput()
         self.rgb2gray_block = ipf.ipfblock.rgb2gray.RGB2Gray()
         self.input_block.properties["file_name"].value = "test.png"

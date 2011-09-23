@@ -10,9 +10,9 @@ import os
 from xml.etree.ElementTree import ElementTree
 
 from ipfblock.ipfblock import IPFBlock
-from ipf import IPFGraph
+from ipfgraph import IPFGraph
 from ipftype.ipftype import IPFType
-from ipfproperty.property import Property
+from ipfblock.property import Property
 
 
 def get_classes_from_module(base_class):
