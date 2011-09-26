@@ -14,10 +14,11 @@ class ImageSave(ipfblock.IPFBlock):
         Block have 1 input port with type IPFImage3cType 
     """
     
+    type = "ImageSave"
+    
     def __init__(self):
         super(ImageSave, self).__init__()
-        self.input_ports["input_image"] = ioport.IPort(self, IPFImage3cType)
-        self.type = "ImageSave"
+        self.input_ports["input_image"] = ioport.IPort(self, IPFImage3cType)    
         self.processing_function = processing.save_image
         self.properties["file_name"] = Property(IPFStringType)
         
