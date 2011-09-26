@@ -27,7 +27,8 @@ def get_classes_from_module(base_class):
         mod = __import__(module_name, fromlist = ["Whatever need for import"])
         for name, obj in inspect.getmembers(mod):
             if inspect.isclass(obj):
-                if issubclass(obj, base_class):
+                # Don`t add base_class to dict
+                if issubclass(obj, base_class) and obj != base_class:
                     classes[name] = obj
     return classes 
 
