@@ -1,7 +1,8 @@
-#Mon Sep 26 19:40:00 OMST 2011
+#Mon Sep 26 20:15:40 OMST 2011
 eclipse.preferences.version=1
 encoding//src/gui/gui.py=utf-8
 encoding//src/gui/main_form.py=utf-8
+encoding//src/gui/main_form_ui.py=utf-8
 encoding//src/ipf/ipfblock/connection.py=utf-8
 encoding//src/ipf/ipfblock/imageinput.py=utf-8
 encoding//src/ipf/ipfblock/imagesave.py=utf-8
