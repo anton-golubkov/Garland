@@ -12,6 +12,7 @@ class RGB2Gray(ipfblock.IPFBlock):
     
     """
     type = "RGB2Gray"
+    category = "Channel operations"
     
     def __init__(self):
         super(RGB2Gray, self).__init__()

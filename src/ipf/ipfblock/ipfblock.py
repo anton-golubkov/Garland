@@ -13,6 +13,7 @@ class IPFBlock(object):
     """
     # Class members
     type = "IPFBlock"
+    category = ""
     
     def __init__(self):
         self.input_ports = dict()   # {"name" : IPort object}

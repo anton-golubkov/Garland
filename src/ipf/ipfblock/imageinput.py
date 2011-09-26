@@ -17,6 +17,7 @@ class ImageInput(ipfblock.IPFBlock):
     """
     
     type = "ImageInput"
+    category = "Image I/O"
     
     def __init__(self):
         super(ImageInput, self).__init__()
