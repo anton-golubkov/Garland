@@ -11,11 +11,13 @@ class IPFBlock(object):
     """ Base image processing flow block class
     
     """
+    # Class members
+    type = "IPFBlock"
+    category = ""
     
     def __init__(self):
         self.input_ports = dict()   # {"name" : IPort object}
         self.output_ports = dict()  # {"name" : OPort object}
-        self.type = "IPFBlock"
         self.properties = dict()    # {"name" : Property object}
         self.python_code = u""      # Python code of image processing
         self.processing_function = None # Image processing function

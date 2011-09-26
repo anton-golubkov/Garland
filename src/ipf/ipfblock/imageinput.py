@@ -16,10 +16,12 @@ class ImageInput(ipfblock.IPFBlock):
         Block have 1 output port with type IPFImage3cType
     """
     
+    type = "ImageInput"
+    category = "Image I/O"
+    
     def __init__(self):
         super(ImageInput, self).__init__()
         self.output_ports["output_image"] = ioport.OPort(self, IPFImage3cType)
-        self.type = "ImageInput"
         self.processing_function = processing.load_image
         self.properties["file_name"] = Property(IPFStringType)
         
