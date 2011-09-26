@@ -19,13 +19,21 @@ class MainForm(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self._init_blocks_widget()
+        
 
     
     def _init_blocks_widget(self):
-        block_classes = get_ipfblock_classes()
+        self.block_classes = get_ipfblock_classes()
         categories = set()
-        for block_class in block_classes.values():
-            if len(block_class.category) > 0:
-                categories.add(block_class.category)
+        for block in self.block_classes.values():
+                categories.add(block.category)
+        category_items = dict()
+        for category in categories:
+            category_items[category] = QtGui.QTreeWidgetItem(None)
+            category_items[category].setText(0, category)
+        for block in self.block_classes.values():
+            block_item = QtGui.QTreeWidgetItem(category_items[block.category])
+            block_item.setText(0, block.type)
         
-        print categories
+        self.ui.blocks_tree.insertTopLevelItems(0, category_items.values())
+            
