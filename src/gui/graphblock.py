@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from PySide import QtGui
+from PySide import QtGui, QtCore
+
 
 class GraphBlock(QtGui.QGraphicsWidget):
     """ GraphBlock represents IPFBlock in graphics scene
@@ -35,6 +36,9 @@ class GraphBlock(QtGui.QGraphicsWidget):
         self.adjust_ports(self.input_ports_items.values(), 0)
         self.adjust_ports(self.output_ports_items.values(), self.block_height)    
         
+        self.setCursor(QtCore.Qt.OpenHandCursor)
+        self.setAcceptedMouseButtons(QtCore.Qt.LeftButton)
+        
     
     def adjust_ports(self, ports, y_base):
         port_count = len(ports)
@@ -45,8 +49,34 @@ class GraphBlock(QtGui.QGraphicsWidget):
                                    y_base - self.port_size / 2,
                                    self.port_size,
                                    self.port_size )
+                
+    def mousePressEvent(self, event):
+        self.setCursor(QtCore.Qt.ClosedHandCursor)
+        
+        
+    def mouseMoveEvent(self, event):
+        if QtCore.QLineF(event.screenPos(), \
+                         event.buttonDownScreenPos(QtCore.Qt.LeftButton)).length() < \
+                         QtGui.QApplication.startDragDistance():
+            return
+     
+        drag = QtGui.QDrag(event.widget())
+        mime = QtCore.QMimeData()
+        drag.setMimeData(mime)
+
+        mime.setText("DRAG")
+
+        pixmap = QtGui.QPixmap(34, 34)
+        pixmap.fill(QtCore.Qt.white)
+        pixmap.setMask(pixmap.createHeuristicMask())
+        drag.setPixmap(pixmap)
+        drag.setHotSpot(QtCore.QPoint(15, 20))
+        drag.exec_()
+        self.setCursor(QtCore.Qt.OpenHandCursor)
     
-         
+    
+    def mouseReleaseEvent(self, event):
+        self.setCursor(QtCore.Qt.OpenHandCursor)
         
     
 
