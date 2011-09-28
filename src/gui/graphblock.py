@@ -31,25 +31,20 @@ class GraphBlock(QtGui.QGraphicsWidget):
             self.input_ports_items[iport] = QtGui.QGraphicsEllipseItem(self.rect_item)
         for oport in self.block.output_ports:
             self.output_ports_items[oport] = QtGui.QGraphicsEllipseItem(self.rect_item)
-        
-        iport_count = len(self.input_ports_items)
-        if iport_count > 0:
-            iport_distance = self.block_width / (iport_count + 1)
-            for i, iport_item in enumerate(self.input_ports_items.values()):
-                iport_item.setRect( (i+1) * iport_distance - self.port_size / 2, 
-                                   0 - self.port_size / 2,
-                                   self.port_size,
-                                   self.port_size )
-                
-        oport_count = len(self.output_ports_items)
-        if oport_count > 0:
-            oport_distance = self.block_width / (oport_count + 1)
-            for i, oport_item in enumerate(self.output_ports_items.values()):
-                oport_item.setRect( (i+1) * oport_distance - self.port_size / 2, 
-                                   self.block_height - self.port_size / 2,
-                                   self.port_size,
-                                   self.port_size )
     
+        self.adjust_ports(self.input_ports_items.values(), 0)
+        self.adjust_ports(self.output_ports_items.values(), self.block_height)    
+        
+    
+    def adjust_ports(self, ports, y_base):
+        port_count = len(ports)
+        if port_count > 0:
+            port_distance = self.block_width / (port_count + 1)
+            for i, port_item in enumerate(ports):
+                port_item.setRect( (i+1) * port_distance - self.port_size / 2, 
+                                   y_base - self.port_size / 2,
+                                   self.port_size,
+                                   self.port_size )
     
          
         
