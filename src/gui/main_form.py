@@ -11,6 +11,7 @@ if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
 from ipf.ipfgraphloader import get_ipfblock_classes
+import graphscheme
 
 class MainForm(QtGui.QMainWindow):
     
@@ -19,6 +20,8 @@ class MainForm(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self._init_blocks_widget()
+        self.scheme = graphscheme.GraphScheme()
+        self.ui.graphicsView.setScene(self.scheme)
         
 
     def _init_blocks_widget(self):

@@ -15,7 +15,7 @@ class GraphScheme( QtGui.QGraphicsScene):
         super(GraphScheme, self).__init__()
         self.layout = QtGui.QGraphicsGridLayout()
         self.form = QtGui.QGraphicsWidget()
-        self.form->setLayout(layout)
+        self.form.setLayout(self.layout)
         self.addItem(self.form)
      
     

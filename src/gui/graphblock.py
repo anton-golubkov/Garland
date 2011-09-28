@@ -7,6 +7,8 @@ class GraphBlock(QtGui.QGraphicsWidget):
     
     """
     
-    def __init__(self, parent=None, wFlags=0):
-        super(GraphBlock, self).__init__(parent, wFlags)
+    def __init__(self):
+        super(GraphBlock, self).__init__()
+        self.rect_item = QtGui.QGraphicsRectItem(self)
+        self.rect_item.setRect(0, 0, 10, 10)
 
