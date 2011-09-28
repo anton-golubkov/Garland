@@ -21,7 +21,6 @@ class MainForm(QtGui.QMainWindow):
         self._init_blocks_widget()
         
 
-    
     def _init_blocks_widget(self):
         self.block_classes = get_ipfblock_classes()
         categories = set()
@@ -36,4 +35,6 @@ class MainForm(QtGui.QMainWindow):
             block_item.setText(0, block.type)
         
         self.ui.blocks_tree.insertTopLevelItems(0, category_items.values())
-            
+
+
+  
