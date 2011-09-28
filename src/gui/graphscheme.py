@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from PySide import QtGui
+from PySide import QtGui, QtCore
 
 class GraphScheme( QtGui.QGraphicsScene):
     """ Graph scheme drawing class
@@ -18,6 +18,10 @@ class GraphScheme( QtGui.QGraphicsScene):
         self.form.setLayout(self.layout)
         self.addItem(self.form)
         self.form.setPos(0, 0)
+        gradient = QtGui.QLinearGradient(0, 0, 0, 4000)
+        gradient.setColorAt( 0, QtGui.QColor(255, 255, 255))
+        gradient.setColorAt( 1, QtGui.QColor(0, 0, 255))
+        self.setBackgroundBrush(gradient)
      
     
     def add_block(self, block, row, column):
