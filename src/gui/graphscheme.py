@@ -17,6 +17,7 @@ class GraphScheme( QtGui.QGraphicsScene):
         self.form = QtGui.QGraphicsWidget()
         self.form.setLayout(self.layout)
         self.addItem(self.form)
+        self.form.setPos(0, 0)
      
     
     def add_block(self, block, row, column):
