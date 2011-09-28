@@ -7,6 +7,8 @@ import sys
 import os
 
 import graphblock
+from ipf.ipfblock.rgb2gray import RGB2Gray
+from ipf.ipfblock.imageinput import ImageInput
 
 cmd_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
 if cmd_folder not in sys.path:
@@ -22,13 +24,13 @@ if __name__ == "__main__":
 
     main_form = MainForm()
     main_form.show()
-    block1 = graphblock.GraphBlock()
+    block1 = graphblock.GraphBlock(RGB2Gray)
     main_form.scheme.add_block(block1, 0, 0)
-    block2 = graphblock.GraphBlock()
+    block2 = graphblock.GraphBlock(RGB2Gray)
     main_form.scheme.add_block(block2, 1, 1)
-    block3 = graphblock.GraphBlock()
+    block3 = graphblock.GraphBlock(ImageInput)
     main_form.scheme.add_block(block3, 2, 2)
-    block4 = graphblock.GraphBlock()
+    block4 = graphblock.GraphBlock(ImageInput)
     main_form.scheme.add_block(block4, 3, 3)
     sys.exit(app.exec_())
     
