@@ -24,6 +24,7 @@ class MainForm(QtGui.QMainWindow):
         self.ui.graphicsView.setScene(self.scheme)
         self.ui.graphicsView.scale(2,2)
         self.ui.graphicsView.setAlignment( QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
+        self.ui.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing)
         
 
     def _init_blocks_widget(self):
