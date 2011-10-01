@@ -15,7 +15,7 @@ class GraphBlock(QtGui.QGraphicsWidget):
     def __init__(self, block):
         super(GraphBlock, self).__init__()
         self.block = block
-        self.rect_item = QtGui.QGraphicsRectItem(self)
+        self.rect_item = BlockPrimitive(self)
         self.rect_item.setRect(0, 0, self.block_width, self.block_height)
         self.setSizePolicy(QtGui.QSizePolicy.Fixed,
                            QtGui.QSizePolicy.Fixed)
@@ -29,9 +29,9 @@ class GraphBlock(QtGui.QGraphicsWidget):
         self.input_ports_items = dict()
         self.output_ports_items = dict()
         for iport in self.block.input_ports:
-            self.input_ports_items[iport] = QtGui.QGraphicsEllipseItem(self.rect_item)
+            self.input_ports_items[iport] = PortPrimitive(self.rect_item)
         for oport in self.block.output_ports:
-            self.output_ports_items[oport] = QtGui.QGraphicsEllipseItem(self.rect_item)
+            self.output_ports_items[oport] = PortPrimitive(self.rect_item)
     
         self.adjust_ports(self.input_ports_items.values(), 0)
         self.adjust_ports(self.output_ports_items.values(), self.block_height)    
@@ -80,3 +80,20 @@ class GraphBlock(QtGui.QGraphicsWidget):
         
     
 
+class PortPrimitive(QtGui.QGraphicsEllipseItem):
+    def __init__(self, parent):
+        super(PortPrimitive, self).__init__(parent)
+        
+    
+    
+class BlockPrimitive(QtGui.QGraphicsRectItem):
+    
+    def __init__(self, parent):
+        super(BlockPrimitive, self).__init__(parent)
+        
+    
+    def paint(self, painter, option, widget):
+        rect = self.rect()
+        painter.drawRoundedRect( rect, 5, 5)
+        
+        
