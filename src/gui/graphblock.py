@@ -8,9 +8,9 @@ class GraphBlock(QtGui.QGraphicsWidget):
     
     """
     
-    block_width = 40
-    block_height = 32
-    port_size = 10
+    block_width = 80
+    block_height = 64
+    port_size = 20
     
     def __init__(self, block):
         super(GraphBlock, self).__init__()
@@ -23,7 +23,7 @@ class GraphBlock(QtGui.QGraphicsWidget):
         self.name_item = QtGui.QGraphicsTextItem(self.rect_item)
         self.name_item.setTextWidth(self.block_width)
         font = self.name_item.font()
-        font.setPixelSize(5)
+        font.setPixelSize(10)
         self.name_item.setFont(font)
         self.name_item.setHtml("<center>%s</center>" % (self.block.type))
         self.input_ports_items = dict()
@@ -79,6 +79,8 @@ class GraphBlock(QtGui.QGraphicsWidget):
         self.setCursor(QtCore.Qt.OpenHandCursor)
         
     
+        
+    
 
 class PortPrimitive(QtGui.QGraphicsEllipseItem):
     def __init__(self, parent):
@@ -96,4 +98,14 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         rect = self.rect()
         painter.drawRoundedRect( rect, 5, 5)
         
+        
+    def mousePressEvent(self, event):
+        self.setCursor(QtCore.Qt.ClosedHandCursor)
+        
+        
+    def mouseMoveEvent(self, event):
+        if QtCore.QLineF(event.screenPos(), \
+                         event.buttonDownScreenPos(QtCore.Qt.LeftButton)).length() < \
+                         QtGui.QApplication.startDragDistance():
+            return
         

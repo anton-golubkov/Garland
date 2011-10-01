@@ -22,9 +22,12 @@ class MainForm(QtGui.QMainWindow):
         self._init_blocks_widget()
         self.scheme = graphscheme.GraphScheme()
         self.ui.graphicsView.setScene(self.scheme)
-        self.ui.graphicsView.scale(2,2)
         self.ui.graphicsView.setAlignment( QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
         self.ui.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing)
+        # Set drag and drop properties
+        self.ui.graphicsView.setAcceptDrops(True)
+        self.ui.graphicsView.dragEnterEvent = dragEnterEvent
+        self.ui.graphicsView.dropEvent = dropEvent
         
 
     def _init_blocks_widget(self):
@@ -43,4 +46,13 @@ class MainForm(QtGui.QMainWindow):
         self.ui.blocks_tree.insertTopLevelItems(0, category_items.values())
 
 
-  
+
+def dragEnterEvent(event):
+    if event.mimeData().hasFormat("text/plain"):
+        event.acceptProposedAction()
+
+
+def dropEvent(event):
+    print event.mimeData().text()
+    event.acceptProposedAction()
+

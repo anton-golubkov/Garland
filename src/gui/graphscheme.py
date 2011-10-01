@@ -13,36 +13,89 @@ class GraphScheme( QtGui.QGraphicsScene):
     
     def __init__(self ):
         super(GraphScheme, self).__init__()
-        self.layout = QtGui.QGraphicsGridLayout()
-        self.form = QtGui.QGraphicsWidget()
-        self.form.setLayout(self.layout)
-        self.addItem(self.form)
-        self.form.setPos(0, 0)
         gradient = QtGui.QLinearGradient(0, 0, 0, 4000)
         gradient.setColorAt( 0, QtGui.QColor(255, 255, 255))
         gradient.setColorAt( 1, QtGui.QColor(0, 0, 255))
         self.setBackgroundBrush(gradient)
-        # Set drag and drop properties
-        self.form.setAcceptDrops(True)
-        self.form.dragEnterEvent = dragEnterEvent
-        self.form.dropEvent = dropEvent
-        
+        self._grid = GraphGrid()
+        self.addItem(self._grid)
+        self._grid.adjust_grid_size()
      
     
-    def add_block(self, block, row, column):
+    def add_block(self, block, column, row):
+        self._grid.add_block(block, column, row)
+
+
+class GraphGrid(QtGui.QGraphicsRectItem):
+    """ Graphics grid class, used in GraphScheme
+    
+    """
+    
+    cell_width = 100
+    cell_height = 80
+    left_margin = 40
+    top_margin = 40
+    
+    
+    def __init__(self, parent=None):
+        super(GraphGrid, self).__init__(parent)
+        self._grid_width = 5
+        self._grid_height = 5
+        
+        
+    def paint(self, painter, option, widget):
+        pen = painter.pen()
+        pen.setColor( QtGui.QColor(200, 200, 200) )
+        pen.setWidth(1)
+        painter.setPen(pen)
+        
+        width = self.cell_width * self._grid_width + 2 * self.left_margin
+        height = self.cell_height * self._grid_height + 2 * self.top_margin
+        for x in range(self.left_margin, width, self.cell_width):
+            painter.drawLine(x, 0, x, height)
+        for y in range(self.top_margin, height, self.cell_height):
+            painter.drawLine(0, y, width, y)
+        
+        
+    def get_grid_size(self):
+        """ Get size of graph grid
+        
+        """
+        return (self._grid_width, self._grid_height)
+    
+    
+    def get_cell_in_point(self, point):
+        column = (point[0] - self.left_margin) % self.cell_width
+        row = (point[1] - self.top_margin) % self.cell_height
+        return (column, row)
+    
+    
+    def adjust_grid_size(self):
+        self.setRect(0, 
+                     0, 
+                     self._grid_width * self.cell_width + 2 * self.left_margin,
+                     self._grid_height * self.cell_height + 2 * self.top_margin)
+        
+    
+    def add_block(self, block, column, row):
         """ Add GraphBlock to scheme into specified row and column
         
         """   
-        self.layout.addItem(block, row, column)
-    
-    
-    
-def dragEnterEvent(event):
-    if event.mimeData().hasFormat("text/plain"):
-         event.acceptProposedAction()
-
-
-def dropEvent(event):
-    print event.mimeData().text()
-    event.acceptProposedAction()
- 
+        if row < self._grid_height and column < self._grid_width:
+            x = self.cell_width * column + self.left_margin
+            y = self.cell_height * row + self.top_margin
+            shift_x = (self.cell_width - block.block_width) / 2
+            shift_y = (self.cell_height - block.block_height) / 2
+            x += shift_x
+            y += shift_y
+            block.setPos(x, y)
+            block.setParentItem(self)
+            self.adjust_grid_size()
+        else:
+            # Wrong cell address
+            raise ValueError("Wrong cell address: (%s, %s); grid size: (%s, %s)" % \
+                              (column, row, self._grid_width, self._grid_height))  
+        
+        
+        
+        
