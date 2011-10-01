@@ -106,8 +106,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     
     
     def move_block(self, block, row, column):
-        block_row, block_column = self.get_block_cell(block)
+        from_cell = self.get_block_cell(block)
         if from_cell is not None and self._grid_model[row][column] is None:
+            block_row, block_column = from_cell
             self._grid_model[block_row][block_column] = None
             self._grid_model[row][column] = block
             self.update_block_positions()
