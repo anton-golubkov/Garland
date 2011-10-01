@@ -22,6 +22,11 @@ class GraphScheme( QtGui.QGraphicsScene):
         gradient.setColorAt( 0, QtGui.QColor(255, 255, 255))
         gradient.setColorAt( 1, QtGui.QColor(0, 0, 255))
         self.setBackgroundBrush(gradient)
+        # Set drag and drop properties
+        self.form.setAcceptDrops(True)
+        self.form.dragEnterEvent = dragEnterEvent
+        self.form.dropEvent = dropEvent
+        
      
     
     def add_block(self, block, row, column):
@@ -32,4 +37,12 @@ class GraphScheme( QtGui.QGraphicsScene):
     
     
     
-    
+def dragEnterEvent(event):
+    if event.mimeData().hasFormat("text/plain"):
+         event.acceptProposedAction()
+
+
+def dropEvent(event):
+    print event.mimeData().text()
+    event.acceptProposedAction()
+ 
