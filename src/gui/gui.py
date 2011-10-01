@@ -31,6 +31,6 @@ if __name__ == "__main__":
     block3 = graphblock.GraphBlock(ImageInput())
     main_form.scheme.add_block(block3, 2, 2)
     block4 = graphblock.GraphBlock(ImageInput())
-    main_form.scheme.add_block(block4, 3, 3)
+    main_form.scheme.add_block(block4, 3, 4)
     sys.exit(app.exec_())
     

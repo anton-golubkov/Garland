@@ -22,8 +22,8 @@ class GraphScheme( QtGui.QGraphicsScene):
         self._grid.adjust_grid_size()
      
     
-    def add_block(self, block, column, row):
-        self._grid.add_block(block, column, row)
+    def add_block(self, block, row, column):
+        self._grid.add_block(block, row, column)
 
 
 class GraphGrid(QtGui.QGraphicsRectItem):
@@ -35,12 +35,17 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     cell_height = 80
     left_margin = 40
     top_margin = 40
+    max_width = 20
+    max_height = 200
     
     
     def __init__(self, parent=None):
         super(GraphGrid, self).__init__(parent)
         self._grid_width = 5
         self._grid_height = 5
+        # Create empty 2-dimension list for blocks in grid
+        self._grid_model = [ [None for j in xrange(self.max_width)] for i in xrange(self.max_height) ]
+        self.adjust_grid_size()
         
         
     def paint(self, painter, option, widget):
@@ -77,24 +82,73 @@ class GraphGrid(QtGui.QGraphicsRectItem):
                      self._grid_height * self.cell_height + 2 * self.top_margin)
         
     
-    def add_block(self, block, column, row):
+    def add_block(self, block, row, column):
         """ Add GraphBlock to scheme into specified row and column
         
         """   
         if row < self._grid_height and column < self._grid_width:
-            x = self.cell_width * column + self.left_margin
-            y = self.cell_height * row + self.top_margin
-            shift_x = (self.cell_width - block.block_width) / 2
-            shift_y = (self.cell_height - block.block_height) / 2
-            x += shift_x
-            y += shift_y
-            block.setPos(x, y)
+            
+            if self._grid_model[row][column] is not None:
+                # This cell is occupied 
+                raise ValueError("Cell (%d, %d) already occupied" % \
+                                 (row, column))
+            
+            self._grid_model[row][column] = block    
             block.setParentItem(self)
-            self.adjust_grid_size()
+            self.update_block_positions()
+            
+            
         else:
             # Wrong cell address
             raise ValueError("Wrong cell address: (%s, %s); grid size: (%s, %s)" % \
-                              (column, row, self._grid_width, self._grid_height))  
+                              (column, row, self._grid_width, self._grid_height))
+    
+    def move_block(self, block, row, column):
+        from_cell = self.get_block_cell(block)
+        if from_cell is not None and self._grid_model[row][column] is None:
+            self._grid_model[from_cell[0]][from_cell[1]] = None
+            self._grid_model[row][column] = block
+            self.update_block_positions()
+            
+    
+    def update_block_positions(self):
+        for row in range(self._grid_height):
+            for column in range(self._grid_width):
+                if self._grid_model[row][column] is not None:
+                    block = self._grid_model[row][column]
+                    x = self.cell_width * column + self.left_margin
+                    y = self.cell_height * row + self.top_margin
+                    shift_x = (self.cell_width - block.block_width) / 2
+                    shift_y = (self.cell_height - block.block_height) / 2
+                    x += shift_x
+                    y += shift_y
+                    block.setPos(x, y)    
+
+    
+    def get_block_cell(self, block):
+        for row in range(self._grid_height):
+            for column in range(self._grid_width):
+                if self._grid_model[row][column] == block:
+                    return (row, column)
+        return None
+            
+            
+    def add_row(self):
+        if self.max_height > self._grid_height:
+            self._grid_height += 1
+            self.adjust_grid_size()
+        else:
+            raise ValueError("Max row count reached")
+       
+        
+    def add_column(self):
+        if self.max_width > self._grid_width:
+            self._grid_widtht += 1
+            self.adjust_grid_size()
+        else:
+            raise ValueError("Max column count reached")
+        
+    
         
         
         
