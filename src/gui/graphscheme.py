@@ -48,6 +48,10 @@ class GraphGrid(QtGui.QGraphicsRectItem):
                              for i in xrange(self.max_height) ]
         self.adjust_grid_size()
         
+        # Dummy block used to show dragged block position
+        self.dummy_block = QtGui.QGraphicsRectItem()
+        self.dummy_block.setRect(0, 0, 50, 50)
+        
         
     def paint(self, painter, option, widget):
         pen = painter.pen()
@@ -71,9 +75,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     
     
     def get_cell_in_point(self, point):
-        column = (point[0] - self.left_margin) % self.cell_width
-        row = (point[1] - self.top_margin) % self.cell_height
-        return (column, row)
+        column = int((point[0] - self.left_margin) / self.cell_width)
+        row = int((point[1] - self.top_margin) / self.cell_height)
+        return (row, column)
     
     
     def adjust_grid_size(self):
@@ -125,13 +129,18 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             for column in range(self._grid_width):
                 if self._grid_model[row][column] is not None:
                     block = self._grid_model[row][column]
-                    x = self.cell_width * column + self.left_margin
-                    y = self.cell_height * row + self.top_margin
-                    shift_x = (self.cell_width - block.block_width) / 2
-                    shift_y = (self.cell_height - block.block_height) / 2
-                    x += shift_x
-                    y += shift_y
-                    block.setPos(x, y)    
+                    x, y = self.get_block_position(block, row, column)
+                    block.setPos(x, y)
+                    
+    
+    def get_block_position(self, block, row, column):
+        x = self.cell_width * column + self.left_margin
+        y = self.cell_height * row + self.top_margin
+        shift_x = (self.cell_width - block.rect().width()) / 2
+        shift_y = (self.cell_height - block.rect().height()) / 2
+        x += shift_x
+        y += shift_y
+        return (x, y)
 
     
     def get_block_cell(self, block):
@@ -157,7 +166,16 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         else:
             raise ValueError("Max column count reached")
         
-    
+    def enable_dummy_block(self):
+        self.dummy_block.setParentItem(self)
+        
+    def disable_dummy_block(self):
+        self.dummy_block.setParentItem(None)
+        
+    def set_dummy_block_cell(self, row, column):
+        x, y = self.get_block_position(self.dummy_block, row, column)
+        self.dummy_block.setPos(x, y)
+        
         
         
         

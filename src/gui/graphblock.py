@@ -50,33 +50,6 @@ class GraphBlock(QtGui.QGraphicsWidget):
                                    self.port_size,
                                    self.port_size )
                 
-    def mousePressEvent(self, event):
-        self.setCursor(QtCore.Qt.ClosedHandCursor)
-        
-        
-    def mouseMoveEvent(self, event):
-        if QtCore.QLineF(event.screenPos(), \
-                         event.buttonDownScreenPos(QtCore.Qt.LeftButton)).length() < \
-                         QtGui.QApplication.startDragDistance():
-            return
-     
-        drag = QtGui.QDrag(event.widget())
-        mime = QtCore.QMimeData()
-        drag.setMimeData(mime)
-
-        mime.setText("DRAG")
-
-        pixmap = QtGui.QPixmap(34, 34)
-        pixmap.fill(QtCore.Qt.white)
-        pixmap.setMask(pixmap.createHeuristicMask())
-        drag.setPixmap(pixmap)
-        drag.setHotSpot(QtCore.QPoint(15, 20))
-        drag.exec_()
-        self.setCursor(QtCore.Qt.OpenHandCursor)
-    
-    
-    def mouseReleaseEvent(self, event):
-        self.setCursor(QtCore.Qt.OpenHandCursor)
         
     
         
@@ -108,4 +81,10 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
                          event.buttonDownScreenPos(QtCore.Qt.LeftButton)).length() < \
                          QtGui.QApplication.startDragDistance():
             return
+        
+        grid = self.parentItem().parentItem()
+        grid.enable_dummy_block()
+        pos = self.mapToScene(event.pos())
+        row, column = grid.get_cell_in_point( (pos.x(), pos.y()) )
+        grid.set_dummy_block_cell(row, column)
         
