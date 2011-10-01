@@ -44,7 +44,8 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self._grid_width = 5
         self._grid_height = 5
         # Create empty 2-dimension list for blocks in grid
-        self._grid_model = [ [None for j in xrange(self.max_width)] for i in xrange(self.max_height) ]
+        self._grid_model = [ [None for j in xrange(self.max_width)] \
+                             for i in xrange(self.max_height) ]
         self.adjust_grid_size()
         
         
@@ -103,13 +104,20 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             raise ValueError("Wrong cell address: (%s, %s); grid size: (%s, %s)" % \
                               (column, row, self._grid_width, self._grid_height))
     
+    
     def move_block(self, block, row, column):
-        from_cell = self.get_block_cell(block)
+        block_row, block_column = self.get_block_cell(block)
         if from_cell is not None and self._grid_model[row][column] is None:
-            self._grid_model[from_cell[0]][from_cell[1]] = None
+            self._grid_model[block_row][block_column] = None
             self._grid_model[row][column] = block
             self.update_block_positions()
             
+    
+    def remove_block(self, block):
+        row, column = self.get_block_cell(block)
+        self._grid_model[row][column] = None
+        block.setParentItem(None)
+        
     
     def update_block_positions(self):
         for row in range(self._grid_height):
