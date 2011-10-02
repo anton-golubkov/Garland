@@ -22,7 +22,7 @@ class GraphBlock(QtGui.QGraphicsWidget):
     
     def __init__(self, block, name):
         super(GraphBlock, self).__init__()
-        self.block = block
+        self.ipf_block = block
         self.name = name
         self.rect_item = BlockPrimitive(self)
         self.rect_item.setRect(0, 0, self.block_width, self.block_height)
@@ -37,12 +37,12 @@ class GraphBlock(QtGui.QGraphicsWidget):
         self.name_item.setHtml("<center>%s</center>" % (self.name))
         self.input_ports_items = dict()
         self.output_ports_items = dict()
-        for iport in self.block.input_ports:
+        for iport in self.ipf_block.input_ports:
             self.input_ports_items[iport] = \
-                PortPrimitive(self, self.block.input_ports[iport])
-        for oport in self.block.output_ports:
+                PortPrimitive(self, self.ipf_block.input_ports[iport])
+        for oport in self.ipf_block.output_ports:
             self.output_ports_items[oport] = \
-                PortPrimitive(self, self.block.output_ports[oport])
+                PortPrimitive(self, self.ipf_block.output_ports[oport])
     
         self.adjust_ports(self.input_ports_items.values(), 0)
         self.adjust_ports(self.output_ports_items.values(), self.block_height)    
@@ -101,8 +101,8 @@ class PortPrimitive(QtGui.QGraphicsEllipseItem):
         beg = self.mapToScene(event.buttonDownPos(QtCore.Qt.LeftButton))
         end = self.mapToScene(event.pos())
         grid.set_temp_arrow_end(end.x(), end.y())
-        port = grid.get_port_at_point(end)
         grid.highlight_arrow(False)
+        port = grid.get_port_at_point(end)
         if port is not None:
             if ipf.ipfblock.ioport.compatible(self.ipf_port, port.ipf_port):
                 grid.highlight_arrow(True)
@@ -115,6 +115,10 @@ class PortPrimitive(QtGui.QGraphicsEllipseItem):
         pos = self.mapToScene(event.pos())
         self.setCursor(QtCore.Qt.ArrowCursor)
         grid.disable_temp_arrow()
+        dest_port = grid.get_port_at_point(pos)
+        if dest_port is not None:
+            if ipf.ipfblock.ioport.compatible(self.ipf_port, dest_port.ipf_port):
+                grid.create_connection(self, dest_port)
             
     
     

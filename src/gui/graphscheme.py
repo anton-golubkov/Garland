@@ -4,6 +4,7 @@
 from PySide import QtGui, QtCore
 
 from ipf.ipfgraph import IPFGraph
+from ipf.ipfblock.ioport import IPort, OPort
 import graphblock
 
 class GraphScheme( QtGui.QGraphicsScene):
@@ -25,8 +26,9 @@ class GraphScheme( QtGui.QGraphicsScene):
         self._grid.adjust_grid_size()
         self.ipf_graph = IPFGraph()
     
+    
     def add_block(self, block, row, column):
-        self.ipf_graph.add_block(block.name, block.block)
+        self.ipf_graph.add_block(block.name, block.ipf_block)
         self._grid.add_block(block, row, column)
 
 
@@ -61,6 +63,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.temp_arrow = QtGui.QGraphicsLineItem(self)
         self.temp_arrow.hide() 
         self.temp_arrow.setZValue(20)
+        
+        # Connection lines
+        self.connection_arrows = []
         
         
     def paint(self, painter, option, widget):
@@ -132,7 +137,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
                 self.add_row()
             if (column == self._grid_width - 1) and self._grid_width < self.max_width:
                 self.add_column() 
-            
+            self.update_connection_arrows()
     
     def remove_block(self, block):
         row, column = self.get_block_cell(block)
@@ -185,8 +190,10 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     def enable_dummy_block(self):
         self.dummy_block.show()
         
+        
     def disable_dummy_block(self):
         self.dummy_block.hide()
+        
         
     def set_dummy_block_cell(self, row, column):
         if row >= self._grid_height or column >= self._grid_width:
@@ -200,20 +207,25 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         else:
             pen.setColor( QtCore.Qt.black)
         self.dummy_block.setPen(pen)
+    
         
     def enable_temp_arrow(self):
         self.temp_arrow.show()
         
+        
     def disable_temp_arrow(self):
         self.temp_arrow.hide()
         
+        
     def set_temp_arrow_begin(self, x, y):
         self.temp_arrow.setLine(x, y, x, y)
+        
         
     def set_temp_arrow_end(self, x, y):
         line = self.temp_arrow.line()
         line.setP2( QtCore.QPoint(x, y) )
         self.temp_arrow.setLine(line)
+        
         
     def highlight_arrow(self, highlight):
         pen = self.temp_arrow.pen()
@@ -229,4 +241,72 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         if item is not None:
             if type(item) == graphblock.PortPrimitive:
                 return item
+    
+    def create_connection(self, port1, port2):
+        scheme = self.scene()
+        ipf_graph = scheme.ipf_graph
+        iport_prim = None
+        oport_prim = None
+        if type(port1.ipf_port) == IPort:
+            iport_prim = port1
+            oport_prim = port2
+        else:
+            iport_prim = port2
+            oport_prim = port1
+        
+        ipf_graph.add_connection(oport_prim.ipf_port, iport_prim.ipf_port)
+        self.update_connection_arrows()
+        
+        
+    def update_connection_arrows(self):
+        """ Recreate all connection lines in GraphScheme
+        
+        """
+        
+        for arrow in self.connection_arrows:
+            arrow.setParentItem(None)
+            self.scene().removeItem(arrow)
+        self.connection_arrows = []
+        
+        scheme = self.scene()
+        ipf_graph = scheme.ipf_graph
+        blocks = []
+        for row in range(self._grid_height):
+            for column in range(self._grid_width):
+                if self._grid_model[row][column] is not None:
+                    blocks.append(self._grid_model[row][column])
+        for connection in ipf_graph.connections:
+            iport = connection._iport
+            oport = connection._oport
+            iblock = iport._owner_block
+            oblock = oport._owner_block
+            iport_name = iblock.get_port_name(iport)
+            oport_name = oblock.get_port_name(oport)
+            iblock_prim = None
+            oblock_prim = None
+            
+            # Search block primitives in scheme
+            for block_prim in blocks:
+                if block_prim.ipf_block == iblock:
+                    iblock_prim = block_prim
+                if block_prim.ipf_block == oblock:
+                    oblock_prim = block_prim
+            if iblock_prim is None or oblock_prim is None:
+                raise ValueError("IPFBlock not found in scheme")
+            
+            # Find port primitives
+            iport_prim = iblock_prim.input_ports_items[iport_name]
+            oport_prim = oblock_prim.output_ports_items[oport_name]
+            arrow = self.create_connection_arrow(oport_prim, iport_prim)
+            self.connection_arrows.append(arrow)
+       
+            
+    def create_connection_arrow(self, oport_prim, iport_prim):
+        begin = oport_prim.get_port_center()
+        end = iport_prim.get_port_center()
+        line = QtGui.QGraphicsLineItem(self)
+        line.setLine(begin.x(), begin.y(), end.x(), end.y())
+        return line
+        
+        
         
