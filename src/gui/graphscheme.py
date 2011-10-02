@@ -175,11 +175,13 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.dummy_block.hide()
         
     def set_dummy_block_cell(self, row, column):
+        if row >= self._grid_height or column >= self._grid_width:
+            # Don`t allow move block outside grid
+            return
         x, y = self.get_block_position(self.dummy_block, row, column)
         self.dummy_block.setPos(x, y)
         pen = self.dummy_block.pen()
-        if self._grid_model[row][column] is not None or \
-            row >= self._grid_height or column >= self._grid_width:
+        if self._grid_model[row][column] is not None:
             pen.setColor( QtCore.Qt.red)
         else:
             pen.setColor( QtCore.Qt.black)
