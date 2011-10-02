@@ -3,6 +3,8 @@
 
 from PySide import QtGui, QtCore
 
+from ipf.ipfgraph import IPFGraph
+
 class GraphScheme( QtGui.QGraphicsScene):
     """ Graph scheme drawing class
     
@@ -20,9 +22,12 @@ class GraphScheme( QtGui.QGraphicsScene):
         self._grid = GraphGrid()
         self.addItem(self._grid)
         self._grid.adjust_grid_size()
-     
+        self.ipf_graph = IPFGraph()
+        self.name_count = 1
     
     def add_block(self, block, row, column):
+        self.name_count += 1
+        self.ipf_graph.add_block(block.block.type + str(self.name_count), block.block)
         self._grid.add_block(block, row, column)
 
 
