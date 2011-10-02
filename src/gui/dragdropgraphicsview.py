@@ -22,8 +22,7 @@ class DragDropGraphicsView(QtGui.QGraphicsView):
         if event.mimeData().hasFormat("application/x-qabstractitemmodeldatalist"):
             event.accept()
             main_form = self.parent().parent()
-            scheme = main_form.scheme
-            grid = scheme._grid
+            grid = main_form.scheme._grid
             grid.enable_dummy_block()
             pos = self.mapToScene(event.pos())
             row, column = grid.get_cell_in_point( (pos.x(), pos.y()) )
@@ -31,8 +30,7 @@ class DragDropGraphicsView(QtGui.QGraphicsView):
     
     def dragLeaveEvent(self, event):
         main_form = self.parent().parent()
-        grid = main_form.scheme._grid
-        grid.disable_dummy_block()
+        main_form.scheme._grid.disable_dummy_block()
     
     def dropEvent(self, event):
         # Decode treewidget item mime data
