@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_form.ui'
 #
-# Created: Mon Sep 26 19:04:39 2011
+# Created: Sun Oct  2 17:19:17 2011
 #      by: PySide UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.graphicsView = QtGui.QGraphicsView(self.centralwidget)
+        self.graphicsView = DragDropGraphicsView(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -60,6 +60,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.dockWidgetContents)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.blocks_tree = QtGui.QTreeWidget(self.dockWidgetContents)
+        self.blocks_tree.setDragEnabled(True)
+        self.blocks_tree.setDragDropMode(QtGui.QAbstractItemView.DragOnly)
         self.blocks_tree.setObjectName("blocks_tree")
         self.blocks_tree.headerItem().setText(0, "1")
         self.blocks_tree.header().setVisible(False)
@@ -141,3 +143,4 @@ class Ui_MainWindow(object):
         self.actionAbout_Garland.setText(QtGui.QApplication.translate("MainWindow", "About Garland", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSave_As.setText(QtGui.QApplication.translate("MainWindow", "Save As ...", None, QtGui.QApplication.UnicodeUTF8))
 
+from dragdropgraphicsview import DragDropGraphicsView
