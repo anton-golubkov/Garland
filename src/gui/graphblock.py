@@ -30,9 +30,9 @@ class GraphBlock(QtGui.QGraphicsWidget):
         self.input_ports_items = dict()
         self.output_ports_items = dict()
         for iport in self.block.input_ports:
-            self.input_ports_items[iport] = PortPrimitive(self.rect_item)
+            self.input_ports_items[iport] = PortPrimitive(self)
         for oport in self.block.output_ports:
-            self.output_ports_items[oport] = PortPrimitive(self.rect_item)
+            self.output_ports_items[oport] = PortPrimitive(self)
     
         self.adjust_ports(self.input_ports_items.values(), 0)
         self.adjust_ports(self.output_ports_items.values(), self.block_height)    
@@ -58,18 +58,63 @@ class GraphBlock(QtGui.QGraphicsWidget):
 class PortPrimitive(QtGui.QGraphicsEllipseItem):
     def __init__(self, parent):
         super(PortPrimitive, self).__init__(parent)
+        brush = self.brush()
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        brush.setColor(QtCore.Qt.white)
+        self.setBrush(brush)
+        self.setZValue(10)
+    
+    
+    def get_port_center(self):
+        r = self.rect()
+        center = QtCore.QPoint(r.x() + r.width()/2, r.y() + r.height()/2)
+        center = self.mapToScene(center)
+        return center
+    
+    
+    def mousePressEvent(self, event):
+        self.setCursor(QtCore.Qt.CrossCursor)
+        grid = self.parentItem().parentItem()
+        grid.enable_temp_arrow()
+        center = self.get_port_center()
+        grid.set_temp_arrow_begin(center.x(), center.y())
+    
         
+    def mouseMoveEvent(self, event):
+        if QtCore.QLineF(event.screenPos(), \
+                         event.buttonDownScreenPos(QtCore.Qt.LeftButton)).length() < \
+                         QtGui.QApplication.startDragDistance():
+            return
+        
+        grid = self.parentItem().parentItem()
+        beg = self.mapToScene(event.buttonDownPos(QtCore.Qt.LeftButton))
+        end = self.mapToScene(event.pos())
+        grid.set_temp_arrow_end(end.x(), end.y())
+
+        
+    def mouseReleaseEvent(self, event):
+        block = self.parentItem()
+        grid = block.parentItem()
+        pos = self.mapToScene(event.pos())
+        self.setCursor(QtCore.Qt.ArrowCursor)
+        grid.disable_temp_arrow()
+            
     
     
 class BlockPrimitive(QtGui.QGraphicsRectItem):
     
     def __init__(self, parent):
         super(BlockPrimitive, self).__init__(parent)
-        self.setCursor(QtCore.Qt.OpenHandCursor)
+
         
     
     def paint(self, painter, option, widget):
         rect = self.rect()
+        brush = painter.brush()
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        brush.setColor(QtCore.Qt.white)
+        painter.setBrush(brush)
+        
         painter.drawRoundedRect( rect, 5, 5)
         
         
@@ -101,5 +146,5 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
            row < grid_height and \
            column < grid_width:
             grid.move_block(block, row, column)
-        self.setCursor(QtCore.Qt.OpenHandCursor)
+        self.setCursor(QtCore.Qt.ArrowCursor)
         

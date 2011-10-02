@@ -56,6 +56,11 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.dummy_block.setRect(0, 0, self.cell_width, self.cell_height)
         self.dummy_block.hide()
         
+        # Temporary connection arrow
+        self.temp_arrow = QtGui.QGraphicsLineItem(self)
+        self.temp_arrow.hide() 
+        self.temp_arrow.setZValue(20)
+        
         
     def paint(self, painter, option, widget):
         pen = painter.pen()
@@ -195,7 +200,18 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             pen.setColor( QtCore.Qt.black)
         self.dummy_block.setPen(pen)
         
+    def enable_temp_arrow(self):
+        self.temp_arrow.show()
         
+    def disable_temp_arrow(self):
+        self.temp_arrow.hide()
         
+    def set_temp_arrow_begin(self, x, y):
+        self.temp_arrow.setLine(x, y, x, y)
+        
+    def set_temp_arrow_end(self, x, y):
+        line = self.temp_arrow.line()
+        line.setP2( QtCore.QPoint(x, y) )
+        self.temp_arrow.setLine(line)
         
         
