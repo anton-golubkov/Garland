@@ -95,13 +95,14 @@ class OPort(Port):
             self._binded_count -= 1
     
 
-def compatible(oport, iport):
+def compatible(port1, port2):
     """ Check ports types compatibility
     
         If output port type has similar properties as input port data type
         then ports assuming compatible.
     
     """
-    return oport._data_type.is_compatible(iport._data_type)
+    return port1._data_type.is_compatible(port2._data_type) and \
+        type(port1) != type (port2)
     
         
