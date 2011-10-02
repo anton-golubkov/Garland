@@ -304,9 +304,24 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     def create_connection_arrow(self, oport_prim, iport_prim):
         begin = oport_prim.get_port_center()
         end = iport_prim.get_port_center()
-        line = QtGui.QGraphicsLineItem(self)
-        line.setLine(begin.x(), begin.y(), end.x(), end.y())
-        return line
+        row = int( (begin.y() - self.top_margin) / self.cell_height) + 1
+        grid_line_y = self.top_margin + row * self.cell_height
+        
+        arrow = QtGui.QGraphicsPathItem(self)
+        path = QtGui.QPainterPath()
+        path.moveTo(begin.x(), begin.y())
+        path.lineTo(begin.x(), grid_line_y)
+        path.lineTo(end.x(), grid_line_y)
+        path.lineTo(end.x(), end.y())  
+        arrow.setPath(path)
+        pen = arrow.pen()
+        pen.setWidth(4)
+        pen.setColor( QtGui.QColor(113, 153, 213))
+        pen.setJoinStyle(QtCore.Qt.RoundJoin)
+        pen.setCapStyle(QtCore.Qt.RoundCap)
+        arrow.setPen(pen)
+        
+        return arrow
         
         
         
