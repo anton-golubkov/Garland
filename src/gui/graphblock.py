@@ -88,3 +88,16 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         row, column = grid.get_cell_in_point( (pos.x(), pos.y()) )
         grid.set_dummy_block_cell(row, column)
         
+    def mouseReleaseEvent(self, event):
+        block = self.parentItem()
+        grid = block.parentItem()
+        grid.disable_dummy_block()
+        pos = self.mapToScene(event.pos())
+        row, column = grid.get_cell_in_point( (pos.x(), pos.y()) )
+        block_row, block_column = grid.get_block_cell(block)
+        grid_width, grid_height = grid.get_grid_size()
+        if (row != block_row or column != block_column) and \
+           row < grid_height and \
+           column < grid_width:
+            grid.move_block(block, row, column)
+        

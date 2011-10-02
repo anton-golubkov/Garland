@@ -49,8 +49,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.adjust_grid_size()
         
         # Dummy block used to show dragged block position
-        self.dummy_block = QtGui.QGraphicsRectItem()
-        self.dummy_block.setRect(0, 0, 50, 50)
+        self.dummy_block = QtGui.QGraphicsRectItem(self)
+        self.dummy_block.setRect(0, 0, self.cell_width, self.cell_height)
+        self.dummy_block.hide()
         
         
     def paint(self, painter, option, widget):
@@ -116,6 +117,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             self._grid_model[block_row][block_column] = None
             self._grid_model[row][column] = block
             self.update_block_positions()
+            self.disable_dummy_block()
             
     
     def remove_block(self, block):
@@ -167,14 +169,21 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             raise ValueError("Max column count reached")
         
     def enable_dummy_block(self):
-        self.dummy_block.setParentItem(self)
+        self.dummy_block.show()
         
     def disable_dummy_block(self):
-        self.dummy_block.setParentItem(None)
+        self.dummy_block.hide()
         
     def set_dummy_block_cell(self, row, column):
         x, y = self.get_block_position(self.dummy_block, row, column)
         self.dummy_block.setPos(x, y)
+        pen = self.dummy_block.pen()
+        if self._grid_model[row][column] is not None or \
+            row >= self._grid_height or column >= self._grid_width:
+            pen.setColor( QtCore.Qt.red)
+        else:
+            pen.setColor( QtCore.Qt.black)
+        self.dummy_block.setPen(pen)
         
         
         
