@@ -43,7 +43,8 @@ class DragDropGraphicsView(QtGui.QGraphicsView):
         pos = self.mapToScene(event.pos())
         row, column = grid.get_cell_in_point( (pos.x(), pos.y()) )
         if block_name in main_form.block_classes:
-            block = graphblock.GraphBlock(main_form.block_classes[block_name]())
+            block = graphblock.GraphBlock(main_form.block_classes[block_name](), \
+                                          block_name + str(len(main_form.scheme.ipf_graph.blocks)))
             main_form.scheme.add_block(block, row, column)
         event.acceptProposedAction()
 

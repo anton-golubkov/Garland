@@ -12,9 +12,10 @@ class GraphBlock(QtGui.QGraphicsWidget):
     block_height = 64
     port_size = 20
     
-    def __init__(self, block):
+    def __init__(self, block, name):
         super(GraphBlock, self).__init__()
         self.block = block
+        self.name = name
         self.rect_item = BlockPrimitive(self)
         self.rect_item.setRect(0, 0, self.block_width, self.block_height)
         self.setSizePolicy(QtGui.QSizePolicy.Fixed,
@@ -25,7 +26,7 @@ class GraphBlock(QtGui.QGraphicsWidget):
         font = self.name_item.font()
         font.setPixelSize(10)
         self.name_item.setFont(font)
-        self.name_item.setHtml("<center>%s</center>" % (self.block.type))
+        self.name_item.setHtml("<center>%s</center>" % (self.name))
         self.input_ports_items = dict()
         self.output_ports_items = dict()
         for iport in self.block.input_ports:
