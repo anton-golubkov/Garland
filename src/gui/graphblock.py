@@ -36,7 +36,6 @@ class GraphBlock(QtGui.QGraphicsWidget):
         self.adjust_ports(self.input_ports_items.values(), 0)
         self.adjust_ports(self.output_ports_items.values(), self.block_height)    
         
-        self.setCursor(QtCore.Qt.OpenHandCursor)
         self.setAcceptedMouseButtons(QtCore.Qt.LeftButton)
         
     
@@ -65,6 +64,7 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
     
     def __init__(self, parent):
         super(BlockPrimitive, self).__init__(parent)
+        self.setCursor(QtCore.Qt.OpenHandCursor)
         
     
     def paint(self, painter, option, widget):
@@ -100,4 +100,5 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
            row < grid_height and \
            column < grid_width:
             grid.move_block(block, row, column)
+        self.setCursor(QtCore.Qt.OpenHandCursor)
         
