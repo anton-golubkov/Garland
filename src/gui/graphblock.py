@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from PySide import QtGui, QtCore
+import os
+import sys
 
-import ipf.ioport
+
+cmd_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
+if cmd_folder not in sys.path:
+    sys.path.insert(0, cmd_folder)
+
+import ipf.ipfblock.ioport
 
 class GraphBlock(QtGui.QGraphicsWidget):
     """ GraphBlock represents IPFBlock in graphics scene
@@ -95,6 +102,10 @@ class PortPrimitive(QtGui.QGraphicsEllipseItem):
         end = self.mapToScene(event.pos())
         grid.set_temp_arrow_end(end.x(), end.y())
         port = grid.get_port_at_point(end)
+        grid.highlight_arrow(False)
+        if port is not None:
+            if ipf.ipfblock.ioport.compatible(self.ipf_port, port.ipf_port):
+                grid.highlight_arrow(True)
         
 
         

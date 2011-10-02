@@ -215,6 +215,15 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         line.setP2( QtCore.QPoint(x, y) )
         self.temp_arrow.setLine(line)
         
+    def highlight_arrow(self, highlight):
+        pen = self.temp_arrow.pen()
+        if highlight:
+            pen.setColor(QtCore.Qt.green)
+        else:
+            pen.setColor(QtCore.Qt.black)
+        self.temp_arrow.setPen(pen)
+    
+        
     def get_port_at_point(self, pos):
         item = self.scene().itemAt(pos)
         if item is not None:
