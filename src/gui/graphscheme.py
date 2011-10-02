@@ -118,6 +118,11 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             self._grid_model[row][column] = block
             self.update_block_positions()
             self.disable_dummy_block()
+            # Enlarge grid if block moved to last row / column
+            if (row == self._grid_height - 1) and self._grid_height < self.max_height:
+                self.add_row()
+            if (column == self._grid_width - 1) and self._grid_width < self.max_width:
+                self.add_column() 
             
     
     def remove_block(self, block):
@@ -163,7 +168,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         
     def add_column(self):
         if self.max_width > self._grid_width:
-            self._grid_widtht += 1
+            self._grid_width += 1
             self.adjust_grid_size()
         else:
             raise ValueError("Max column count reached")
