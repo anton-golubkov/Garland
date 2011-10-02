@@ -2,6 +2,7 @@
 
 from PySide import QtGui, QtCore
 
+import ipf.ioport
 
 class GraphBlock(QtGui.QGraphicsWidget):
     """ GraphBlock represents IPFBlock in graphics scene
@@ -30,9 +31,11 @@ class GraphBlock(QtGui.QGraphicsWidget):
         self.input_ports_items = dict()
         self.output_ports_items = dict()
         for iport in self.block.input_ports:
-            self.input_ports_items[iport] = PortPrimitive(self)
+            self.input_ports_items[iport] = \
+                PortPrimitive(self, self.block.input_ports[iport])
         for oport in self.block.output_ports:
-            self.output_ports_items[oport] = PortPrimitive(self)
+            self.output_ports_items[oport] = \
+                PortPrimitive(self, self.block.output_ports[oport])
     
         self.adjust_ports(self.input_ports_items.values(), 0)
         self.adjust_ports(self.output_ports_items.values(), self.block_height)    
@@ -56,8 +59,9 @@ class GraphBlock(QtGui.QGraphicsWidget):
     
 
 class PortPrimitive(QtGui.QGraphicsEllipseItem):
-    def __init__(self, parent):
+    def __init__(self, parent, ipf_port):
         super(PortPrimitive, self).__init__(parent)
+        self.ipf_port = ipf_port
         brush = self.brush()
         brush.setStyle(QtCore.Qt.SolidPattern)
         brush.setColor(QtCore.Qt.white)
@@ -90,6 +94,8 @@ class PortPrimitive(QtGui.QGraphicsEllipseItem):
         beg = self.mapToScene(event.buttonDownPos(QtCore.Qt.LeftButton))
         end = self.mapToScene(event.pos())
         grid.set_temp_arrow_end(end.x(), end.y())
+        port = grid.get_port_at_point(end)
+        
 
         
     def mouseReleaseEvent(self, event):
@@ -114,7 +120,6 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         brush.setStyle(QtCore.Qt.SolidPattern)
         brush.setColor(QtCore.Qt.white)
         painter.setBrush(brush)
-        
         painter.drawRoundedRect( rect, 5, 5)
         
         
@@ -133,6 +138,7 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         pos = self.mapToScene(event.pos())
         row, column = grid.get_cell_in_point( (pos.x(), pos.y()) )
         grid.set_dummy_block_cell(row, column)
+        
         
     def mouseReleaseEvent(self, event):
         block = self.parentItem()

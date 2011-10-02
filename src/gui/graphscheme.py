@@ -4,6 +4,7 @@
 from PySide import QtGui, QtCore
 
 from ipf.ipfgraph import IPFGraph
+import graphblock
 
 class GraphScheme( QtGui.QGraphicsScene):
     """ Graph scheme drawing class
@@ -35,7 +36,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     """
     
     cell_width = 100
-    cell_height = 80
+    cell_height = 120
     left_margin = 40
     top_margin = 40
     max_width = 20
@@ -214,4 +215,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         line.setP2( QtCore.QPoint(x, y) )
         self.temp_arrow.setLine(line)
         
+    def get_port_at_point(self, pos):
+        item = self.scene().itemAt(pos)
+        if item is not None:
+            if type(item) == graphblock.PortPrimitive:
+                return item
         
