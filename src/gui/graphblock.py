@@ -100,7 +100,8 @@ class PortPrimitive(QtGui.QGraphicsEllipseItem):
         grid = self.parentItem().parentItem()
         beg = self.mapToScene(event.buttonDownPos(QtCore.Qt.LeftButton))
         end = self.mapToScene(event.pos())
-        grid.set_temp_arrow_end(end.x(), end.y())
+        # Shift line end from mouse position for prevent overlap of ports  
+        grid.set_temp_arrow_end(end.x() - 2 , end.y() + 2)
         grid.highlight_arrow(False)
         port = grid.get_port_at_point(end)
         if port is not None:
