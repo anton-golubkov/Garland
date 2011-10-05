@@ -37,7 +37,6 @@ class TestConnection(unittest.TestCase):
         self.assertEqual(oport._binded_count, 0)
         self.assertTrue(iport.is_free())
         
-    
         
     def test_connection_float(self):
         iport = ipf.ipfblock.ioport.IPort(None, ipf.ipftype.ipffloattype.IPFFloatType())
@@ -53,6 +52,7 @@ class TestConnection(unittest.TestCase):
         self.assertEqual(oport._binded_count, 0)
         self.assertTrue(iport.is_free())
         
+        
     def test_connection_rgb(self):
         iport = ipf.ipfblock.ioport.IPort(None, ipf.ipftype.ipfrgbtype.IPFRGBType())
         oport = ipf.ipfblock.ioport.OPort(None, ipf.ipftype.ipfrgbtype.IPFRGBType())
@@ -66,6 +66,7 @@ class TestConnection(unittest.TestCase):
         del connection
         self.assertEqual(oport._binded_count, 0)
         self.assertTrue(iport.is_free())
+    
     
     def test_connection_image1c(self):
         iport = ipf.ipfblock.ioport.IPort(None, ipf.ipftype.ipfimage1ctype.IPFImage1cType())
@@ -82,6 +83,7 @@ class TestConnection(unittest.TestCase):
         self.assertEqual(oport._binded_count, 0)
         self.assertTrue(iport.is_free())
     
+    
     def test_connection_image3c(self):
         iport = ipf.ipfblock.ioport.IPort(None, ipf.ipftype.ipfimage3ctype.IPFImage3cType())
         oport = ipf.ipfblock.ioport.OPort(None, ipf.ipftype.ipfimage3ctype.IPFImage3cType())
@@ -97,6 +99,23 @@ class TestConnection(unittest.TestCase):
         self.assertEqual(oport._binded_count, 0)
         self.assertTrue(iport.is_free())
    
+   
+    def test_connection_image_1c_3c(self):
+        iport = ipf.ipfblock.ioport.IPort(None, ipf.ipftype.ipfimage3ctype.IPFImage3cType())
+        oport = ipf.ipfblock.ioport.OPort(None, ipf.ipftype.ipfimage1ctype.IPFImage1cType())
+        connection = ipf.ipfblock.connection.Connection(oport, iport)
+        self.assertEqual(oport._binded_count, 1)
+        self.assertFalse(iport.is_free())
+        image = cv.LoadImage("test.png", 0)
+        oport._set_value(image)
+        connection.process()
+        transmitted_value = iport._get_value()
+        image1c = cv.CreateImage(cv.GetSize(transmitted_value), cv.IPL_DEPTH_8U, 1)
+        cv.Split(transmitted_value, image1c, None, None, None)
+        self.assertEqual(image1c.tostring(), image.tostring())
+        del connection
+        self.assertEqual(oport._binded_count, 0)
+        self.assertTrue(iport.is_free())
         
     
             

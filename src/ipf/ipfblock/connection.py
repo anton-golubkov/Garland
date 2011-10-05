@@ -11,7 +11,7 @@ class Connection(object):
 
     def __init__(self, oport, iport):
         # Check port compatibility and free of input port
-        if ioport.compatible(oport, iport) and iport.is_free():
+        if ioport.is_connect_allowed(oport, iport):
             self._oport = oport
             self._iport = iport
             self._oport.increase_binded_count()

@@ -123,3 +123,28 @@ def compatible(port1, port2):
     return iport._data_type.is_compatible(oport._data_type)
     
         
+def is_connect_allowed(port1, port2):
+    """ Return True if ports can be connected, False otherwise
+    
+    """
+    
+    if not compatible(port1, port2):
+        return False
+    
+    # Find witch of ports is input and witch is output
+    # 
+    iport = None
+    
+    if type(port1) == IPort:
+        iport = port1
+    elif type(port2) == IPort:
+        iport = port2
+    else:
+        return False
+    
+    if iport.is_free():
+        return True
+    
+    
+    
+    

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+import cv
 
 import os, sys
 cmd_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
@@ -28,6 +29,7 @@ class TestIPFType(unittest.TestCase):
         self.image1c1 = ipf.ipftype.ipfimage1ctype.IPFImage1cType()
         self.image1c2 = ipf.ipftype.ipfimage1ctype.IPFImage1cType()
         
+        
     def test_compatible_types(self):
         self.assertTrue(self.int1.is_compatible(self.int2))
         self.assertTrue(self.float1.is_compatible(self.float2))
@@ -47,6 +49,28 @@ class TestIPFType(unittest.TestCase):
         self.assertFalse(self.rgb1.is_compatible(self.image1c1))
         self.assertFalse(self.rgb1.is_compatible(self.image3c1))
     
+    
+    def test_convert_types(self):
+        self.assertEqual(10, self.int1.convert(10))
+        self.assertEqual(10, self.int1.convert(10.1))
+        self.assertEqual(10.1, self.float1.convert(10.1))
+        self.assertEqual(10.0, self.float1.convert(10))
+        self.assertEqual([255, 255, 255], self.rgb1.convert([255,255,255]))
+        self.assertEqual([255, 255, 255], self.rgb1.convert((255,255,255)))
+        
+        
+        i1c = cv.LoadImage("test.png", 0)
+        i3c = cv.LoadImage("test.png")
+        
+        i3c_gray = cv.CreateImage(cv.GetSize(i1c), cv.IPL_DEPTH_8U, 3)
+        cv.Merge(i1c, i1c, i1c, None, i3c_gray)
+        
+        self.assertEqual(i1c, self.image1c1.convert(i1c))
+        self.assertEqual(i3c, self.image3c1.convert(i3c))
+        self.assertEqual(i3c_gray.tostring(), self.image3c1.convert(i1c).tostring())
+        
+        
+        
     
 
 if __name__ == '__main__':

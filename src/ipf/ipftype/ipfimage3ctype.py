@@ -30,8 +30,8 @@ class IPFImage3cType(ipftype.IPFType):
         
         """ 
         if( value.nChannels == 1):
-            image3c = cv.CreateImage(value.size, cv.IPL_DEPTH_8U, 3)
-            cv.Merge(src0=value, src1=value, src2=value, dst=image3c)
+            image3c = cv.CreateImage(cv.GetSize(value), cv.IPL_DEPTH_8U, 3)
+            cv.Merge(value, value, value, None, image3c)
             return image3c
         else:
             return value

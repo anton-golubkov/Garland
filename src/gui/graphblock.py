@@ -105,7 +105,7 @@ class PortPrimitive(QtGui.QGraphicsEllipseItem):
         grid.highlight_arrow(False)
         port = grid.get_port_at_point(end)
         if port is not None:
-            if ipf.ipfblock.ioport.compatible(self.ipf_port, port.ipf_port):
+            if ipf.ipfblock.ioport.is_connect_allowed(self.ipf_port, port.ipf_port):
                 grid.highlight_arrow(True)
         
 
@@ -118,7 +118,7 @@ class PortPrimitive(QtGui.QGraphicsEllipseItem):
         grid.disable_temp_arrow()
         dest_port = grid.get_port_at_point(pos)
         if dest_port is not None:
-            if ipf.ipfblock.ioport.compatible(self.ipf_port, dest_port.ipf_port):
+            if ipf.ipfblock.ioport.is_connect_allowed(self.ipf_port, dest_port.ipf_port):
                 grid.create_connection(self, dest_port)
             
     
