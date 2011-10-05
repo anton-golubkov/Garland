@@ -53,6 +53,9 @@ class TestIOPort(unittest.TestCase):
         
         self.assertTrue(compatible(self.oport_int, self.iport_float) )
         self.assertTrue(compatible(self.oport_float, self.iport_int) )
+        
+        # Allow convert from 1 channel to 3 channel
+        self.assertTrue(compatible(self.oport_image1c, self.iport_image3c) )
 
 
     def test_different_type_uncompatibility(self):
@@ -64,7 +67,6 @@ class TestIOPort(unittest.TestCase):
         
         self.assertFalse(compatible(self.oport_int, self.iport_image1c) )
         self.assertFalse(compatible(self.oport_float, self.iport_image1c) )
-        self.assertFalse(compatible(self.oport_image1c, self.iport_image3c) )
         self.assertFalse(compatible(self.oport_int, self.iport_rgb) )
         self.assertFalse(compatible(self.oport_rgb, self.iport_float) )
 
@@ -82,7 +84,21 @@ class TestIOPort(unittest.TestCase):
         self.assertFalse(compatible(self.oport_image3c, self.oport_image3c) )
         self.assertFalse(compatible(self.oport_rgb, self.oport_rgb) )
 
-
+    def test_compatibly_argument_swap(self):
+        self.assertTrue(compatible(self.oport_image1c, self.iport_image3c) )
+        self.assertTrue(compatible(self.iport_image3c, self.oport_image1c) )
+        
+        self.assertTrue(compatible(self.iport_int, self.oport_float) )
+        self.assertTrue(compatible(self.oport_float, self.iport_int) )
+        
+        self.assertTrue(compatible(self.iport_float, self.oport_int) )
+        self.assertTrue(compatible(self.oport_int, self.iport_float) )
+        
+        self.assertTrue(compatible(self.oport_int, self.iport_float) )
+        self.assertTrue(compatible(self.iport_float, self.oport_int) )
+        
+        self.assertTrue(compatible(self.oport_float, self.iport_int) )
+        self.assertTrue(compatible(self.iport_int, self.oport_float) )
 
 if __name__ == '__main__':
     unittest.main()
