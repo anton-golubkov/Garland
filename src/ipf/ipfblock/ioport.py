@@ -102,7 +102,24 @@ def compatible(port1, port2):
         then ports assuming compatible.
     
     """
-    return port1._data_type.is_compatible(port2._data_type) and \
-        type(port1) != type (port2)
+    # Both input or both output ports is not compatible
+    if type(port1) == type (port2):
+        return False
+    
+    # Find witch of ports is input and witch is output
+    # 
+    iport = None
+    oport = None
+    
+    if type(port1) == IPort and type(port2) == OPort:
+        iport = port1
+        oport = port2
+    elif type(port1) == OPort and type(port2) == IPort:
+        iport = port2
+        oport = port1
+    else:
+        return False
+    
+    return iport._data_type.is_compatible(oport._data_type)
     
         
