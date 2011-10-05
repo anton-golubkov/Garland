@@ -127,6 +127,7 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
     
     def __init__(self, parent):
         super(BlockPrimitive, self).__init__(parent)
+        self.selected = False
 
         
     
@@ -134,13 +135,18 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         rect = self.rect()
         brush = painter.brush()
         brush.setStyle(QtCore.Qt.SolidPattern)
-        brush.setColor(QtCore.Qt.white)
+        if self.selected:
+            brush.setColor(QtGui.QColor(255, 230, 230))
+        else:
+            brush.setColor(QtCore.Qt.white)
         painter.setBrush(brush)
         painter.drawRoundedRect( rect, 5, 5)
         
         
     def mousePressEvent(self, event):
         self.setCursor(QtCore.Qt.ClosedHandCursor)
+        grid = self.parentItem().parentItem()
+        grid.block_selected(self)
         
         
     def mouseMoveEvent(self, event):

@@ -67,6 +67,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         # Connection lines
         self.connection_arrows = []
         
+        # Current selected block
+        self.selected_block = None
+        
         
     def paint(self, painter, option, widget):
         pen = painter.pen()
@@ -322,6 +325,19 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         arrow.setPen(pen)
         
         return arrow
+    
+    
+    def block_selected(self, block):
+        """ Notification of block selection change
+        
+        """
+        if self.selected_block is not None:
+            self.selected_block.selected = False
+            self.selected_block.update()
+            
+        self.selected_block = block
+        self.selected_block.selected = True
+        self.selected_block.update()
         
         
         
