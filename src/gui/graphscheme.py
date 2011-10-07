@@ -15,8 +15,8 @@ class GraphScheme( QtGui.QGraphicsScene):
     
     """
     
-    def __init__(self ):
-        super(GraphScheme, self).__init__()
+    def __init__(self, parent=None):
+        super(GraphScheme, self).__init__(parent)
         gradient = QtGui.QLinearGradient(0, 0, 0, 4000)
         gradient.setColorAt( 0, QtGui.QColor(255, 255, 255))
         gradient.setColorAt( 1, QtGui.QColor(0, 0, 255))
@@ -338,7 +338,8 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.selected_block = block
         self.selected_block.selected = True
         self.selected_block.update()
-
+        main_form = self.scene().parent()
+        print main_form
         
         
         

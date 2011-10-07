@@ -21,7 +21,7 @@ class MainForm(QtGui.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self._init_blocks_widget()
-        self.scheme = graphscheme.GraphScheme()
+        self.scheme = graphscheme.GraphScheme(self)
         self.ui.graphicsView.setScene(self.scheme)
         self.ui.graphicsView.setAlignment( QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
         self.ui.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing)
