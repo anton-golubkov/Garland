@@ -33,11 +33,11 @@ class PropertiesModel(QtCore.QAbstractTableModel):
         if not index.isValid():
             return None
         
-        if role != QtCore.Qt.DisplayRole or role != QtCore.Qt.EditRole:
+        if role != QtCore.Qt.DisplayRole and role != QtCore.Qt.EditRole:
             return None
         
         if index.row() >= self.rowCount(index) or \
-           index.column >= self.columnCount(index):
+           index.column() >= self.columnCount(index):
             return None
         
         key = self.block.properties.keys()[index.row()]

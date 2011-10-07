@@ -338,8 +338,10 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.selected_block = block
         self.selected_block.selected = True
         self.selected_block.update()
+        
+        ipf_block = block.parentItem().ipf_block
         main_form = self.scene().parent()
-        print main_form
+        main_form.show_block_properties(ipf_block)
         
         
         

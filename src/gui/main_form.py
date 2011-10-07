@@ -12,6 +12,7 @@ if cmd_folder not in sys.path:
 
 from ipf.ipfgraphloader import get_ipfblock_classes
 import graphscheme
+import propertiesmodel
 
 
 class MainForm(QtGui.QMainWindow):
@@ -25,6 +26,7 @@ class MainForm(QtGui.QMainWindow):
         self.ui.graphicsView.setScene(self.scheme)
         self.ui.graphicsView.setAlignment( QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
         self.ui.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing)
+        self.properties_model = None
 
         
 
@@ -44,4 +46,5 @@ class MainForm(QtGui.QMainWindow):
         self.ui.blocks_tree.insertTopLevelItems(0, category_items.values())
         
     def show_block_properties(self, block):
-        pass
+        self.properties_model = propertiesmodel.PropertiesModel(block)
+        self.ui.propertyTable.setModel(self.properties_model)
