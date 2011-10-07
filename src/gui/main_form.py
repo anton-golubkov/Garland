@@ -27,7 +27,8 @@ class MainForm(QtGui.QMainWindow):
         self.ui.graphicsView.setAlignment( QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
         self.ui.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing)
         self.properties_model = None
-
+        self.init_actions()
+    
         
 
     def _init_blocks_widget(self):
@@ -48,3 +49,97 @@ class MainForm(QtGui.QMainWindow):
     def show_block_properties(self, block):
         self.properties_model = propertiesmodel.PropertiesModel(block)
         self.ui.propertyTable.setModel(self.properties_model)
+
+
+    def init_actions(self):
+        self.ui.actionAbout_Garland.triggered.connect(self.about)
+        self.ui.actionArrange_scheme.triggered.connect(self.arrange_scheme)
+        self.ui.actionCopy.triggered.connect(self.copy)
+        self.ui.actionCut.triggered.connect(self.cut)
+        self.ui.actionDelete.triggered.connect(self.delete)
+        self.ui.actionExit.triggered.connect(QtGui.QApplication.exit)
+        self.ui.actionFind.triggered.connect(self.find)
+        self.ui.actionHelp_contents.triggered.connect(self.help_contents)
+        self.ui.actionIcon_mode.triggered.connect(self.icon_mode)
+        self.ui.actionImage_mode.triggered.connect(self.image_mode)
+        self.ui.actionOpen.triggered.connect(self.open_file)
+        self.ui.actionPaste.triggered.connect(self.paste)
+        self.ui.actionText_mode.triggered.connect(self.text_mode)
+        self.ui.actionSave.triggered.connect(self.save_file)
+        self.ui.actionSave_As.triggered.connect(self.save_file_as)
+        self.ui.actionStart.triggered.connect(self.processing_start)
+        self.ui.actionStop.triggered.connect(self.processing_stop)
+        self.ui.actionZoom_in.triggered.connect(self.zoom_in)
+        self.ui.actionZoom_out.triggered.connect(self.zoom_out)
+        
+    
+    def open_file(self):
+        pass
+    
+    
+    def save_file(self):
+        pass
+    
+    
+    def save_file_as(self):
+        pass
+    
+    
+    def cut(self):
+        pass
+    
+    
+    def copy(self):
+        pass
+    
+    
+    def paste(self):
+        pass
+    
+    
+    def arrange_scheme(self):
+        pass
+    
+    
+    def find(self):
+        pass
+    
+    
+    def delete(self):
+        pass
+    
+    
+    def processing_start(self):
+        pass
+    
+    
+    def processing_stop(self):
+        pass
+    
+    
+    def zoom_in(self):
+        pass
+    
+    
+    def zoom_out(self):
+        pass
+    
+    
+    def text_mode(self):
+        pass
+    
+    
+    def image_mode(self):
+        pass
+    
+    
+    def icon_mode(self):
+        pass
+    
+    
+    def help_contents(self):
+        pass
+    
+    
+    def about(self):
+        pass

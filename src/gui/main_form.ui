@@ -74,7 +74,7 @@
     </property>
     <addaction name="actionZoom_in"/>
     <addaction name="actionZoom_out"/>
-    <addaction name="actionBlock_mode"/>
+    <addaction name="actionText_mode"/>
     <addaction name="actionImage_mode"/>
     <addaction name="actionIcon_mode"/>
    </widget>
@@ -329,7 +329,7 @@
     <string>Zoom out</string>
    </property>
   </action>
-  <action name="actionBlock_mode">
+  <action name="actionText_mode">
    <property name="text">
     <string>Text mode</string>
    </property>

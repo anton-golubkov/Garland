@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_form.ui'
 #
-# Created: Fri Oct  7 22:46:52 2011
+# Created: Fri Oct  7 23:08:25 2011
 #      by: PySide UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -150,8 +150,8 @@ class Ui_MainWindow(object):
         self.actionZoom_in.setObjectName("actionZoom_in")
         self.actionZoom_out = QtGui.QAction(MainWindow)
         self.actionZoom_out.setObjectName("actionZoom_out")
-        self.actionBlock_mode = QtGui.QAction(MainWindow)
-        self.actionBlock_mode.setObjectName("actionBlock_mode")
+        self.actionText_mode = QtGui.QAction(MainWindow)
+        self.actionText_mode.setObjectName("actionText_mode")
         self.actionImage_mode = QtGui.QAction(MainWindow)
         self.actionImage_mode.setObjectName("actionImage_mode")
         self.actionIcon_mode = QtGui.QAction(MainWindow)
@@ -171,7 +171,7 @@ class Ui_MainWindow(object):
         self.menuEdit.addAction(self.actionArrange_scheme)
         self.menuView.addAction(self.actionZoom_in)
         self.menuView.addAction(self.actionZoom_out)
-        self.menuView.addAction(self.actionBlock_mode)
+        self.menuView.addAction(self.actionText_mode)
         self.menuView.addAction(self.actionImage_mode)
         self.menuView.addAction(self.actionIcon_mode)
         self.menuHelp.addAction(self.actionHelp_contents)
@@ -218,7 +218,7 @@ class Ui_MainWindow(object):
         self.actionArrange_scheme.setText(QtGui.QApplication.translate("MainWindow", "Arrange scheme", None, QtGui.QApplication.UnicodeUTF8))
         self.actionZoom_in.setText(QtGui.QApplication.translate("MainWindow", "Zoom in", None, QtGui.QApplication.UnicodeUTF8))
         self.actionZoom_out.setText(QtGui.QApplication.translate("MainWindow", "Zoom out", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionBlock_mode.setText(QtGui.QApplication.translate("MainWindow", "Text mode", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionText_mode.setText(QtGui.QApplication.translate("MainWindow", "Text mode", None, QtGui.QApplication.UnicodeUTF8))
         self.actionImage_mode.setText(QtGui.QApplication.translate("MainWindow", "Image mode", None, QtGui.QApplication.UnicodeUTF8))
         self.actionIcon_mode.setText(QtGui.QApplication.translate("MainWindow", "Icon mode", None, QtGui.QApplication.UnicodeUTF8))
 
