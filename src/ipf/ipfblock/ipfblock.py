@@ -70,6 +70,13 @@ class IPFBlock(object):
             return iport_name
         oport_name = dict_key_from_value(self.output_ports, port)
         return oport_name
+    
+    def get_preview_image(self):
+        """ Return block processing result in form of image
+        
+            If no result is available, function returns None 
+        """
+        return None
             
         
         

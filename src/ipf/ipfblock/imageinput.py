@@ -26,3 +26,8 @@ class ImageInput(ipfblock.IPFBlock):
         self.properties["file_name"] = Property(IPFStringType)
         
         
+    def get_preview_image(self):
+        return self.output_ports["output_image"].value
+        
+        
+        

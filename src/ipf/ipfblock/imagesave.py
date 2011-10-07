@@ -23,4 +23,5 @@ class ImageSave(ipfblock.IPFBlock):
         self.processing_function = processing.save_image
         self.properties["file_name"] = Property(IPFStringType)
         
-        
+    def get_preview_image(self):
+        return self.input_ports["input_image"].value  
