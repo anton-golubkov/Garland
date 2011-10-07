@@ -110,7 +110,7 @@ class MainForm(QtGui.QMainWindow):
     
     
     def processing_start(self):
-        pass
+        self.scheme.ipf_graph.process()
     
     
     def processing_stop(self):
