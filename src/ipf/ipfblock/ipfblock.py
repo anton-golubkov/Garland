@@ -38,7 +38,7 @@ class IPFBlock(object):
         if self.processing_function is not None:
             output = self.processing_function(input)
             for key in output:
-                if self.output_ports.has_key(key):
+                if self.output_ports.has_key(key) and output[key] is not None:
                     self.output_ports[key]._set_value(output[key])
                     
     def xml(self):

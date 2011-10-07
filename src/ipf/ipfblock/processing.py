@@ -18,8 +18,13 @@ def rgb2gray(input):
 
 def load_image(input):
     file_name = input["file_name"]
-    output_image = cv.LoadImage(file_name)
-    output = {"output_image" : output_image}
+    try:
+        output_image = cv.LoadImage(file_name)
+    except IOError:
+        # file not found, returns None
+        output = {"output_image": None}
+    else: 
+        output = {"output_image" : output_image}
     return output
 
 def save_image(input):
