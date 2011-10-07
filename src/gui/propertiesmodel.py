@@ -41,7 +41,7 @@ class PropertiesModel(QtCore.QAbstractTableModel):
             return None
         
         key = self.block.properties.keys()[index.row()]
-        value = self.block.properties[key]
+        value = self.block.properties[key].value
         
         if index.column() == 0:
             return key
@@ -56,7 +56,7 @@ class PropertiesModel(QtCore.QAbstractTableModel):
            role == QtCore.Qt.EditRole and \
            index.column() == 1:
             key = self.block.properties.keys()[index.row()]
-            self.block.properties[key] = value
+            self.block.properties[key].set_value(value)
             self.dataChanged.emit(index, index)
             return True
         else:
