@@ -338,6 +338,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.selected_block = block
         self.selected_block.selected = True
         self.selected_block.update()
+
         
         
         

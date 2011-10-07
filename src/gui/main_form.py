@@ -42,3 +42,6 @@ class MainForm(QtGui.QMainWindow):
             block_item.setText(0, block.type)
         
         self.ui.blocks_tree.insertTopLevelItems(0, category_items.values())
+        
+    def show_block_properties(self, block):
+        pass
