@@ -23,6 +23,11 @@ class Connection(object):
         self._oport.decrease_binded_count()
         self._iport.set_free()
         
+        
+    def contains_port(self, port):
+        return self._iport == port or self._oport == port
+        
+        
     def process(self):
         """ Send value from output port to input port """
         self._iport.pass_value(self._oport.get_value())

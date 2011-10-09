@@ -131,7 +131,7 @@ class MainForm(QtGui.QMainWindow):
     
     
     def delete(self):
-        pass
+        self.scheme.delete_selected()
     
     
     def processing_start(self):

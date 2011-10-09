@@ -22,7 +22,7 @@ class IPFGraph(object):
 
     def __init__(self):
         self.blocks = dict() # {"Block name" : IPFBlock}
-        self.connections = [] 
+        self.connections = set() 
         self._grid_width = 5
         self._grid_height = 5
         
@@ -48,12 +48,13 @@ class IPFGraph(object):
             
             
     def remove_block(self, block_name):
+        self.delete_connections_for_block(block_name)
         block = self.blocks[block_name]
         cell = self.get_block_cell(block)
         if cell is not None:
             row, column = cell
             self._grid_model[row][column] = None
-        del self.blocks[block_name]        
+        del self.blocks[block_name]      
     
     
     def add_connection(self, oport, iport):
@@ -62,7 +63,7 @@ class IPFGraph(object):
             Function raises exception ValueError if ports can`t be connected.
         """
         con = ipfblock.connection.Connection(oport, iport)
-        self.connections.append(con)
+        self.connections.add(con)
         
         
     def process(self):
@@ -178,8 +179,29 @@ class IPFGraph(object):
         else:
             raise ValueError("Max row count reached")
         
+        
     def add_column(self):
         if self.max_grid_width > self._grid_width:
             self._grid_width += 1
         else:
             raise ValueError("Max column count reached")
+        
+        
+    def delete_connections_for_block(self, block_name):
+        
+        connections_to_delete = []
+        for iport in self.blocks[block_name].input_ports.values():
+            for connection in self.connections:
+                if connection.contains_port(iport):
+                    connections_to_delete.append(connection)
+        for connection in connections_to_delete:
+            self.connections.remove(connection)
+        
+        connections_to_delete = []            
+        for oport in self.blocks[block_name].output_ports.values():                    
+            for connection in self.connections:
+                if connection.contains_port(oport):
+                    connections_to_delete.append(connection)
+        for connection in connections_to_delete:
+            self.connections.remove(connection)
+                    

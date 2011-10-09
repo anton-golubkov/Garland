@@ -24,12 +24,14 @@ class TestIPFGraph(unittest.TestCase):
         self.rgb2gray_block = ipf.ipfblock.rgb2gray.RGB2Gray()
         self.input_block.properties["file_name"].value = "test.png"
 
+    
     def test_add_block(self):
         self.ipf_graph.add_block("input_image", self.input_block)
         self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
         self.assertTrue("input_image" in self.ipf_graph.blocks.keys())
         self.assertTrue("rgb2gray1" in self.ipf_graph.blocks.keys())
         
+    
     def test_remove_block(self):
         self.ipf_graph.add_block("input_image", self.input_block)
         self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
@@ -39,6 +41,7 @@ class TestIPFGraph(unittest.TestCase):
         self.assertFalse("rgb2gray1" in self.ipf_graph.blocks.keys())
         self.assertTrue(len(self.ipf_graph.blocks) == 0)
     
+    
     def test_add_connection(self):
         self.ipf_graph.add_block("input_image", self.input_block)
         self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
@@ -46,9 +49,19 @@ class TestIPFGraph(unittest.TestCase):
         iport = self.rgb2gray_block.input_ports["input_image"]
         self.ipf_graph.add_connection(oport, iport)
         self.assertEqual(len(self.ipf_graph.connections), 1 )
-        connection = self.ipf_graph.connections[0]
-        self.assertEqual(connection._oport, oport)
-        self.assertEqual(connection._iport, iport)
+        for connection in self.ipf_graph.connections:
+            self.assertEqual(connection._oport, oport)
+            self.assertEqual(connection._iport, iport)
+    
+    
+    def test_delete_block_with_connections(self):
+        self.ipf_graph.add_block("input_image", self.input_block)
+        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
+        oport = self.input_block.output_ports["output_image"]
+        iport = self.rgb2gray_block.input_ports["input_image"]
+        self.ipf_graph.add_connection(oport, iport)
+        self.ipf_graph.remove_block("input_image")
+        self.assertEqual(len(self.ipf_graph.connections), 0 )
         
     
     def test_process(self):

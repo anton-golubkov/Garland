@@ -43,6 +43,7 @@ def load_image(input):
 def save_image(input):
     file_name = input["file_name"]
     saving_image = input["input_image"]
-    cv.SaveImage(file_name, saving_image)
+    if len(file_name) > 0:
+        cv.SaveImage(file_name, saving_image)
     return {}
     

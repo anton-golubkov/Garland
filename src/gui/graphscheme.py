@@ -31,6 +31,10 @@ class GraphScheme( QtGui.QGraphicsScene):
     def add_block(self, block, row, column):
         self.ipf_graph.add_block(block.name, block.ipf_block, row, column)
         self._grid.add_block(block, row, column)
+        
+        
+    def delete_selected(self):
+        self._grid.delete_selected()
 
 
 class GraphGrid(QtGui.QGraphicsRectItem):
@@ -49,8 +53,8 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.ipf_graph = ipf_graph
         self.adjust_grid_size()
         
-        # Set of BlockPrimitive objects
-        self.block_primitives = set()
+        # Set of GraphBlock objects
+        self.graph_blocks = set()
         
         # Dummy block used to show dragged block position
         self.dummy_block = QtGui.QGraphicsRectItem(self)
@@ -103,7 +107,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         
         """   
         block.setParentItem(self)
-        self.block_primitives.add(block)
+        self.graph_blocks.add(block)
         self.update_block_positions()
             
     
@@ -126,17 +130,19 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     def remove_block(self, block):
         block_name = self.ipf_graph.get_block_name(block.ipf_block)
         block.setParentItem(None)
+        self.scene().removeItem(block)
         self.ipf_graph.remove_block(block_name)
-        
+        self.graph_blocks.remove(block)
+        self.update_connection_arrows()
     
     def update_block_positions(self):
-        for block_primitive in self.block_primitives:
-            row, column = self.ipf_graph.get_block_cell(block_primitive.ipf_block)
+        for graph_block in self.graph_blocks:
+            row, column = self.ipf_graph.get_block_cell(graph_block.ipf_block)
             x, y = self.get_block_position(row, \
                                            column, \
                                            GraphBlock.block_width, \
                                            GraphBlock.block_width)
-            block_primitive.setPos(x, y)
+            graph_block.setPos(x, y)
                     
     
     def get_block_position(self, row, column, block_width, block_height):
@@ -297,9 +303,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         
         
     def get_block_primitive_from_block(self, block):
-        for block_primitive in self.block_primitives:
-            if block == block_primitive.ipf_block:
-                return block_primitive
+        for graph_block in self.graph_blocks:
+            if block == graph_block.ipf_block:
+                return graph_block
         return None
     
     
@@ -311,3 +317,11 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         return self.ipf_graph.get_grid_size()
             
         
+    def delete_selected(self):
+        if self.selected_block is not None:
+            self.remove_block(self.selected_block.parentItem())
+            del self.selected_block
+            self.selected_block = None
+            
+            
+    
