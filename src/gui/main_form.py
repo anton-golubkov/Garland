@@ -28,11 +28,19 @@ class MainForm(QtGui.QMainWindow):
         self.ui.graphicsView.setScene(self.scheme)
         self.ui.graphicsView.setAlignment( QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
         self.ui.graphicsView.setRenderHint(QtGui.QPainter.Antialiasing)
+        # Block preview objects 
+        self.previewPixmapItem1 = QtGui.QGraphicsPixmapItem()
+        self.previewPixmapItem2 = QtGui.QGraphicsPixmapItem()
+        self.previewScene1 = QtGui.QGraphicsScene()
+        self.previewScene2 = QtGui.QGraphicsScene()
+        self.previewScene1.addItem(self.previewPixmapItem1)
+        self.previewScene2.addItem(self.previewPixmapItem2)
+        self.ui.previewView1.setScene(self.previewScene1)
+        self.ui.previewView2.setScene(self.previewScene2)
         self.properties_model = None
         self.init_actions()
     
         
-
     def _init_blocks_widget(self):
         self.block_classes = get_ipfblock_classes()
         categories = set()
@@ -55,7 +63,8 @@ class MainForm(QtGui.QMainWindow):
         if ipl_image is not None:
             qimage = image_convert.iplimage_to_qimage(ipl_image)
             qpixmap = QtGui.QPixmap.fromImage(qimage)
-            self.ui.previewImage1.setPixmap(qpixmap)
+            self.previewPixmapItem1.setPixmap(qpixmap)
+            self.previewPixmapItem2.setPixmap(qpixmap)
         
         
     def show_block_properties(self, block):

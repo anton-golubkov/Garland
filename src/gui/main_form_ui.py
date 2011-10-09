@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_form.ui'
 #
-# Created: Fri Oct  7 23:08:25 2011
+# Created: Sun Oct  9 11:47:29 2011
 #      by: PySide UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -83,11 +83,9 @@ class Ui_MainWindow(object):
         self.keepPreview1 = QtGui.QCheckBox(self.dockWidgetContents_2)
         self.keepPreview1.setObjectName("keepPreview1")
         self.verticalLayout_3.addWidget(self.keepPreview1)
-        self.previewImage1 = QtGui.QLabel(self.dockWidgetContents_2)
-        self.previewImage1.setFrameShape(QtGui.QFrame.Box)
-        self.previewImage1.setFrameShadow(QtGui.QFrame.Sunken)
-        self.previewImage1.setObjectName("previewImage1")
-        self.verticalLayout_3.addWidget(self.previewImage1)
+        self.previewView1 = QtGui.QGraphicsView(self.dockWidgetContents_2)
+        self.previewView1.setObjectName("previewView1")
+        self.verticalLayout_3.addWidget(self.previewView1)
         self.line = QtGui.QFrame(self.dockWidgetContents_2)
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
@@ -96,11 +94,9 @@ class Ui_MainWindow(object):
         self.keepPreview2 = QtGui.QCheckBox(self.dockWidgetContents_2)
         self.keepPreview2.setObjectName("keepPreview2")
         self.verticalLayout_3.addWidget(self.keepPreview2)
-        self.previewImage2 = QtGui.QLabel(self.dockWidgetContents_2)
-        self.previewImage2.setFrameShape(QtGui.QFrame.Box)
-        self.previewImage2.setFrameShadow(QtGui.QFrame.Sunken)
-        self.previewImage2.setObjectName("previewImage2")
-        self.verticalLayout_3.addWidget(self.previewImage2)
+        self.previewView2 = QtGui.QGraphicsView(self.dockWidgetContents_2)
+        self.previewView2.setObjectName("previewView2")
+        self.verticalLayout_3.addWidget(self.previewView2)
         self.previewDock.setWidget(self.dockWidgetContents_2)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.previewDock)
         self.propertiesDock = QtGui.QDockWidget(MainWindow)
@@ -197,10 +193,8 @@ class Ui_MainWindow(object):
         self.menuProcessing.setTitle(QtGui.QApplication.translate("MainWindow", "Processing", None, QtGui.QApplication.UnicodeUTF8))
         self.blockTreeDock.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Processing blocks", None, QtGui.QApplication.UnicodeUTF8))
         self.previewDock.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Preview", None, QtGui.QApplication.UnicodeUTF8))
-        self.keepPreview1.setText(QtGui.QApplication.translate("MainWindow", "Keep", None, QtGui.QApplication.UnicodeUTF8))
-        self.previewImage1.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
-        self.keepPreview2.setText(QtGui.QApplication.translate("MainWindow", "Keep", None, QtGui.QApplication.UnicodeUTF8))
-        self.previewImage2.setText(QtGui.QApplication.translate("MainWindow", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
+        self.keepPreview1.setText(QtGui.QApplication.translate("MainWindow", "Keep block preview", None, QtGui.QApplication.UnicodeUTF8))
+        self.keepPreview2.setText(QtGui.QApplication.translate("MainWindow", "Keep block preview", None, QtGui.QApplication.UnicodeUTF8))
         self.propertiesDock.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Properties", None, QtGui.QApplication.UnicodeUTF8))
         self.actionOpen.setText(QtGui.QApplication.translate("MainWindow", "Open ...", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSave.setText(QtGui.QApplication.translate("MainWindow", "Save", None, QtGui.QApplication.UnicodeUTF8))

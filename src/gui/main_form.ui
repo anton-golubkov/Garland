@@ -165,22 +165,12 @@
      <item>
       <widget class="QCheckBox" name="keepPreview1">
        <property name="text">
-        <string>Keep</string>
+        <string>Keep block preview</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="previewImage1">
-       <property name="frameShape">
-        <enum>QFrame::Box</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
+      <widget class="QGraphicsView" name="previewView1"/>
      </item>
      <item>
       <widget class="Line" name="line">
@@ -192,22 +182,12 @@
      <item>
       <widget class="QCheckBox" name="keepPreview2">
        <property name="text">
-        <string>Keep</string>
+        <string>Keep block preview</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="previewImage2">
-       <property name="frameShape">
-        <enum>QFrame::Box</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Sunken</enum>
-       </property>
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
+      <widget class="QGraphicsView" name="previewView2"/>
      </item>
     </layout>
    </widget>
