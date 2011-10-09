@@ -65,6 +65,10 @@ class MainForm(QtGui.QMainWindow):
             qpixmap = QtGui.QPixmap.fromImage(qimage)
             self.previewPixmapItem1.setPixmap(qpixmap)
             self.previewPixmapItem2.setPixmap(qpixmap)
+            self.ui.previewView1.fitInView(self.previewPixmapItem1, \
+                                           QtCore.Qt.KeepAspectRatio)
+            self.ui.previewView2.fitInView(self.previewPixmapItem2, \
+                                           QtCore.Qt.KeepAspectRatio)
         
         
     def show_block_properties(self, block):
