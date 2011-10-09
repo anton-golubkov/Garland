@@ -22,7 +22,7 @@ class RGB2Gray(ipfblock.IPFBlock):
         self.processing_function = ipf.ipfblock.processing.rgb2gray
 
     def get_preview_image(self):
-        return self.output_ports["output_image"].value         
+        return IPFImage3cType.convert(self.output_ports["output_image"]._value)         
         
     
     

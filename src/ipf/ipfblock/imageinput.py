@@ -27,7 +27,7 @@ class ImageInput(ipfblock.IPFBlock):
         
         
     def get_preview_image(self):
-        return self.output_ports["output_image"].value
+        return self.output_ports["output_image"]._value
         
         
         

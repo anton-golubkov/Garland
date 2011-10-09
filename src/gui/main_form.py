@@ -5,6 +5,7 @@ from PySide import QtCore, QtGui
 from main_form_ui import Ui_MainWindow
 import os
 import sys
+import cv
 
 cmd_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
 if cmd_folder not in sys.path:
@@ -13,6 +14,7 @@ if cmd_folder not in sys.path:
 from ipf.ipfgraphloader import get_ipfblock_classes
 import graphscheme
 import propertiesmodel
+import image_convert
 
 
 class MainForm(QtGui.QMainWindow):
@@ -45,6 +47,16 @@ class MainForm(QtGui.QMainWindow):
             block_item.setText(0, block.type)
         
         self.ui.blocks_tree.insertTopLevelItems(0, category_items.values())
+        
+        
+    def block_selected(self, block):
+        self.show_block_properties(block)
+        ipl_image = block.get_preview_image()
+        if ipl_image is not None:
+            qimage = image_convert.iplimage_to_qimage(ipl_image)
+            qpixmap = QtGui.QPixmap.fromImage(qimage)
+            self.ui.previewImage1.setPixmap(qpixmap)
+        
         
     def show_block_properties(self, block):
         self.properties_model = propertiesmodel.PropertiesModel(block)

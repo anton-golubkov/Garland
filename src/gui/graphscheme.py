@@ -341,7 +341,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         
         ipf_block = block.parentItem().ipf_block
         main_form = self.scene().parent()
-        main_form.show_block_properties(ipf_block)
+        main_form.block_selected(ipf_block)
         
         
         
