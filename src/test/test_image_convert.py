@@ -68,26 +68,32 @@ class TestImageConvert(unittest.TestCase):
         
     def test_zero_ipl_to_pil(self):
         result_pil = gui.image_convert.iplimage_to_pilimage(self.zero_iplimage)
+        self.assertEqual(result_pil.size, (0, 0))
         
         
     def test_zero_pil_to_ipl(self):
         result_ipl = gui.image_convert.pilimage_to_iplimage(self.zero_pilimage)
+        self.assertEqual(cv.GetSize(result_ipl), (0, 0))
         
         
     def test_zero_ipl_to_q(self):
         result_q = gui.image_convert.iplimage_to_qimage(self.zero_iplimage)
+        self.assertEqual(result_q, self.zero_qimage)
         
         
     def test_zero_q_to_ipl(self):
         result_ipl = gui.image_convert.qimage_to_iplimage(self.zero_qimage)
+        self.assertEqual(cv.GetSize(result_ipl), (0, 0))
         
         
     def test_zero_pil_to_q(self):
         result_q = gui.image_convert.pilimage_to_qimage(self.zero_pilimage)
+        self.assertEqual(result_q, self.zero_qimage)
         
         
     def test_zero_q_to_pil(self):
         result_pil = gui.image_convert.qimage_to_pilimage(self.zero_qimage)
+        self.assertEqual(result_pil.size, (0, 0))
     
 
 if __name__ == '__main__':
