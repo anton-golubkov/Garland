@@ -31,7 +31,7 @@ class IPFImage1cType(ipftype.IPFType):
     @classmethod
     def default_value(cls):
         """ Return default value for this type """
-        return cv.CreateImage( (1, 1), cv.IPL_DEPTH_8U, 1)  
+        return cv.CreateImage( (0, 0), cv.IPL_DEPTH_8U, 1)  
     
     @classmethod
     def is_numeric(cls):

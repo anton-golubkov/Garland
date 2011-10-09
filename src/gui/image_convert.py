@@ -7,6 +7,9 @@ import PIL.Image
 import StringIO
 
 def pilimage_to_iplimage(pil_image):
+    # Check zero size of image 
+    if pil_image.size == (0, 0):
+        return cv.CreateImage( (0, 0), cv.IPL_DEPTH_8U, 3) 
     ipl_image = cv.CreateImageHeader(pil_image.size, cv.IPL_DEPTH_8U, 3)
     # The image rotation and reversion of the string is to swap RGB into BGR, 
     # that is used in OpenCV video encoding.
@@ -15,6 +18,9 @@ def pilimage_to_iplimage(pil_image):
 
 
 def pilimage_to_qimage(pil_image):
+    # Check zero size of image
+    if pil_image.size == (0, 0):
+        return QtGui.QImage()
     
     # There is something strange bug appears,
     # when returning QImage created from PIL data
@@ -32,7 +38,10 @@ def iplimage_to_pilimage(ipl_image):
         
         This function may be obsolete. Use ipl_image.as_pil_image() instead.
         """
-        # return ipl_image.as_pil_image()
+         # Check zero size of image
+        if cv.GetSize(ipl_image) == (0, 0):
+            return PIL.Image.Image()
+
         size = cv.GetSize(ipl_image)
         data = ipl_image.tostring()
         im_pil = PIL.Image.fromstring(
@@ -55,6 +64,10 @@ def qimage_to_iplimage( qimage):
 
     
 def qimage_to_pilimage(qimage):
+    # Check zero size of image
+    if (qimage.width(), qimage.height()) == (0, 0):
+        return PIL.Image.Image()
+     
     ba = QtCore.QByteArray()
     buffer = QtCore.QBuffer(ba)
     buffer.open(QtCore.QIODevice.WriteOnly)

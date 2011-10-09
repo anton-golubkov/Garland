@@ -9,11 +9,24 @@
 
 import cv
 
+
+def zero_image():
+    return cv.CreateImage( (0, 0), cv.IPL_DEPTH_8U, 3)
+    
+def zero_image_1c():
+    return cv.CreateImage( (0, 0), cv.IPL_DEPTH_8U, 1)
+
+def image_empty(image):
+    return cv.GetSize(image) == (0, 0)
+
 def rgb2gray(input):
     input_image = input["input_image"]
-    gray_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
-    cv.CvtColor(input_image, gray_image, cv.CV_RGB2GRAY)
-    output = {"output_image" : gray_image}
+    if not image_empty(input_image):
+        gray_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
+        cv.CvtColor(input_image, gray_image, cv.CV_RGB2GRAY)
+        output = {"output_image" : gray_image}
+    else:
+        output = {"output_image" : zero_image_1c()}
     return output
 
 def load_image(input):
@@ -21,8 +34,8 @@ def load_image(input):
     try:
         output_image = cv.LoadImage(file_name)
     except IOError:
-        # file not found, returns None
-        output = {"output_image": None}
+        # file not found, returns zero image
+        output = {"output_image": zero_image()}
     else: 
         output = {"output_image" : output_image}
     return output

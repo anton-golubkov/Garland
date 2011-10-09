@@ -19,6 +19,9 @@ class TestImageConvert(unittest.TestCase):
         self.iplimage = cv.LoadImage("test.png")
         self.pilimage = PIL.Image.open("test.png")
         self.qimage = QtGui.QImage("test.png")
+        self.zero_iplimage = cv.CreateImage( (0, 0), cv.IPL_DEPTH_8U, 3)
+        self.zero_pilimage = PIL.Image.Image()
+        self.zero_qimage = QtGui.QImage()
         
         
     def images_equal(self, filename1, filename2):
@@ -62,6 +65,29 @@ class TestImageConvert(unittest.TestCase):
         result_qimage.save("test_ipl_qimage.png")
         self.assertTrue(self.images_equal("test.png", "test_ipl_qimage.png"))
         
+        
+    def test_zero_ipl_to_pil(self):
+        result_pil = gui.image_convert.iplimage_to_pilimage(self.zero_iplimage)
+        
+        
+    def test_zero_pil_to_ipl(self):
+        result_ipl = gui.image_convert.pilimage_to_iplimage(self.zero_pilimage)
+        
+        
+    def test_zero_ipl_to_q(self):
+        result_q = gui.image_convert.iplimage_to_qimage(self.zero_iplimage)
+        
+        
+    def test_zero_q_to_ipl(self):
+        result_ipl = gui.image_convert.qimage_to_iplimage(self.zero_qimage)
+        
+        
+    def test_zero_pil_to_q(self):
+        result_q = gui.image_convert.pilimage_to_qimage(self.zero_pilimage)
+        
+        
+    def test_zero_q_to_pil(self):
+        result_pil = gui.image_convert.qimage_to_pilimage(self.zero_qimage)
     
 
 if __name__ == '__main__':
