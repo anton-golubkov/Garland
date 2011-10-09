@@ -168,7 +168,7 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         grid.disable_dummy_block()
         pos = self.mapToScene(event.pos())
         row, column = grid.get_cell_in_point( (pos.x(), pos.y()) )
-        block_row, block_column = grid.get_block_cell(block)
+        block_row, block_column = grid.get_block_cell(block.ipf_block)
         grid_width, grid_height = grid.get_grid_size()
         if (row != block_row or column != block_column) and \
            row < grid_height and \

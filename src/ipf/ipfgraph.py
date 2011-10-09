@@ -16,15 +16,45 @@ class IPFGraph(object):
         This class represents image processing chain. 
     """
 
+    # Grid model constants 
+    max_grid_width = 20
+    max_grid_height = 200
+
     def __init__(self):
         self.blocks = dict() # {"Block name" : IPFBlock}
         self.connections = [] 
+        self._grid_width = 5
+        self._grid_height = 5
         
-    def add_block(self, block_name, ipf_block):
-        self.blocks[block_name] = ipf_block
+        # Create empty 2-dimension list for blocks in grid
+        self._grid_model = [ [None for j in xrange(self.max_grid_width)] \
+                             for i in xrange(self.max_grid_height) ]
     
+    
+    def add_block(self, block_name, ipf_block, row=-1, column=-1):
+        self.blocks[block_name] = ipf_block
+        if row >= 0 and column >= 0:
+            # Add block to grid_model
+            if not self.grid_cell_empty(row, column):
+                # This cell is occupied 
+                raise ValueError("Cell (%d, %d) already occupied" % \
+                                 (row, column))
+            
+            if not self.cell_in_grid(row, column):
+                raise ValueError("Wrong cell address: (%s, %s); grid size: (%s, %s)" % \
+                              (column, row, self._grid_width, self._grid_height))
+                
+            self._grid_model[row][column] = ipf_block
+            
+            
     def remove_block(self, block_name):
-        del self.blocks[block_name]
+        block = self.blocks[block_name]
+        cell = self.get_block_cell(block)
+        if cell is not None:
+            row, column = cell
+            self._grid_model[row][column] = None
+        del self.blocks[block_name]        
+    
     
     def add_connection(self, oport, iport):
         """ Add connection between input (iport) and output (oport) ports 
@@ -33,6 +63,7 @@ class IPFGraph(object):
         """
         con = ipfblock.connection.Connection(oport, iport)
         self.connections.append(con)
+        
         
     def process(self):
         """ Process image processing flow for IPFGraph """
@@ -66,6 +97,7 @@ class IPFGraph(object):
     def get_block_name(self, block):
         return dict_key_from_value(self.blocks, block)
     
+    
     def xml(self):
         """ Return IPFGraph as XML element
         
@@ -96,6 +128,7 @@ class IPFGraph(object):
                                    {"block" : iblock_name,
                                     "port" : iport_name})
         return graph
+    
             
     def save(self, file_name):
         """ Save IPFGraph as XML file 
@@ -108,8 +141,45 @@ class IPFGraph(object):
         with  open(file_name, "w") as file:
             file.write(str_root)
         
-    def load(self, file_name):
-        pass
+    
+    def get_grid_size(self):
+        return (self._grid_width, self._grid_height)
         
+    
+    def grid_cell_empty(self, row, column):
+        return self._grid_model[row][column] is None
+    
+    
+    def cell_in_grid(self, row, column):
+        return row >= 0 and row < self._grid_height and \
+               column >= 0 and column < self._grid_width
+               
+    
+    def get_block_cell(self, block):
+        for row in range(self._grid_height):
+            for column in range(self._grid_width):
+                if self._grid_model[row][column] == block:
+                    return (row, column)
+        return None
+    
+    def move_block(self, block, row, column):
+        from_cell = self.get_block_cell(block)
+        if from_cell is not None and self.grid_cell_empty(row, column):
+            block_row, block_column = from_cell
+            self._grid_model[block_row][block_column] = None
+            self._grid_model[row][column] = block
+        else:
+            raise ValueError("Can`t move block to (%d, %d)" % \
+                                 (row, column)) 
+            
+    def add_row(self):
+        if self.max_grid_height > self._grid_height:
+            self._grid_height += 1
+        else:
+            raise ValueError("Max row count reached")
         
-        
+    def add_column(self):
+        if self.max_grid_width > self._grid_width:
+            self._grid_width += 1
+        else:
+            raise ValueError("Max column count reached")
