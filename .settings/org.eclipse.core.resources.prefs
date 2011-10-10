@@ -1,4 +1,4 @@
-#Sat Oct 08 21:43:17 OMST 2011
+#Mon Oct 10 12:57:58 OMST 2011
 eclipse.preferences.version=1
 encoding//src/gui/graphblock.py=utf-8
 encoding//src/gui/graphscheme.py=utf-8
@@ -8,6 +8,7 @@ encoding//src/gui/main_form.py=utf-8
 encoding//src/gui/main_form_ui.py=utf-8
 encoding//src/gui/propertiesmodel.py=utf-8
 encoding//src/ipf/ipfblock/connection.py=utf-8
+encoding//src/ipf/ipfblock/erosion.py=utf-8
 encoding//src/ipf/ipfblock/imageinput.py=utf-8
 encoding//src/ipf/ipfblock/imagesave.py=utf-8
 encoding//src/ipf/ipfblock/ioport.py=utf-8
@@ -17,6 +18,8 @@ encoding//src/ipf/ipfblock/property.py=utf-8
 encoding//src/ipf/ipfblock/rgb2gray.py=utf-8
 encoding//src/ipf/ipfgraph.py=utf-8
 encoding//src/ipf/ipfgraphloader.py=utf-8
+encoding//src/ipf/ipftype/ipfdicttype.py=utf-8
+encoding//src/ipf/ipftype/ipfelementstype.py=utf-8
 encoding//src/ipf/ipftype/ipffloattype.py=utf-8
 encoding//src/ipf/ipftype/ipfimage1ctype.py=utf-8
 encoding//src/ipf/ipftype/ipfimage3ctype.py=utf-8
@@ -32,4 +35,5 @@ encoding//src/test/test_ioport.py=utf-8
 encoding//src/test/test_ipfgraph.py=utf-8
 encoding//src/test/test_ipfgraphloader.py=utf-8
 encoding//src/test/test_ipftype.py=utf-8
+encoding//src/test/test_property.py=utf-8
 encoding//src/test/test_rgb2grayblock.py=utf-8

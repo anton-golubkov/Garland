@@ -12,12 +12,15 @@ import cv
 
 def zero_image():
     return cv.CreateImage( (0, 0), cv.IPL_DEPTH_8U, 3)
+
     
 def zero_image_1c():
     return cv.CreateImage( (0, 0), cv.IPL_DEPTH_8U, 1)
 
+
 def image_empty(image):
     return cv.GetSize(image) == (0, 0)
+
 
 def rgb2gray(input):
     input_image = input["input_image"]
@@ -47,3 +50,15 @@ def save_image(input):
         cv.SaveImage(file_name, saving_image)
     return {}
     
+    
+def erosion(input):
+    input_image = input["input_image"]
+    element = input["element"]
+    iterations = input["iterations"]
+    if not image_empty(input_image):
+        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
+        cv.Erode(input_image, output_image, element, iterations)
+        output = {"output_image": output_image}
+    else:
+        output = {"output_image" : zero_image()}
+    return output
