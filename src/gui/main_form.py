@@ -15,7 +15,7 @@ from ipf.ipfgraphloader import get_ipfblock_classes
 import graphscheme
 import propertiesmodel
 import image_convert
-
+import propertyeditor
 
 class MainForm(QtGui.QMainWindow):
     
@@ -39,6 +39,10 @@ class MainForm(QtGui.QMainWindow):
         self.ui.previewView2.setScene(self.previewScene2)
         self.properties_model = None
         self.init_actions()
+        
+        # Set property editor item delegate
+        self.editor_delegate = propertyeditor.PropertyEditorDelegate()
+        self.ui.propertyTable.setItemDelegate(self.editor_delegate)
     
         
     def _init_blocks_widget(self):

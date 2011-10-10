@@ -28,7 +28,7 @@ class Property(object):
             raise ValueError("Value %s outside property limits (%s, %s)" %\
                              (new_value, self.min_value, self.max_value))
 
-        self._value = self._data_type.convert(new_value)
+        self._value = self._data_type.convert(value)
         
     
     
@@ -79,4 +79,8 @@ class Property(object):
         else:
             property_element.attrib["max_value"] = ""
         return property_element
+    
+    
+    def get_data_type(self):
+        return self._data_type
     

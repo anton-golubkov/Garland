@@ -10,7 +10,6 @@ if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
 
-
 class PropertiesModel(QtCore.QAbstractTableModel):
     """ Subclass of QAbstractTableModel for handle IPFBlock properties data
     
@@ -21,11 +20,11 @@ class PropertiesModel(QtCore.QAbstractTableModel):
         self.block = block
         
         
-    def rowCount(self, index):
+    def rowCount(self, index=None):
         return len(self.block.properties)
     
     
-    def columnCount(self, index):
+    def columnCount(self, index=None):
         return 2
     
     
@@ -41,7 +40,7 @@ class PropertiesModel(QtCore.QAbstractTableModel):
             return None
         
         key = self.block.properties.keys()[index.row()]
-        value = self.block.properties[key].get_value()
+        value = self.block.properties[key].get_value_representation()
         
         if index.column() == 0:
             return key
@@ -85,5 +84,22 @@ class PropertiesModel(QtCore.QAbstractTableModel):
                    QtCore.Qt.ItemIsEditable
         else:
             return super(PropertiesModel, self).flags(index)
+        
+    
+    def get_property(self, row):
+        """ PropertiesModel specific function
+        
+            Returns property for given row
+        """
+        
+        if row >= self.rowCount():
+            return None
+        
+        key = self.block.properties.keys()[row]
+        return self.block.properties[key]
+        
+
+
+        
         
         
