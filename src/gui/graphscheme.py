@@ -237,6 +237,10 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         ipf_graph.add_connection(oport_prim.ipf_port, iport_prim.ipf_port)
         self.update_connection_arrows()
         
+        # Notify main_form about graph changing
+        main_form = self.scene().parent()
+        main_form.graph_changed()
+        
         
     def update_connection_arrows(self):
         """ Recreate all connection lines in GraphScheme
@@ -289,7 +293,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         pen.setJoinStyle(QtCore.Qt.RoundJoin)
         pen.setCapStyle(QtCore.Qt.RoundCap)
         arrow.setPen(pen)
-        
+
         return arrow
     
     

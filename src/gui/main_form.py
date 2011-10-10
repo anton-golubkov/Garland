@@ -74,6 +74,7 @@ class MainForm(QtGui.QMainWindow):
             self.previewBlock2 = block
         self.update_window()
         
+        
     def show_block_properties(self, block):
         self.properties_model = propertiesmodel.PropertiesModel(block)
         self.ui.propertyTable.setModel(self.properties_model)
@@ -212,4 +213,9 @@ class MainForm(QtGui.QMainWindow):
                 previewPixmapItem.setPixmap(qpixmap)
                 previewView.fitInView(previewPixmapItem, \
                                                QtCore.Qt.KeepAspectRatio)
-                
+        
+    def graph_changed(self):
+        """ Notify function, called when image processing graph is changed
+        
+        """
+        self.update_window()
