@@ -171,7 +171,9 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         block_row, block_column = grid.get_block_cell(block.ipf_block)
         grid_width, grid_height = grid.get_grid_size()
         if (row != block_row or column != block_column) and \
+           row >= 0 and \
            row < grid_height and \
+           column >= 0 and \
            column < grid_width:
             grid.move_block(block, row, column)
         self.setCursor(QtCore.Qt.ArrowCursor)

@@ -139,6 +139,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.graph_blocks.remove(block)
         self.update_connection_arrows()
     
+    
     def update_block_positions(self):
         for graph_block in self.graph_blocks:
             row, column = self.ipf_graph.get_block_cell(graph_block.ipf_block)
@@ -169,7 +170,10 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         
     def set_dummy_block_cell(self, row, column):
         grid_width, grid_height = self.ipf_graph.get_grid_size()
-        if row >= grid_height or column >= grid_width:
+        if row < 0 or \
+           row >= grid_height or \
+           column < 0 or\
+           column >= grid_width:
             # Don`t allow move block outside grid
             return
         rect = self.dummy_block.rect()
