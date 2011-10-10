@@ -67,7 +67,7 @@ class Property(object):
         property_element = Element("PropertyValue")
         property_element.attrib["data_type"] = self._data_type.name
         if self._value is not None:
-            property_element.attrib["value"] = str(self.get_value())
+            property_element.attrib["value"] = str(self.get_value_representation())
         else:
             property_element.attrib["value"] = ""
         if self.min_value is not None:
