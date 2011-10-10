@@ -41,7 +41,7 @@ class PropertiesModel(QtCore.QAbstractTableModel):
             return None
         
         key = self.block.properties.keys()[index.row()]
-        value = self.block.properties[key].value
+        value = self.block.properties[key].get_value()
         
         if index.column() == 0:
             return key

@@ -38,22 +38,37 @@ class IPFType(object):
         """ Return default value for this type """
         return None    
     
+    
     @classmethod
     def is_numeric(cls):
         return False
+    
     
     @classmethod
     def is_image(cls):
         return False
     
+    
     @classmethod
     def channel_count(cls):
         return 0
+    
     
     @classmethod
     def is_array(cls):
         return False
     
+    
+    @classmethod
+    def get_value_representation(cls, value):
+        """ Return displaying data for value """
+        return value
+    
+    
+    @classmethod
+    def get_value_list(cls):
+        """ Return list of all possible values """
+        return None
     
     
         

@@ -9,17 +9,55 @@ class Property(object):
     
     """
 
-    def __init__(self, data_type):
+    def __init__(self, data_type, min_value=None, max_value=None):
         self._data_type = data_type 
-        self.value = data_type.default_value()
-        self.min_value = None
-        self.max_value = None
+        self._value = data_type.default_value()
+        self.min_value = min_value
+        self.max_value = max_value
+        
         
     def set_value(self, value):
         """ Set value to property (use data_type.convert() function)
         
         """
-        self.value = self._data_type.convert(value)
+        new_value = self._data_type.convert(value)
+        
+        # Test value limits
+        if (self.min_value is not None and new_value < self.min_value) or \
+           (self.max_value is not None and new_value > self.max_value): 
+            raise ValueError("Value %s outside property limits (%s, %s)" %\
+                             (new_value, self.min_value, self.max_value))
+
+        self._value = self._data_type.convert(new_value)
+        
+    
+    
+    def get_value(self):
+        """ Get value of property
+        
+        """
+        
+        return self._value 
+    
+    
+    def get_value_representation(self):
+        """ Get view of value
+        
+            Function using for Dictionary data types, witch have name and data
+            for values
+        
+        """
+        
+        return self._data_type.get_value_representation(self._value)
+    
+    
+    def get_value_list(self):
+        """ Return list of all possible values
+        
+            Function used for Dictionary data types
+        """
+        
+        return self._data_type.get_value_list()
     
 
     def xml(self):
@@ -28,8 +66,8 @@ class Property(object):
         """
         property_element = Element("PropertyValue")
         property_element.attrib["data_type"] = self._data_type.name
-        if self.value is not None:
-            property_element.attrib["value"] = str(self.value)
+        if self._value is not None:
+            property_element.attrib["value"] = str(self.get_value())
         else:
             property_element.attrib["value"] = ""
         if self.min_value is not None:

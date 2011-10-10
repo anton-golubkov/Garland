@@ -15,7 +15,7 @@ import ipf.ipfblock.imagesave
 class TestImageSaveBlock(unittest.TestCase):
     def setUp(self):
         self.block = ipf.ipfblock.imagesave.ImageSave()
-        self.block.properties["file_name"].value = "test_saved.png"
+        self.block.properties["file_name"].set_value("test_saved.png")
     
         
     def test_save_image(self):
@@ -27,6 +27,7 @@ class TestImageSaveBlock(unittest.TestCase):
         self.block.process()
         saved_image = cv.LoadImage("test_saved.png")
         self.assertEqual(saved_image.tostring(), image.tostring())
+        
         
     def tearDown(self):
         os.remove("test_saved.png")

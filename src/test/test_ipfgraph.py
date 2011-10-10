@@ -22,7 +22,7 @@ class TestIPFGraph(unittest.TestCase):
         self.ipf_graph = ipf.ipfgraph.IPFGraph()
         self.input_block = ipf.ipfblock.imageinput.ImageInput()
         self.rgb2gray_block = ipf.ipfblock.rgb2gray.RGB2Gray()
-        self.input_block.properties["file_name"].value = "test.png"
+        self.input_block.properties["file_name"].set_value("test.png")
 
     
     def test_add_block(self):
