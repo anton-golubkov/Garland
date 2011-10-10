@@ -59,8 +59,8 @@ class TestIPFType(unittest.TestCase):
         self.assertEqual([255, 255, 255], self.rgb1.convert((255,255,255)))
         
         
-        i1c = cv.LoadImage("test.png", 0)
-        i3c = cv.LoadImage("test.png")
+        i1c = cv.LoadImage("files/test.png", 0)
+        i3c = cv.LoadImage("files/test.png")
         
         i3c_gray = cv.CreateImage(cv.GetSize(i1c), cv.IPL_DEPTH_8U, 3)
         cv.Merge(i1c, i1c, i1c, None, i3c_gray)

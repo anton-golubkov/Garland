@@ -15,7 +15,7 @@ import ipf.ipfblock.rgb2gray
 class TestRGB2GrayBlock(unittest.TestCase):
     def setUp(self):
         self.block = ipf.ipfblock.rgb2gray.RGB2Gray()
-        self.test_image = cv.LoadImage("test.png")
+        self.test_image = cv.LoadImage("files/test.png")
         self.block.input_ports["input_image"].pass_value(self.test_image)
         
         
@@ -40,9 +40,9 @@ class TestRGB2GrayBlock(unittest.TestCase):
     def test_gray_image(self):
         self.block.process()
         output_gray_image = self.block.output_ports["output_image"].get_value()
-        cv.SaveImage("test_gray_out.png", output_gray_image)
-        output_gray_image = cv.LoadImage("test_gray_out.png")
-        gray_image = cv.LoadImage("test_gray.png")
+        cv.SaveImage("files/test_gray_out.png", output_gray_image)
+        output_gray_image = cv.LoadImage("files/test_gray_out.png")
+        gray_image = cv.LoadImage("files/test_gray.png")
         self.assertEqual(output_gray_image.tostring(), gray_image.tostring())
         
         

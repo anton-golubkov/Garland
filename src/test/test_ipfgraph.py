@@ -22,7 +22,7 @@ class TestIPFGraph(unittest.TestCase):
         self.ipf_graph = ipf.ipfgraph.IPFGraph()
         self.input_block = ipf.ipfblock.imageinput.ImageInput()
         self.rgb2gray_block = ipf.ipfblock.rgb2gray.RGB2Gray()
-        self.input_block.properties["file_name"].set_value("test.png")
+        self.input_block.properties["file_name"].set_value("files/test.png")
 
     
     def test_add_block(self):
@@ -72,7 +72,7 @@ class TestIPFGraph(unittest.TestCase):
         self.ipf_graph.add_connection(oport, iport)
         self.ipf_graph.process()
         # This flow must return gray image
-        test_image = cv.LoadImage("test.png")
+        test_image = cv.LoadImage("files/test.png")
         gray_image = cv.CreateImage(cv.GetSize(test_image), cv.IPL_DEPTH_8U, 1)
         cv.CvtColor(test_image, gray_image, cv.CV_RGB2GRAY)
         processed_image = self.rgb2gray_block.output_ports["output_image"].get_value() 
@@ -85,8 +85,8 @@ class TestIPFGraph(unittest.TestCase):
         iport = self.rgb2gray_block.input_ports["input_image"]
         self.ipf_graph.add_connection(oport, iport)
         self.ipf_graph.process()
-        self.ipf_graph.save("test.xml")
-        self.assertTrue(filecmp.cmp("test.xml", "test_file_reference.xml"))
+        self.ipf_graph.save("files/test.xml")
+        self.assertTrue(filecmp.cmp("files/test.xml", "files/test_file_reference.xml"))
 
 
 if __name__ == "__main__":

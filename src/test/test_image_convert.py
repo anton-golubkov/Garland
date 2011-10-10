@@ -16,9 +16,9 @@ import gui.image_convert
 class TestImageConvert(unittest.TestCase):
     
     def setUp(self):
-        self.iplimage = cv.LoadImage("test.png")
-        self.pilimage = PIL.Image.open("test.png")
-        self.qimage = QtGui.QImage("test.png")
+        self.iplimage = cv.LoadImage("files/test.png")
+        self.pilimage = PIL.Image.open("files/test.png")
+        self.qimage = QtGui.QImage("files/test.png")
         self.zero_iplimage = cv.CreateImage( (0, 0), cv.IPL_DEPTH_8U, 3)
         self.zero_pilimage = PIL.Image.Image()
         self.zero_qimage = QtGui.QImage()
@@ -32,38 +32,38 @@ class TestImageConvert(unittest.TestCase):
     
     def test_ipl_to_pil(self):    
         result_pil = gui.image_convert.iplimage_to_pilimage(self.iplimage)
-        result_pil.save("test_ipl_pil.png", "PNG")
-        self.assertTrue(self.images_equal("test.png", "test_ipl_pil.png"))
+        result_pil.save("files/test_ipl_pil.png", "PNG")
+        self.assertTrue(self.images_equal("files/test.png", "files/test_ipl_pil.png"))
     
     
     def test_pil_to_ipl(self):
         result_ipl = gui.image_convert.pilimage_to_iplimage(self.pilimage)
-        cv.SaveImage("test_pil_ipl.png", result_ipl)
-        self.assertTrue(self.images_equal("test.png", "test_pil_ipl.png"))
+        cv.SaveImage("files/test_pil_ipl.png", result_ipl)
+        self.assertTrue(self.images_equal("files/test.png", "files/test_pil_ipl.png"))
         
         
     def test_qimage_to_ipl(self):
         result_ipl = gui.image_convert.qimage_to_iplimage(self.qimage)
-        cv.SaveImage("test_qimage_ipl.png", result_ipl)
-        self.assertTrue(self.images_equal("test.png", "test_qimage_ipl.png"))
+        cv.SaveImage("files/test_qimage_ipl.png", result_ipl)
+        self.assertTrue(self.images_equal("files/test.png", "files/test_qimage_ipl.png"))
 
 
     def test_pil_to_qimage(self):
         result_qimage = gui.image_convert.pilimage_to_qimage(self.pilimage)
-        result_qimage.save("test_pil_qimage.png")
-        self.assertTrue(self.images_equal("test.png", "test_pil_qimage.png"))
+        result_qimage.save("files/test_pil_qimage.png")
+        self.assertTrue(self.images_equal("files/test.png", "files/test_pil_qimage.png"))
 
 
     def test_qimage_to_pil(self):
         result_pil = gui.image_convert.qimage_to_pilimage(self.qimage)
-        result_pil.save("test_qimage_pil.png")
-        self.assertTrue(self.images_equal("test.png", "test_qimage_pil.png"))
+        result_pil.save("files/test_qimage_pil.png")
+        self.assertTrue(self.images_equal("files/test.png", "files/test_qimage_pil.png"))
 
 
     def test_ipl_to_qimage(self):
         result_qimage = gui.image_convert.iplimage_to_qimage(self.iplimage)
-        result_qimage.save("test_ipl_qimage.png")
-        self.assertTrue(self.images_equal("test.png", "test_ipl_qimage.png"))
+        result_qimage.save("files/test_ipl_qimage.png")
+        self.assertTrue(self.images_equal("files/test.png", "files/test_ipl_qimage.png"))
         
         
     def test_zero_ipl_to_pil(self):

@@ -26,9 +26,9 @@ class TestIPFGraphLoader(unittest.TestCase):
         self.assertEqual(block_classes['ImageInput'], ImageInput)
     
     def test_load_and_save_file(self):
-        graph = ipf.ipfgraphloader.load("test.xml")
-        graph.save("test_load_save.xml")
-        self.assertTrue(filecmp.cmp("test_load_save.xml", "test.xml"))
+        graph = ipf.ipfgraphloader.load("files/test.xml")
+        graph.save("files/test_load_save.xml")
+        self.assertTrue(filecmp.cmp("files/test_load_save.xml", "files/test.xml"))
         
         
 if __name__ == "__main__":

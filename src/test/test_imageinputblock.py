@@ -15,7 +15,7 @@ import ipf.ipfblock.imageinput
 class TestImageInputBlock(unittest.TestCase):
     def setUp(self):
         self.block = ipf.ipfblock.imageinput.ImageInput()
-        self.block.properties["file_name"].set_value("test.png")
+        self.block.properties["file_name"].set_value("files/test.png")
     
         
     def test_load_image(self):
@@ -24,7 +24,7 @@ class TestImageInputBlock(unittest.TestCase):
         """
         self.block.process()
         loaded_image = self.block.output_ports["output_image"].get_value()
-        test_image = cv.LoadImage("test.png")
+        test_image = cv.LoadImage("files/test.png")
         self.assertEqual(loaded_image.tostring(), test_image.tostring())
         
         
