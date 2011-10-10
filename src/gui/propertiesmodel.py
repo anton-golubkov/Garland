@@ -15,13 +15,16 @@ class PropertiesModel(QtCore.QAbstractTableModel):
     
     """
     
-    def __init__(self, block):
+    def __init__(self, block=None):
         super(PropertiesModel, self).__init__()
         self.block = block
         
         
     def rowCount(self, index=None):
-        return len(self.block.properties)
+        if self.block is None:
+            return 0
+        else:
+            return len(self.block.properties)
     
     
     def columnCount(self, index=None):
@@ -37,6 +40,9 @@ class PropertiesModel(QtCore.QAbstractTableModel):
         
         if index.row() >= self.rowCount(index) or \
            index.column() >= self.columnCount(index):
+            return None
+        
+        if self.block is None:
             return None
         
         key = self.block.properties.keys()[index.row()]
@@ -100,6 +106,4 @@ class PropertiesModel(QtCore.QAbstractTableModel):
         
 
 
-        
-        
         

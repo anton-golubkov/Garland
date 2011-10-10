@@ -43,6 +43,11 @@ class MainForm(QtGui.QMainWindow):
         # Set property editor item delegate
         self.editor_delegate = propertyeditor.PropertyEditorDelegate()
         self.ui.propertyTable.setItemDelegate(self.editor_delegate)
+        self.editor_delegate.closeEditor.connect(self.update_window)
+        
+        # Preview block
+        self.previewBlock1 = None
+        self.previewBlock2 = None
     
         
     def _init_blocks_widget(self):
@@ -63,17 +68,11 @@ class MainForm(QtGui.QMainWindow):
         
     def block_selected(self, block):
         self.show_block_properties(block)
-        ipl_image = block.get_preview_image()
-        if ipl_image is not None:
-            qimage = image_convert.iplimage_to_qimage(ipl_image)
-            qpixmap = QtGui.QPixmap.fromImage(qimage)
-            self.previewPixmapItem1.setPixmap(qpixmap)
-            self.previewPixmapItem2.setPixmap(qpixmap)
-            self.ui.previewView1.fitInView(self.previewPixmapItem1, \
-                                           QtCore.Qt.KeepAspectRatio)
-            self.ui.previewView2.fitInView(self.previewPixmapItem2, \
-                                           QtCore.Qt.KeepAspectRatio)
-        
+        if not self.ui.keepPreview1.isChecked():
+            self.previewBlock1 = block
+        if not self.ui.keepPreview2.isChecked():
+            self.previewBlock2 = block
+        self.update_window()
         
     def show_block_properties(self, block):
         self.properties_model = propertiesmodel.PropertiesModel(block)
@@ -135,11 +134,20 @@ class MainForm(QtGui.QMainWindow):
     
     
     def delete(self):
+        selected_block = self.scheme.get_selected_block()
+        if self.previewBlock1 == selected_block:
+            self.previewBlock1 = None
+        if self.previewBlock2 == selected_block:
+            self.previewBlock2 = None
+        self.properties_model = propertiesmodel.PropertiesModel()
+        self.ui.propertyTable.setModel(self.properties_model)
         self.scheme.delete_selected()
+        self.update_window()
     
     
     def processing_start(self):
         self.scheme.ipf_graph.process()
+        self.update_window()
     
     
     def processing_stop(self):
@@ -172,3 +180,36 @@ class MainForm(QtGui.QMainWindow):
     
     def about(self):
         pass
+    
+    
+    def update_window(self):
+        """ Update all window GUI elements
+        
+        """
+        # Perform image processing 
+        self.scheme.ipf_graph.process()
+        
+        self._update_preview(self.previewBlock1, 
+                             self.previewPixmapItem1, 
+                             self.ui.previewView1)
+        self._update_preview(self.previewBlock2, 
+                             self.previewPixmapItem2, 
+                             self.ui.previewView2)
+        
+        
+    
+    def _update_preview(self, block, previewPixmapItem, previewView):
+        """ Update preview image for block in previewPixmapItem
+        
+        """
+        if block is None:
+            previewPixmapItem.setPixmap(QtGui.QPixmap())
+        else:
+            ipl_image = block.get_preview_image()
+            if ipl_image is not None:
+                qimage = image_convert.iplimage_to_qimage(ipl_image)
+                qpixmap = QtGui.QPixmap.fromImage(qimage)
+                previewPixmapItem.setPixmap(qpixmap)
+                previewView.fitInView(previewPixmapItem, \
+                                               QtCore.Qt.KeepAspectRatio)
+                

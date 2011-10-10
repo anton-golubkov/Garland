@@ -35,6 +35,10 @@ class GraphScheme( QtGui.QGraphicsScene):
         
     def delete_selected(self):
         self._grid.delete_selected()
+        
+        
+    def get_selected_block(self):
+        return self._grid.get_selected_block()
 
 
 class GraphGrid(QtGui.QGraphicsRectItem):
@@ -322,6 +326,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             self.remove_block(self.selected_block.parentItem())
             del self.selected_block
             self.selected_block = None
-            
+    
+    
+    def get_selected_block(self):
+        return self.selected_block.parentItem().ipf_block
             
     
