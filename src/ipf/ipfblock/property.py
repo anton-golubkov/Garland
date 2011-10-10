@@ -14,6 +14,9 @@ class Property(object):
         self._value = data_type.default_value()
         self.min_value = min_value
         self.max_value = max_value
+        # If min_value is given set it as init value
+        if min_value is not None:
+            self._value = min_value
         
         
     def set_value(self, value):
