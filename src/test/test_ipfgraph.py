@@ -78,6 +78,7 @@ class TestIPFGraph(unittest.TestCase):
         processed_image = self.rgb2gray_block.output_ports["output_image"].get_value() 
         self.assertEqual(processed_image.tostring(), gray_image.tostring())
         
+    
     def test_save(self):
         self.ipf_graph.add_block("input_image", self.input_block)
         self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
@@ -87,7 +88,11 @@ class TestIPFGraph(unittest.TestCase):
         self.ipf_graph.process()
         self.ipf_graph.save("files/test.xml")
         self.assertTrue(filecmp.cmp("files/test.xml", "files/test_file_reference.xml"))
-
+        
+    
+    def test_no_connection_process(self):
+        self.ipf_graph.process()
+        
 
 if __name__ == "__main__":
     unittest.main()
