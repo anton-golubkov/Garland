@@ -9,9 +9,9 @@ class IPFElementsType(ipfdicttype.IPFDictType):
     """
 
     name = "IPFElementsType"
-    dictionary = {"3x3" : cv.CreateMat(3, 3, cv.CV_8S),
-                  "5x5" : cv.CreateMat(5, 5, cv.CV_8S),
-                  "7x7" : cv.CreateMat(7, 7, cv.CV_8S),}
+    dictionary = {"3x3" : cv.CreateStructuringElementEx(3, 3, 1, 1, cv.CV_SHAPE_RECT),
+                  "5x5" : cv.CreateStructuringElementEx(5, 5, 3, 3, cv.CV_SHAPE_RECT),
+                  "7x7" : cv.CreateStructuringElementEx(7, 7, 5, 5, cv.CV_SHAPE_RECT),}
         
     def __init__(self):
         pass

@@ -62,3 +62,7 @@ def erosion(input):
     else:
         output = {"output_image" : zero_image()}
     return output
+
+
+
+
