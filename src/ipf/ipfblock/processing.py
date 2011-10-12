@@ -101,3 +101,13 @@ def closing(input):
     return output
 
 
+def tophat(input):
+    input_image = input["input_image"]
+    element = input["element"]
+    if not image_empty(input_image):
+        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
+        cv.MorphologyEx(input_image, output_image, None, element, cv.CV_MOP_TOPHAT)
+        output = {"output_image": output_image}
+    else:
+        output = {"output_image" : zero_image()}
+    return output
