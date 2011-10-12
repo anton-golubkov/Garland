@@ -26,10 +26,16 @@ class GraphScheme( QtGui.QGraphicsScene):
         self._grid = GraphGrid(self.ipf_graph)
         self.addItem(self._grid)
         self._grid.adjust_grid_size()
-    
+        
+        # Counter for block names
+        self.block_number = 0
     
     def add_block(self, block, row, column):
-        self.ipf_graph.add_block(block.name, block.ipf_block, row, column)
+        self.block_number += 1
+        self.ipf_graph.add_block(block.ipf_block.type + str(self.block_number),
+                                 block.ipf_block, 
+                                 row, 
+                                 column)
         self._grid.add_block(block, row, column)
         
         
