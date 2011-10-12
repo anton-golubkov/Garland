@@ -13,7 +13,7 @@ class TopHat(ipfblock.IPFBlock):
     """ Perform top hat filter image 
     
     """
-    type = "Top hat"
+    type = "TopHat"
     category = "Morphological Operations"
     
     def __init__(self):

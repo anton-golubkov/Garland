@@ -13,7 +13,7 @@ class BlackHat(ipfblock.IPFBlock):
     """ Perform black hat filter image 
     
     """
-    type = "Black hat"
+    type = "BlackHat"
     category = "Morphological Operations"
     
     def __init__(self):
