@@ -1,4 +1,4 @@
-#Mon Oct 10 21:17:08 OMST 2011
+#Wed Oct 12 11:50:05 OMST 2011
 eclipse.preferences.version=1
 encoding//src/gui/graphblock.py=utf-8
 encoding//src/gui/graphscheme.py=utf-8
@@ -9,6 +9,7 @@ encoding//src/gui/main_form_ui.py=utf-8
 encoding//src/gui/propertiesmodel.py=utf-8
 encoding//src/gui/propertyeditor.py=utf-8
 encoding//src/ipf/ipfblock/connection.py=utf-8
+encoding//src/ipf/ipfblock/dilate.py=utf-8
 encoding//src/ipf/ipfblock/erosion.py=utf-8
 encoding//src/ipf/ipfblock/imageinput.py=utf-8
 encoding//src/ipf/ipfblock/imagesave.py=utf-8
@@ -29,6 +30,7 @@ encoding//src/ipf/ipftype/ipfrgbtype.py=utf-8
 encoding//src/ipf/ipftype/ipfstringtype.py=utf-8
 encoding//src/ipf/ipftype/ipftype.py=utf-8
 encoding//src/test/test_connection.py=utf-8
+encoding//src/test/test_dilateblock.py=utf-8
 encoding//src/test/test_erosionblock.py=utf-8
 encoding//src/test/test_image_convert.py=utf-8
 encoding//src/test/test_imageinputblock.py=utf-8

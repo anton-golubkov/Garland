@@ -64,5 +64,17 @@ def erosion(input):
     return output
 
 
+def dilate(input):
+    input_image = input["input_image"]
+    element = input["element"]
+    iterations = input["iterations"]
+    if not image_empty(input_image):
+        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
+        cv.Dilate(input_image, output_image, element, iterations)
+        output = {"output_image": output_image}
+    else:
+        output = {"output_image" : zero_image()}
+    return output
+
 
 
