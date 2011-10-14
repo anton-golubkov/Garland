@@ -1,5 +1,6 @@
-#Wed Oct 12 19:22:38 OMST 2011
+#Thu Oct 13 20:27:48 OMST 2011
 eclipse.preferences.version=1
+encoding//src/gui/geticon.py=utf-8
 encoding//src/gui/graphblock.py=utf-8
 encoding//src/gui/graphscheme.py=utf-8
 encoding//src/gui/gui.py=utf-8
