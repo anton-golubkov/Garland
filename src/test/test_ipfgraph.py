@@ -14,6 +14,7 @@ if cmd_folder not in sys.path:
 import ipf.ipfgraph
 import ipf.ipfblock.rgb2gray
 import ipf.ipfblock.imageinput
+import ipf.ipfgraphloader
 
 
 class TestIPFGraph(unittest.TestCase):
@@ -93,6 +94,23 @@ class TestIPFGraph(unittest.TestCase):
     def test_no_connection_process(self):
         self.ipf_graph.process()
         
+        
+    def test_save_and_load_all_blocks(self):
+        block_classes = ipf.ipfgraphloader.get_ipfblock_classes()
+        for block_name in block_classes:
+            self._test_save_and_load_block( block_classes[block_name])
+        
+        
+    def _test_save_and_load_block(self, block_class):
+        graph = ipf.ipfgraph.IPFGraph()
+        graph.add_block(block_class.__name__, block_class())
+        graph.save("files/test_block.xml")
+        new_graph = ipf.ipfgraphloader.load("files/test_block.xml")
+        new_graph.save("files/test_block_load.xml")
+        self.assertTrue(filecmp.cmp("files/test_block.xml", 
+                                    "files/test_block_load.xml"))
+
+
 
 if __name__ == "__main__":
     unittest.main()
