@@ -223,10 +223,11 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     
         
     def get_port_at_point(self, pos):
-        item = self.scene().itemAt(pos)
-        if item is not None:
-            if type(item) == graphblock.PortPrimitive:
-                return item
+        items = self.scene().items(pos)
+        for item in items:
+            if item is not None:
+                if type(item) == graphblock.PortPrimitive:
+                    return item
     
     def create_connection(self, port1, port2):
         scheme = self.scene()
