@@ -10,6 +10,7 @@ if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
 import ipf.ipfblock.ioport
+import geticon
 
 class GraphBlock(QtGui.QGraphicsWidget):
     """ GraphBlock represents IPFBlock in graphics scene
@@ -18,7 +19,6 @@ class GraphBlock(QtGui.QGraphicsWidget):
     
     block_width = 80
     block_height = 64
-    port_size = 20
     
     def __init__(self, block):
         super(GraphBlock, self).__init__()
@@ -54,17 +54,20 @@ class GraphBlock(QtGui.QGraphicsWidget):
         if port_count > 0:
             port_distance = self.block_width / (port_count + 1)
             for i, port_item in enumerate(ports):
-                port_item.setRect( (i+1) * port_distance - self.port_size / 2, 
-                                   y_base - self.port_size / 2,
-                                   self.port_size,
-                                   self.port_size )
+                port_item.setRect(0, 
+                                  0,
+                                  port_item.port_size,
+                                  port_item.port_size )
+                port_item.setPos((i+1) * port_distance - port_item.port_size / 2, 
+                                  y_base - port_item.port_size / 2)
+
                 
-        
-    
-        
-    
+                
 
 class PortPrimitive(QtGui.QGraphicsEllipseItem):
+    
+    port_size = 20
+    
     def __init__(self, parent, ipf_port):
         super(PortPrimitive, self).__init__(parent)
         self.ipf_port = ipf_port
@@ -73,6 +76,15 @@ class PortPrimitive(QtGui.QGraphicsEllipseItem):
         brush.setColor(QtCore.Qt.white)
         self.setBrush(brush)
         self.setZValue(10)
+        image = geticon.get_image_for_type(ipf_port._data_type.__name__)
+        icon_pixmap = QtGui.QPixmap.fromImage(image)
+        self.icon = QtGui.QGraphicsPixmapItem(self)
+        self.icon.setPixmap(icon_pixmap)
+        rect = self.icon.boundingRect()
+        icon_x = (self.port_size - rect.width()) / 2
+        icon_y = (self.port_size - rect.height()) / 2
+        self.icon.setPos(icon_x, icon_y)
+         
     
     
     def get_port_center(self):
