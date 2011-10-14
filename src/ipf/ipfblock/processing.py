@@ -125,4 +125,24 @@ def blackhat(input):
     return output
 
 
+def split(input):
+    input_image = input["input_image"]
+    if not image_empty(input_image):
+        output_image_1 = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
+        output_image_2 = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
+        output_image_3 = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
+        cv.Split(input_image, 
+                 output_image_1, 
+                 output_image_2,
+                 output_image_3,
+                 None)
+        output = {"output_image_1": output_image_1,
+                  "output_image_2": output_image_2,
+                  "output_image_3": output_image_3,}
+    else:
+        output = {"output_image_1" : zero_image_1c()}
+        output = {"output_image_2" : zero_image_1c()}
+        output = {"output_image_3" : zero_image_1c()}
+    return output
+
 
