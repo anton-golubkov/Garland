@@ -15,9 +15,11 @@ from ipftype.ipftype import IPFType
 from ipfblock.property import Property
 
 
-def get_classes_from_module(base_class):
+def get_classes_from_module(base_class, 
+                            is_accepted=lambda x: True):
     """ Create dict {"class_name" : class object } for all classes
         based on given base_class
+        is_accepted function checks if given class need to be added in dict
     """
     parent_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
     modules = [ cls for iter, cls, ispkg in \
@@ -29,7 +31,8 @@ def get_classes_from_module(base_class):
             if inspect.isclass(obj):
                 # Don`t add base_class to dict
                 if issubclass(obj, base_class) and obj != base_class:
-                    classes[name] = obj
+                    if is_accepted(obj):
+                        classes[name] = obj
     return classes 
 
 def get_ipfblock_classes():
@@ -37,7 +40,7 @@ def get_ipfblock_classes():
     
         This dict will be used in file loading process
     """
-    return get_classes_from_module(IPFBlock)
+    return get_classes_from_module(IPFBlock, lambda x: not x.is_abstract_block)
     
     
 def get_type_classes():

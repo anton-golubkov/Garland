@@ -14,6 +14,8 @@ class IPFBlock(object):
     # Class members
     type = "IPFBlock"
     category = ""
+    # Tells that block is abstract and can not be created
+    is_abstract_block = True
     
     def __init__(self):
         self.input_ports = dict()   # {"name" : IPort object}

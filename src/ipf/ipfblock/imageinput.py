@@ -18,6 +18,7 @@ class ImageInput(ipfblock.IPFBlock):
     
     type = "ImageInput"
     category = "Image I/O"
+    is_abstract_block = False
     
     def __init__(self):
         super(ImageInput, self).__init__()

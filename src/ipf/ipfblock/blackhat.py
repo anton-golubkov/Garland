@@ -15,6 +15,7 @@ class BlackHat(ipfblock.IPFBlock):
     """
     type = "BlackHat"
     category = "Morphological Operations"
+    is_abstract_block = False
     
     def __init__(self):
         super(BlackHat, self).__init__()

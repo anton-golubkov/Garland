@@ -16,6 +16,7 @@ class ImageSave(ipfblock.IPFBlock):
     
     type = "ImageSave"
     category = "Image I/O"
+    is_abstract_block = False
     
     def __init__(self):
         super(ImageSave, self).__init__()

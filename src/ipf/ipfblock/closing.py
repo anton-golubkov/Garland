@@ -15,6 +15,7 @@ class Closing(ipfblock.IPFBlock):
     """
     type = "Closing"
     category = "Morphological Operations"
+    is_abstract_block = False
     
     def __init__(self):
         super(Closing, self).__init__()

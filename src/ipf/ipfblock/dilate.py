@@ -15,6 +15,7 @@ class Dilate(ipfblock.IPFBlock):
     """
     type = "Dilate"
     category = "Morphological Operations"
+    is_abstract_block = False
     
     def __init__(self):
         super(Dilate, self).__init__()

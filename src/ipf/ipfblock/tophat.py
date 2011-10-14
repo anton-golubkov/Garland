@@ -15,6 +15,7 @@ class TopHat(ipfblock.IPFBlock):
     """
     type = "TopHat"
     category = "Morphological Operations"
+    is_abstract_block = False
     
     def __init__(self):
         super(TopHat, self).__init__()

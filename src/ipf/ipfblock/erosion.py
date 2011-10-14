@@ -15,6 +15,7 @@ class Erosion(ipfblock.IPFBlock):
     """
     type = "Erosion"
     category = "Morphological Operations"
+    is_abstract_block = False
     
     def __init__(self):
         super(Erosion, self).__init__()
