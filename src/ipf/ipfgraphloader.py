@@ -83,9 +83,15 @@ def load(file):
             max_value = value_node.attrib["max_value"]
             if len(max_value) == 0:
                 max_value = None
+            else:
+                # Convert limit value to property data type
+                max_value = type_classes[property_type].convert(max_value)
             min_value = value_node.attrib["min_value"]
             if len(min_value) == 0:
                 min_value = None
+            else:
+                # Convert limit value to property data type
+                min_value = type_classes[property_type].convert(min_value)
             value = value_node.attrib["value"]
             property = Property(type_classes[property_type]())
             property.max_value = max_value
