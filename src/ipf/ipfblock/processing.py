@@ -146,3 +146,29 @@ def split(input):
     return output
 
 
+def merge(input):
+    input_image_1 = input["input_image_1"]
+    input_image_2 = input["input_image_2"]
+    input_image_3 = input["input_image_3"]
+    if not image_empty(input_image_1) and \
+       not image_empty(input_image_2) and \
+       not image_empty(input_image_3):
+        # Test same size of input images
+        if cv.GetSize(input_image_1) != cv.GetSize(input_image_2) or \
+           cv.GetSize(input_image_2) != cv.GetSize(input_image_3):
+            output = {"output_image" : zero_image()}
+        else:
+            # Merge channels
+            output_image = cv.CreateImage(cv.GetSize(input_image_1), cv.IPL_DEPTH_8U, 3)
+            cv.Merge(input_image_1,
+                     input_image_2,
+                     input_image_3,
+                     None,
+                     output_image)
+            output = {"output_image" : output_image}
+    else:
+        output = {"output_image" : zero_image()}
+    return output
+        
+        
+        
