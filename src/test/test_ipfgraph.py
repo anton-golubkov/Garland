@@ -98,10 +98,10 @@ class TestIPFGraph(unittest.TestCase):
     def test_save_and_load_all_blocks(self):
         block_classes = ipf.ipfgraphloader.get_ipfblock_classes()
         for block_name in block_classes:
-            self._test_save_and_load_block( block_classes[block_name])
+            self.help_test_save_and_load_block( block_classes[block_name])
         
         
-    def _test_save_and_load_block(self, block_class):
+    def help_test_save_and_load_block(self, block_class):
         graph = ipf.ipfgraph.IPFGraph()
         graph.add_block(block_class.__name__, block_class())
         graph.save("files/test_block.xml")
@@ -109,8 +109,42 @@ class TestIPFGraph(unittest.TestCase):
         new_graph.save("files/test_block_load.xml")
         self.assertTrue(filecmp.cmp("files/test_block.xml", 
                                     "files/test_block_load.xml"))
+        
+        
+    def test_add_block_to_grid(self):
+        self.assertTrue(self.ipf_graph.grid_cell_empty(1, 1))
+        self.ipf_graph.add_block("input_image", self.input_block, 1, 1)
+        self.assertTrue("input_image" in self.ipf_graph.blocks.keys())
+        self.assertFalse(self.ipf_graph.grid_cell_empty(1, 1))
+        
+        self.assertTrue(self.ipf_graph.grid_cell_empty(2, 2))
+        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block, 2, 2)
+        self.assertTrue("rgb2gray1" in self.ipf_graph.blocks.keys())
+        self.assertFalse(self.ipf_graph.grid_cell_empty(2, 2))
+        
+        
+    def test_delete_block_from_grid(self):
+        self.ipf_graph.add_block("input_image", self.input_block, 1, 1)
+        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block, 2, 2)
+        
+        self.ipf_graph.remove_block("input_image")
+        self.assertFalse("input_image" in self.ipf_graph.blocks.keys())
+        
+        self.ipf_graph.remove_block("rgb2gray1")
+        self.assertFalse("rgb2gray1" in self.ipf_graph.blocks.keys())
+        
+        self.assertTrue(len(self.ipf_graph.blocks) == 0)
+        
+        self.assertEqual(self.ipf_graph.get_block_cell(self.input_block), 
+                         None)
+        self.assertEqual(self.ipf_graph.get_block_cell(self.rgb2gray_block), 
+                         None)
+        self.assertTrue(self.ipf_graph.grid_cell_empty(1, 1))
+        self.assertTrue(self.ipf_graph.grid_cell_empty(2, 2))
 
 
 
 if __name__ == "__main__":
     unittest.main()
+    
+    
