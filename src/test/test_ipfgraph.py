@@ -144,6 +144,41 @@ class TestIPFGraph(unittest.TestCase):
             self.ipf_graph.add_block,
             "UnknownBlockClass", 
             "block")
+        
+    def test_add_block_without_name(self):
+        block = self.ipf_graph.add_block("ImageInput", None, 1, 1)
+        self.assertTrue(block is not None)
+        block_name = self.ipf_graph.get_block_name(block)
+        self.assertTrue(len(block_name) > 0)
+        block2 = self.ipf_graph.add_block("ImageInput", None, 2, 2)
+        self.assertTrue(block2 is not None)
+        block_name2 = self.ipf_graph.get_block_name(block2)
+        self.assertTrue(len(block_name2) > 0)
+        self.assertTrue (block_name != block_name2)
+        
+        
+    def test_add_blocks_to_same_cell(self):
+        self.ipf_graph.add_block("ImageInput", "input_image1", 1, 1)
+        self.assertRaises(
+            ValueError,
+            self.ipf_graph.add_block,
+            "ImageInput", 
+            "input_image2",
+            1,
+            1)
+    
+    
+    def test_add_block_with_same_name(self):
+        self.ipf_graph.add_block("ImageInput", "input_image1")
+        self.assertRaises(
+            ValueError,
+            self.ipf_graph.add_block,
+            "ImageInput", 
+            "input_image1")
+        
+        
+        
+        
 
 
 if __name__ == "__main__":
