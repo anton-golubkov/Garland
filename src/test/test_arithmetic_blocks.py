@@ -15,6 +15,8 @@ import ipf.ipfblock.subtract
 import ipf.ipfblock.multiplication
 import ipf.ipfblock.division
 import ipf.ipfblock.and_block
+import ipf.ipfblock.or_block
+import ipf.ipfblock.xor_block
 
 # Base test class for arithmetics blocks
 class TestArithmeticBlock(unittest.TestCase):
@@ -127,9 +129,20 @@ class TestDivisionBlock(TestArithmeticBlock):
     test_class = ipf.ipfblock.division.Division
     test_file_name = "division"
     
+
 class TestAndBlock(TestArithmeticBlock):
     test_class = ipf.ipfblock.and_block.And
     test_file_name = "and"
+
+
+class TestOrBlock(TestArithmeticBlock):
+    test_class = ipf.ipfblock.or_block.Or
+    test_file_name = "or"
+
+
+class TestXorBlock(TestArithmeticBlock):
+    test_class = ipf.ipfblock.xor_block.Xor
+    test_file_name = "xor"
 
 
 if __name__ == '__main__':
