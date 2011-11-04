@@ -27,15 +27,14 @@ class GraphScheme( QtGui.QGraphicsScene):
         self.addItem(self._grid)
         self._grid.adjust_grid_size()
         
-        # Counter for block names
-        self.block_number = 0
     
-    def add_block(self, block, row, column):
-        self.block_number += 1
-        self.ipf_graph.add_block(block.ipf_block.type + str(self.block_number),
-                                 block.ipf_block, 
-                                 row, 
-                                 column)
+    def add_block(self, block_type, row, column):
+        ipf_block = self.ipf_graph.add_block(block_type,
+                                             None, 
+                                             row, 
+                                             column)
+        block_name = self.ipf_graph.get_block_name(ipf_block)
+        block = graphblock.GraphBlock(ipf_block, block_name)
         self._grid.add_block(block, row, column)
         
         
@@ -122,9 +121,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             
     
     def move_block(self, block, row, column):
-        from_cell = self.ipf_graph.get_block_cell(block.ipf_block)
+        from_cell = self.ipf_graph.get_block_cell(block.block_name)
         if from_cell is not None and self.ipf_graph.grid_cell_empty(row, column):
-            self.ipf_graph.move_block(block.ipf_block, row, column)
+            self.ipf_graph.move_block(block.block_name, row, column)
             self.update_block_positions()
             self.disable_dummy_block()
             # Enlarge grid if block moved to last row / column
@@ -138,7 +137,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     
     
     def remove_block(self, block):
-        block_name = self.ipf_graph.get_block_name(block.ipf_block)
+        block_name = block.block_name
         block.setParentItem(None)
         self.scene().removeItem(block)
         self.ipf_graph.remove_block(block_name)
@@ -148,7 +147,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     
     def update_block_positions(self):
         for graph_block in self.graph_blocks:
-            row, column = self.ipf_graph.get_block_cell(graph_block.ipf_block)
+            row, column = self.ipf_graph.get_block_cell(graph_block.block_name)
             x, y = self.get_block_position(row, \
                                            column, \
                                            GraphBlock.block_width, \
@@ -263,10 +262,10 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         grid_width, grid_height = self.ipf_graph.get_grid_size()
         
         for connection in self.ipf_graph.connections:
-            iport = connection._iport
-            oport = connection._oport
-            iblock = iport._owner_block
-            oblock = oport._owner_block
+            iport = connection._iport()
+            oport = connection._oport()
+            iblock = iport._owner_block()
+            oblock = oport._owner_block()
             iport_name = iblock.get_port_name(iport)
             oport_name = oblock.get_port_name(oport)
             iblock_prim = self.get_block_primitive_from_block(iblock)
@@ -316,20 +315,20 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.selected_block.selected = True
         self.selected_block.update()
         
-        ipf_block = block_primitive.parentItem().ipf_block
+        ipf_block = block_primitive.parentItem().ipf_block_ref()
         main_form = self.scene().parent()
         main_form.block_selected(ipf_block)
         
         
-    def get_block_primitive_from_block(self, block):
+    def get_block_primitive_from_block(self, ipf_block):
         for graph_block in self.graph_blocks:
-            if block == graph_block.ipf_block:
+            if ipf_block == graph_block.ipf_block_ref():
                 return graph_block
         return None
     
     
-    def get_block_cell(self, ipf_block):
-        return self.ipf_graph.get_block_cell(ipf_block)
+    def get_block_cell(self, block_name):
+        return self.ipf_graph.get_block_cell(block_name)
     
     
     def get_grid_size(self):
@@ -344,6 +343,6 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     
     
     def get_selected_block(self):
-        return self.selected_block.parentItem().ipf_block
+        return self.selected_block.parentItem().ipf_block_ref()
             
     
