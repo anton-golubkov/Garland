@@ -45,7 +45,7 @@ class PropertyEditorDelegate(QtGui.QItemDelegate):
         data_type = property.get_data_type()
         
         editor = None
-        
+
         if data_type == IPFIntType:
             editor = self.create_int_editor(parent, property)
         elif data_type == IPFFloatType:

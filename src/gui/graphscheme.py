@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import objgraph
+
 
 from PySide import QtGui, QtCore
+import weakref
 
 from ipf.ipfgraph import IPFGraph
 from ipf.ipfblock.ioport import IPort, OPort
@@ -16,24 +17,23 @@ class GraphScheme( QtGui.QGraphicsScene):
     
     """
     
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, ipf_graph=None):
         super(GraphScheme, self).__init__(parent)
         gradient = QtGui.QLinearGradient(0, 0, 0, 4000)
         gradient.setColorAt( 0, QtGui.QColor(255, 255, 255))
         gradient.setColorAt( 1, QtGui.QColor(0, 0, 255))
         self.setBackgroundBrush(gradient)
-        self.ipf_graph = IPFGraph()
-        self._grid = GraphGrid(self.ipf_graph)
+        self._grid = GraphGrid(ipf_graph)
         self.addItem(self._grid)
         self._grid.adjust_grid_size()
         
     
     def add_block(self, block_type, row, column):
-        ipf_block_ref = self.ipf_graph.add_block(block_type,
+        ipf_block_ref = self._grid.ipf_graph.add_block(block_type,
                                              None, 
                                              row, 
                                              column)
-        block_name = self.ipf_graph.get_block_name(ipf_block_ref())
+        block_name = self._grid.ipf_graph.get_block_name(ipf_block_ref())
         block = graphblock.GraphBlock(ipf_block_ref, block_name)
         self._grid.add_block(block, row, column)
         
@@ -44,6 +44,14 @@ class GraphScheme( QtGui.QGraphicsScene):
         
     def get_selected_block(self):
         return self._grid.get_selected_block()
+    
+    
+    def load_graph(self, ipf_graph):
+        self._grid.load_graph(ipf_graph)
+        
+        
+    def process(self):
+        return self._grid.ipf_graph.process()
 
 
 class GraphGrid(QtGui.QGraphicsRectItem):
@@ -59,7 +67,10 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     
     def __init__(self, ipf_graph, parent=None):
         super(GraphGrid, self).__init__(parent)
-        self.ipf_graph = ipf_graph
+        if ipf_graph is None:
+            self.ipf_graph = IPFGraph()
+        else:
+            self.ipf_graph = ipf_graph
         self.adjust_grid_size()
         
         # Set of GraphBlock objects
@@ -229,8 +240,6 @@ class GraphGrid(QtGui.QGraphicsRectItem):
                     return item
     
     def create_connection(self, port1, port2):
-        scheme = self.scene()
-        ipf_graph = scheme.ipf_graph
         iport_prim = None
         oport_prim = None
         if type(port1.ipf_port) == IPort:
@@ -240,7 +249,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             iport_prim = port2
             oport_prim = port1
         
-        ipf_graph.add_connection(oport_prim.ipf_port, iport_prim.ipf_port)
+        self.ipf_graph.add_connection(oport_prim.ipf_port, iport_prim.ipf_port)
         self.update_connection_arrows()
         
         # Notify main_form about graph changing
@@ -345,5 +354,21 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     
     def get_selected_block(self):
         return self.selected_block.parentItem().ipf_block_ref()
+    
+    
+    def load_graph(self, ipf_graph):
+        self.selected_block = None
+        self.ipf_graph = ipf_graph
+        for graph_block in self.graph_blocks:
+            graph_block.setParent(None)
+            del graph_block
+        self.graph_blocks = set()
+        for block_name in self.ipf_graph.blocks():
+            row, column = self.ipf_graph.get_block_cell(block_name)
+            block = graphblock.GraphBlock(
+                    weakref.ref(self.ipf_graph.get_block(block_name)), 
+                    block_name)
+            self.add_block(block, row, column)
+        self.update_connection_arrows()
             
     

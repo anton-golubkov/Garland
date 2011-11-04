@@ -12,11 +12,13 @@ cmd_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
 if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
-from ipf.ipfgraphloader import get_ipfblock_classes
+from ipf.ipfgraphloader import load
+from ipf.getblockclasses import get_ipfblock_classes
 import graphscheme
 import propertiesmodel
 import image_convert
 import propertyeditor
+
 
 class MainForm(QtGui.QMainWindow):
     
@@ -104,7 +106,15 @@ class MainForm(QtGui.QMainWindow):
         
     
     def open_file(self):
-        pass
+        file_name, file_type = QtGui.QFileDialog.getOpenFileName(
+                    self,
+                    self.tr("Open image processing graph"), 
+                    "./", 
+                    self.tr("Garland files (*.xml *.garland)"))
+        if len(file_name) > 0:
+            self.scheme.load_graph(load(file_name))
+            
+            
     
     
     def save_file(self):
@@ -191,7 +201,7 @@ class MainForm(QtGui.QMainWindow):
         
         """
         # Perform image processing 
-        self.scheme.ipf_graph.process()
+        self.scheme.process()
         
         if self.previewBlock1 is not None:
             self._update_preview(self.previewBlock1, 
