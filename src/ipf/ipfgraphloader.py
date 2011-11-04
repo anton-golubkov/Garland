@@ -69,7 +69,7 @@ def load(file):
                 # Convert limit value to property data type
                 min_value = type_classes[property_type].convert(min_value)
             value = value_node.attrib["value"]
-            property = Property(type_classes[property_type]())
+            property = Property(type_classes[property_type])
             property.max_value = max_value
             property.min_value = min_value
             property.set_value(value)
