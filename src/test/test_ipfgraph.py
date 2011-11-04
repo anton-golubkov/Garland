@@ -146,13 +146,13 @@ class TestIPFGraph(unittest.TestCase):
             "block")
         
     def test_add_block_without_name(self):
-        block = self.ipf_graph.add_block("ImageInput", None, 1, 1)
-        self.assertTrue(block is not None)
-        block_name = self.ipf_graph.get_block_name(block)
+        block_ref = self.ipf_graph.add_block("ImageInput", None, 1, 1)
+        self.assertTrue(block_ref() is not None)
+        block_name = self.ipf_graph.get_block_name(block_ref())
         self.assertTrue(len(block_name) > 0)
-        block2 = self.ipf_graph.add_block("ImageInput", None, 2, 2)
-        self.assertTrue(block2 is not None)
-        block_name2 = self.ipf_graph.get_block_name(block2)
+        block_ref2 = self.ipf_graph.add_block("ImageInput", None, 2, 2)
+        self.assertTrue(block_ref2() is not None)
+        block_name2 = self.ipf_graph.get_block_name(block_ref2())
         self.assertTrue(len(block_name2) > 0)
         self.assertTrue (block_name != block_name2)
         
