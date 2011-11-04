@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import ioport
+import weakref
 
 class Connection(object):
     """ Connection class for IPFBlock
@@ -12,24 +13,24 @@ class Connection(object):
     def __init__(self, oport, iport):
         # Check port compatibility and free of input port
         if ioport.is_connect_allowed(oport, iport):
-            self._oport = oport
-            self._iport = iport
-            self._oport.increase_binded_count()
-            self._iport.set_binded()
+            self._oport = weakref.ref(oport)
+            self._iport = weakref.ref(iport)
+            self._oport().increase_binded_count()
+            self._iport().set_binded()
         else:
             raise ValueError("Can not create Connection with given ports")
             
     def __del__(self):
-        self._oport.decrease_binded_count()
-        self._iport.set_free()
+        self._oport().decrease_binded_count()
+        self._iport().set_free()
         
         
     def contains_port(self, port):
-        return self._iport == port or self._oport == port
+        return self._iport() == port or self._oport() == port
         
         
     def process(self):
         """ Send value from output port to input port """
-        self._iport.pass_value(self._oport.get_value())
+        self._iport().pass_value(self._oport().get_value())
         
         
