@@ -20,15 +20,23 @@ class TestIPFGraphLoader(unittest.TestCase):
     def setUp(self):
         pass
 
+    
     def test_get_ipfblock_classes(self):
         block_classes = ipf.ipfgraphloader.get_ipfblock_classes()
         self.assertEqual(block_classes['RGB2Gray'], RGB2Gray)
         self.assertEqual(block_classes['ImageInput'], ImageInput)
     
+    
     def test_load_and_save_file(self):
         graph = ipf.ipfgraphloader.load("files/test.xml")
         graph.save("files/test_load_save.xml")
         self.assertTrue(filecmp.cmp("files/test_load_save.xml", "files/test.xml"))
+        
+    
+    def test_load_and_save_file_cells(self):
+        graph = ipf.ipfgraphloader.load("files/test_cells.xml")
+        graph.save("files/test_load_save_cells.xml")
+        self.assertTrue(filecmp.cmp("files/test_load_save_cells.xml", "files/test_cells.xml"))
         
         
 if __name__ == "__main__":
