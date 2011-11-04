@@ -223,3 +223,16 @@ def divide(input_image_1, input_image_2, output_image):
            input_image_2,
            output_image)
 
+@process_2i_1o 
+def conjunction(input_image_1, input_image_2, output_image):
+    cv.And(input_image_1,
+           input_image_2,
+           output_image)
+    
+
+
+
+
+
+
+

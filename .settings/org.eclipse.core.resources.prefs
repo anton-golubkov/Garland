@@ -1,4 +1,4 @@
-#Sat Nov 05 00:21:03 OMST 2011
+#Sat Nov 05 00:34:20 OMST 2011
 eclipse.preferences.version=1
 encoding//src/gui/geticon.py=utf-8
 encoding//src/gui/graphblock.py=utf-8
@@ -10,6 +10,7 @@ encoding//src/gui/main_form_ui.py=utf-8
 encoding//src/gui/propertiesmodel.py=utf-8
 encoding//src/gui/propertyeditor.py=utf-8
 encoding//src/ipf/getblockclasses.py=utf-8
+encoding//src/ipf/ipfblock/and_block.py=utf-8
 encoding//src/ipf/ipfblock/arithmetic.py=utf-8
 encoding//src/ipf/ipfblock/blackhat.py=utf-8
 encoding//src/ipf/ipfblock/closing.py=utf-8

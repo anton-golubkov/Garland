@@ -14,6 +14,7 @@ import ipf.ipfblock.sum
 import ipf.ipfblock.subtract
 import ipf.ipfblock.multiplication
 import ipf.ipfblock.division
+import ipf.ipfblock.and_block
 
 # Base test class for arithmetics blocks
 class TestArithmeticBlock(unittest.TestCase):
@@ -125,6 +126,11 @@ class TestMultiplicationBlock(TestArithmeticBlock):
 class TestDivisionBlock(TestArithmeticBlock):
     test_class = ipf.ipfblock.division.Division
     test_file_name = "division"
+    
+class TestAndBlock(TestArithmeticBlock):
+    test_class = ipf.ipfblock.and_block.And
+    test_file_name = "and"
+
 
 if __name__ == '__main__':
     unittest.main()
