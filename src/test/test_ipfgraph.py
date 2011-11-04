@@ -138,6 +138,13 @@ class TestIPFGraph(unittest.TestCase):
         self.assertTrue(self.ipf_graph.grid_cell_empty(2, 2))
 
 
+    def test_add_unknown_block(self):
+        self.assertRaises(
+            ValueError,
+            self.ipf_graph.add_block,
+            "UnknownBlockClass", 
+            "block")
+
 
 if __name__ == "__main__":
     unittest.main()
