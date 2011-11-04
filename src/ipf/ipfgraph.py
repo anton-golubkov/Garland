@@ -54,9 +54,19 @@ class IPFGraph(object):
                 # This cell is occupied 
                 raise ValueError("Cell (%d, %d) already occupied" % 
                                  (row, column))
-            if not self.cell_in_grid(row, column):
-                raise ValueError("Wrong cell address: (%s, %s); grid size: (%s, %s)" % \
+            
+            if row >= self.max_grid_height or \
+               column >= self.max_grid_width:
+                raise ValueError("Cell address out of grid size: (%s, %s); grid size: (%s, %s)" % \
                               (column, row, self._grid_width, self._grid_height))
+            
+            
+            if row >= self._grid_height:
+                self._grid_height = row + 1
+             
+            if column >= self._grid_width:
+                self._grid_width = column + 1
+                
                 
             self._grid_model[row][column] = block_name
         return weakref.ref(self.__blocks[block_name])
