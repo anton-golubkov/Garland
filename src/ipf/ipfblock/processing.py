@@ -170,5 +170,23 @@ def merge(input):
         output = {"output_image" : zero_image()}
     return output
         
-        
+
+def sum(input):
+    input_image_1 = input["input_image_1"]
+    input_image_2 = input["input_image_2"]
+    if not image_empty(input_image_1) and \
+       not image_empty(input_image_2):
+        # Test same size of input images
+        if cv.GetSize(input_image_1) != cv.GetSize(input_image_2):
+            output = {"output_image" : zero_image()}
+        else:
+            output_image = cv.CreateImage(cv.GetSize(input_image_1), cv.IPL_DEPTH_8U, 3)
+            cv.Add(input_image_1,
+                   input_image_2,
+                   output_image)
+            output = {"output_image" : output_image}
+    else:
+        output = {"output_image" : zero_image()}
+    return output
+       
         

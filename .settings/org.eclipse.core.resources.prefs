@@ -1,4 +1,4 @@
-#Fri Oct 21 20:33:40 OMST 2011
+#Fri Nov 04 23:22:18 OMST 2011
 eclipse.preferences.version=1
 encoding//src/gui/geticon.py=utf-8
 encoding//src/gui/graphblock.py=utf-8
@@ -26,6 +26,7 @@ encoding//src/ipf/ipfblock/processing.py=utf-8
 encoding//src/ipf/ipfblock/property.py=utf-8
 encoding//src/ipf/ipfblock/rgb2gray.py=utf-8
 encoding//src/ipf/ipfblock/split.py=utf-8
+encoding//src/ipf/ipfblock/sum.py=utf-8
 encoding//src/ipf/ipfblock/tophat.py=utf-8
 encoding//src/ipf/ipfgraph.py=utf-8
 encoding//src/ipf/ipfgraphloader.py=utf-8
@@ -55,4 +56,5 @@ encoding//src/test/test_openingblock.py=utf-8
 encoding//src/test/test_property.py=utf-8
 encoding//src/test/test_rgb2grayblock.py=utf-8
 encoding//src/test/test_splitblock.py=utf-8
+encoding//src/test/test_sumblock.py=utf-8
 encoding//src/test/test_tophat.py=utf-8
