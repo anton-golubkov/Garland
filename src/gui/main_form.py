@@ -51,6 +51,10 @@ class MainForm(QtGui.QMainWindow):
         # Preview block
         self.previewBlock1 = None
         self.previewBlock2 = None
+        
+        # File name of current file, new file have None as file name
+        self.current_file_name = None
+        self.update_window_title()
     
         
     def _init_blocks_widget(self):
@@ -113,16 +117,35 @@ class MainForm(QtGui.QMainWindow):
                     self.tr("Garland files (*.xml *.garland)"))
         if len(file_name) > 0:
             self.scheme.load_graph(load(file_name))
+            self.current_file_name = file_name
+        
+        self.update_window_title()
             
             
-    
     
     def save_file(self):
-        pass
+        if self.current_file_name is None:
+            self.save_file_as()
+        else:
+            self._save(self.current_file_name)
+        self.update_window_title()
     
     
     def save_file_as(self):
-        pass
+        file_name, file_type = QtGui.QFileDialog.getSaveFileName(
+                    self,
+                    self.tr("Save image processing graph"),
+                    "./",
+                    self.tr("Garland files (*.xml *.garland)"))
+        if len(file_name) > 0:
+            self._save(file_name)
+        self.update_window_title()
+    
+    
+    def _save(self, file_name):
+        if len(file_name) > 0:
+            self.scheme.save_graph(file_name)
+            self.current_file_name = file_name
     
     
     def cut(self):
@@ -234,3 +257,11 @@ class MainForm(QtGui.QMainWindow):
         
         """
         self.update_window()
+        
+        
+    def update_window_title(self):
+        # Update window caption with current file name
+        if self.current_file_name is None:
+            self.setWindowTitle(self.tr("Untitled"))
+        else:
+            self.setWindowTitle(self.current_file_name)

@@ -52,6 +52,10 @@ class GraphScheme( QtGui.QGraphicsScene):
         
     def process(self):
         return self._grid.ipf_graph.process()
+    
+    
+    def save_graph(self, file_name):
+        self._grid.ipf_graph.save(file_name) 
 
 
 class GraphGrid(QtGui.QGraphicsRectItem):
