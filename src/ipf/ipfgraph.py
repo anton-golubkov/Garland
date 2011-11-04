@@ -5,6 +5,7 @@ from pygraph.algorithms.sorting import topological_sorting
 import xml.etree.ElementTree
 from xml.etree.ElementTree import Element 
 from xml.etree.ElementTree import SubElement
+import weakref
 
 from keyfromvalue import dict_key_from_value
 import ipfblock
@@ -40,13 +41,12 @@ class IPFGraph(object):
         if block_type not in self.block_classes:
             raise ValueError("Unknown block class: '%s'" % (block_type))
             
-        ipf_block = self.block_classes[block_type]()
         if block_name is None:
             block_name = block_type + str(ipfblock.ipfblock.IPFBlock.block_number)
         if block_name in self.__blocks:
             raise ValueError("Adding block, that already exist: '%s'" %
                              (block_name) )
-        self.__blocks[block_name] = ipf_block
+        self.__blocks[block_name] = self.block_classes[block_type]()
         
         if row >= 0 and column >= 0:
             # Add block to grid_model
@@ -59,7 +59,7 @@ class IPFGraph(object):
                               (column, row, self._grid_width, self._grid_height))
                 
             self._grid_model[row][column] = block_name
-        return ipf_block
+        return weakref.ref(self.__blocks[block_name])
 
     def get_block(self, block_name):
         if block_name in self.__blocks:
@@ -98,21 +98,21 @@ class IPFGraph(object):
         
         graph = digraph()
         for block in self.__blocks:
-            graph.add_node(self.__blocks[block])
+            graph.add_node(weakref.ref(self.__blocks[block]))
             for iport in self.__blocks[block].input_ports.values():
-                graph.add_node(iport)
-                graph.add_edge( (iport, self.__blocks[block]) )
+                graph.add_node(weakref.ref(iport))
+                graph.add_edge( (weakref.ref(iport), weakref.ref(self.__blocks[block])) )
             for oport in self.__blocks[block].output_ports.values():
-                graph.add_node(oport)
-                graph.add_edge( (self.__blocks[block], oport) )
+                graph.add_node(weakref.ref(oport))
+                graph.add_edge( (weakref.ref(self.__blocks[block]), weakref.ref(oport)) )
         for connection in self.connections:
-            graph.add_node(connection)
-            graph.add_edge( (connection._oport(), connection) )
-            graph.add_edge( (connection, connection._iport()) )
-        
+            graph.add_node(weakref.ref(connection))
+            graph.add_edge( (connection._oport, weakref.ref(connection)) )
+            graph.add_edge( (weakref.ref(connection), connection._iport ) )
+
         sorted_graph = topological_sorting(graph)
         for node in sorted_graph:
-            node.process()
+            node().process()
     
     def get_block_name(self, block):
         return dict_key_from_value(self.__blocks, block)

@@ -83,8 +83,7 @@ class IPFBlock(object):
         """
         return None
             
-        
-        
+  
     
     
 
