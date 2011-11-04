@@ -9,6 +9,7 @@ from xml.etree.ElementTree import SubElement
 from keyfromvalue import dict_key_from_value
 import ipfblock
 import ipfblock.connection
+from getblockclasses import get_ipfblock_classes
 
 class IPFGraph(object):
     """ Image processing flow graph
@@ -21,40 +22,55 @@ class IPFGraph(object):
     max_grid_height = 200
 
     def __init__(self):
-        self.blocks = dict() # {"Block name" : IPFBlock}
+        self.__blocks = dict() # {"Block name" : IPFBlock}
         self.connections = set() 
         self._grid_width = 5
         self._grid_height = 5
         
-        # Create empty 2-dimension list for blocks in grid
+        # Create empty 2-dimension list for __blocks in grid
         self._grid_model = [ [None for j in xrange(self.max_grid_width)] \
                              for i in xrange(self.max_grid_height) ]
+        
+        
+        # Block classes list
+        self.block_classes = get_ipfblock_classes()
     
     
-    def add_block(self, block_name, ipf_block, row=-1, column=-1):
-        self.blocks[block_name] = ipf_block
-        if row >= 0 and column >= 0:
-            # Add block to grid_model
-            if not self.grid_cell_empty(row, column):
-                # This cell is occupied 
-                raise ValueError("Cell (%d, %d) already occupied" % \
-                                 (row, column))
+    def add_block(self, block_type, block_name=None, row=-1, column=-1):
+        if block_type in self.block_classes:
+            ipf_block = self.block_classes[block_type]()
+            if block_name is None:
+                block_name = block_type + str(ipf_block.__block_number)
+            if block_name in self.__blocks:
+                raise ValueError("Adding block, that already exist: '%s'" %
+                                 (block_name) )
+            self.__blocks[block_name] = ipf_block
             
-            if not self.cell_in_grid(row, column):
-                raise ValueError("Wrong cell address: (%s, %s); grid size: (%s, %s)" % \
-                              (column, row, self._grid_width, self._grid_height))
-                
-            self._grid_model[row][column] = ipf_block
-            
+            if row >= 0 and column >= 0:
+                # Add block to grid_model
+                if not self.grid_cell_empty(row, column):
+                    # This cell is occupied 
+                    raise ValueError("Cell (%d, %d) already occupied" % 
+                                     (row, column))
+                if not self.cell_in_grid(row, column):
+                    raise ValueError("Wrong cell address: (%s, %s); grid size: (%s, %s)" % \
+                                  (column, row, self._grid_width, self._grid_height))
+                    
+                self._grid_model[row][column] = block_name
+    
+    def get_block(self, block_name):
+        if block_name in self.__blocks:
+            return self.__blocks[block_name]
+        else:
+            return None   
             
     def remove_block(self, block_name):
         self.delete_connections_for_block(block_name)
-        block = self.blocks[block_name]
-        cell = self.get_block_cell(block)
+        cell = self.get_block_cell(block_name)
         if cell is not None:
             row, column = cell
             self._grid_model[row][column] = None
-        del self.blocks[block_name]      
+        del self.__blocks[block_name]      
     
     
     def add_connection(self, oport, iport):
@@ -69,23 +85,23 @@ class IPFGraph(object):
     def process(self):
         """ Process image processing flow for IPFGraph """
         
-        # Invalidate all input ports in blocks
+        # Invalidate all input ports in __blocks
         ((iport.invalidate() for iport in block.input_ports.values()) 
-                             for block in self.blocks.values())
+                             for block in self.__blocks.values())
         
         # Map image processing flow to directed graph
         # apply topological sorting and execute processing blocks in
         # topological order 
         
         graph = digraph()
-        for block in self.blocks:
-            graph.add_node(self.blocks[block])
-            for iport in self.blocks[block].input_ports.values():
+        for block in self.__blocks:
+            graph.add_node(self.__blocks[block])
+            for iport in self.__blocks[block].input_ports.values():
                 graph.add_node(iport)
-                graph.add_edge( (iport, self.blocks[block]) )
-            for oport in self.blocks[block].output_ports.values():
+                graph.add_edge( (iport, self.__blocks[block]) )
+            for oport in self.__blocks[block].output_ports.values():
                 graph.add_node(oport)
-                graph.add_edge( (self.blocks[block], oport) )
+                graph.add_edge( (self.__blocks[block], oport) )
         for connection in self.connections:
             graph.add_node(connection)
             graph.add_edge( (connection._oport, connection) )
@@ -96,7 +112,7 @@ class IPFGraph(object):
             node.process()
     
     def get_block_name(self, block):
-        return dict_key_from_value(self.blocks, block)
+        return dict_key_from_value(self.__blocks, block)
     
     
     def xml(self):
@@ -105,9 +121,9 @@ class IPFGraph(object):
         """
         graph = Element("IPFGraph")
         block_tree = SubElement(graph, "Blocks")
-        for name in self.blocks:
+        for name in self.__blocks:
             block_element = SubElement(block_tree, "Block", {"name": name})
-            block_element.append(self.blocks[name].xml())
+            block_element.append(self.__blocks[name].xml())
         
         connection_tree = SubElement(graph, "Connections")
         for connection in self.connections:
@@ -156,19 +172,20 @@ class IPFGraph(object):
                column >= 0 and column < self._grid_width
                
     
-    def get_block_cell(self, block):
+    def get_block_cell(self, block_name):
         for row in range(self._grid_height):
             for column in range(self._grid_width):
-                if self._grid_model[row][column] == block:
+                if self._grid_model[row][column] == block_name:
                     return (row, column)
         return None
     
-    def move_block(self, block, row, column):
-        from_cell = self.get_block_cell(block)
+    
+    def move_block(self, block_name, row, column):
+        from_cell = self.get_block_cell(block_name)
         if from_cell is not None and self.grid_cell_empty(row, column):
             block_row, block_column = from_cell
             self._grid_model[block_row][block_column] = None
-            self._grid_model[row][column] = block
+            self._grid_model[row][column] = block_name
         else:
             raise ValueError("Can`t move block to (%d, %d)" % \
                                  (row, column)) 
@@ -188,9 +205,10 @@ class IPFGraph(object):
         
         
     def delete_connections_for_block(self, block_name):
-        
+        if block_name not in self.__blocks:
+            return 
         connections_to_delete = []
-        for iport in self.blocks[block_name].input_ports.values():
+        for iport in self.__blocks[block_name].input_ports.values():
             for connection in self.connections:
                 if connection.contains_port(iport):
                     connections_to_delete.append(connection)
@@ -198,10 +216,9 @@ class IPFGraph(object):
             self.connections.remove(connection)
         
         connections_to_delete = []            
-        for oport in self.blocks[block_name].output_ports.values():                    
+        for oport in self.__blocks[block_name].output_ports.values():                    
             for connection in self.connections:
                 if connection.contains_port(oport):
                     connections_to_delete.append(connection)
         for connection in connections_to_delete:
             self.connections.remove(connection)
-                    
