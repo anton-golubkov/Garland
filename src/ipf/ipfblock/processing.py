@@ -51,17 +51,42 @@ def save_image(input):
     return {}
     
     
-def erosion(input):
-    input_image = input["input_image"]
-    element = input["element"]
-    iterations = input["iterations"]
-    if not image_empty(input_image):
-        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
-        cv.Erode(input_image, output_image, element, iterations)
-        output = {"output_image": output_image}
-    else:
-        output = {"output_image" : zero_image()}
-    return output
+class process_morphology_1i_1o(object):
+    # Decorator class for processing morphologi operation 
+    # on one 3-channel input image and one output image
+    def __init__(self, f):
+        self.f = f
+
+    def __call__(self, *args, **kwargs):
+        input_image = args[0]["input_image"]
+        element = args[0]["element"]
+        if "iterations" in args[0]:
+            iterations = args[0]["iterations"]
+        else:
+            iterations = None
+        if not image_empty(input_image):
+            output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
+            if iterations is not None:
+                self.f(input_image,
+                       element,
+                       iterations,
+                       output_image)
+            else:
+                self.f(input_image,
+                       element,
+                       output_image)
+            output = {"output_image" : output_image}
+        else:
+            output = {"output_image" : zero_image()}
+        return output
+    
+
+@process_morphology_1i_1o   
+def erosion(input_image,
+            element,
+            iterations,
+            output_image):
+    cv.Erode(input_image, output_image, element, iterations)
 
 
 def dilate(input):
@@ -223,6 +248,7 @@ def divide(input_image_1, input_image_2, output_image):
            input_image_2,
            output_image)
 
+
 @process_2i_1o 
 def conjunction(input_image_1, input_image_2, output_image):
     cv.And(input_image_1,
@@ -230,9 +256,37 @@ def conjunction(input_image_1, input_image_2, output_image):
            output_image)
     
 
+@process_2i_1o 
+def disjunction(input_image_1, input_image_2, output_image):
+    cv.Or(input_image_1,
+          input_image_2,
+          output_image)
+
+
+@process_2i_1o 
+def xor(input_image_1, input_image_2, output_image):
+    cv.Xor(input_image_1,
+           input_image_2,
+           output_image)
 
 
 
+
+class process_1i_1o(object):
+    # Decorator class for processing one 3-channel input image and one output image
+    def __init__(self, f):
+        self.f = f
+
+    def __call__(self, *args, **kwargs):
+        input_image = args[0]["input_image"]
+        if not image_empty(input_image):
+            output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
+            self.f(input_image,
+                   output_image)
+            output = {"output_image" : output_image}
+        else:
+            output = {"output_image" : zero_image()}
+        return output
 
 
 
