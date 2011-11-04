@@ -89,66 +89,41 @@ def erosion(input_image,
     cv.Erode(input_image, output_image, element, iterations)
 
 
-def dilate(input):
-    input_image = input["input_image"]
-    element = input["element"]
-    iterations = input["iterations"]
-    if not image_empty(input_image):
-        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
-        cv.Dilate(input_image, output_image, element, iterations)
-        output = {"output_image": output_image}
-    else:
-        output = {"output_image" : zero_image()}
-    return output
+@process_morphology_1i_1o
+def dilate(input_image,
+            element,
+            iterations,
+            output_image):
+    cv.Dilate(input_image, output_image, element, iterations)
+    
 
+@process_morphology_1i_1o
+def opening(input_image,
+            element,
+            output_image):
+    cv.MorphologyEx(input_image, output_image, None, element, cv.CV_MOP_OPEN)
+    
 
-def opening(input):
-    input_image = input["input_image"]
-    element = input["element"]
-    if not image_empty(input_image):
-        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
-        cv.MorphologyEx(input_image, output_image, None, element, cv.CV_MOP_OPEN)
-        output = {"output_image": output_image}
-    else:
-        output = {"output_image" : zero_image()}
-    return output
+@process_morphology_1i_1o
+def closing(input_image,
+            element,
+            output_image):
+    cv.MorphologyEx(input_image, output_image, None, element, cv.CV_MOP_CLOSE)
+    
 
+@process_morphology_1i_1o
+def tophat(input_image,
+            element,
+            output_image):
+    cv.MorphologyEx(input_image, output_image, None, element, cv.CV_MOP_TOPHAT)
+    
 
-def closing(input):
-    input_image = input["input_image"]
-    element = input["element"]
-    if not image_empty(input_image):
-        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
-        cv.MorphologyEx(input_image, output_image, None, element, cv.CV_MOP_CLOSE)
-        output = {"output_image": output_image}
-    else:
-        output = {"output_image" : zero_image()}
-    return output
-
-
-def tophat(input):
-    input_image = input["input_image"]
-    element = input["element"]
-    if not image_empty(input_image):
-        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
-        cv.MorphologyEx(input_image, output_image, None, element, cv.CV_MOP_TOPHAT)
-        output = {"output_image": output_image}
-    else:
-        output = {"output_image" : zero_image()}
-    return output
-
-
-def blackhat(input):
-    input_image = input["input_image"]
-    element = input["element"]
-    if not image_empty(input_image):
-        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
-        cv.MorphologyEx(input_image, output_image, None, element, cv.CV_MOP_BLACKHAT)
-        output = {"output_image": output_image}
-    else:
-        output = {"output_image" : zero_image()}
-    return output
-
+@process_morphology_1i_1o
+def blackhat(input_image,
+            element,
+            output_image):
+    cv.MorphologyEx(input_image, output_image, None, element, cv.CV_MOP_BLACKHAT)
+    
 
 def split(input):
     input_image = input["input_image"]
@@ -287,6 +262,15 @@ class process_1i_1o(object):
         else:
             output = {"output_image" : zero_image()}
         return output
+
+
+@process_1i_1o
+def invert(input_image, output_image):
+    cv.Not(input_image, output_image)
+    
+
+
+
 
 
 
