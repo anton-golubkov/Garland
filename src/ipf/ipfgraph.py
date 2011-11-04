@@ -232,3 +232,8 @@ class IPFGraph(object):
                     connections_to_delete.append(connection)
         for connection in connections_to_delete:
             self.connections.remove(connection)
+            
+    
+    def blocks(self):
+        # Returns iterator for __blocks dictionary keys
+        return self.__blocks.keys()
