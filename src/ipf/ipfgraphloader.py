@@ -38,6 +38,8 @@ def load(file):
     
     for block_node in blocks_node.getiterator("Block"):
         block_name = block_node.attrib["name"]
+        grid_row = int(block_node.attrib["grid_row"])
+        grid_column = int(block_node.attrib["grid_column"])
         block_class_node = list(block_node)[0]
         class_name = block_class_node.tag
         
@@ -45,8 +47,7 @@ def load(file):
         if class_name not in ipfblock_classes:
             raise TypeError("Unknown block class '%s'" % class_name)
         
-        ## !! TODO Add reading of row and column
-        graph.add_block(class_name, block_name)
+        graph.add_block(class_name, block_name, grid_row, grid_column)
         block = graph.get_block(block_name)
         properties_node = block_class_node.find("Properties")
         

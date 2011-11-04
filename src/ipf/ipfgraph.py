@@ -125,7 +125,11 @@ class IPFGraph(object):
         graph = Element("IPFGraph")
         block_tree = SubElement(graph, "Blocks")
         for name in self.__blocks:
-            block_element = SubElement(block_tree, "Block", {"name": name})
+            row, column = self.get_block_cell(name)
+            block_element = SubElement(block_tree, "Block", 
+                                       {"name":name,
+                                        "grid_row":str(row),
+                                        "grid_column":str(column)})
             block_element.append(self.__blocks[name].xml())
             
         connection_tree = SubElement(graph, "Connections")
@@ -180,7 +184,10 @@ class IPFGraph(object):
             for column in range(self._grid_width):
                 if self._grid_model[row][column] == block_name:
                     return (row, column)
-        return None
+        if block_name in self.__blocks:
+            return (-1, -1)
+        else:
+            return None
     
     
     def move_block(self, block_name, row, column):
