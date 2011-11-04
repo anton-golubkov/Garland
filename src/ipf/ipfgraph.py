@@ -42,7 +42,7 @@ class IPFGraph(object):
             
         ipf_block = self.block_classes[block_type]()
         if block_name is None:
-            block_name = block_type + str(ipf_block.__block_number)
+            block_name = block_type + str(ipfblock.ipfblock.IPFBlock.block_number)
         if block_name in self.__blocks:
             raise ValueError("Adding block, that already exist: '%s'" %
                              (block_name) )
@@ -59,6 +59,7 @@ class IPFGraph(object):
                               (column, row, self._grid_width, self._grid_height))
                 
             self._grid_model[row][column] = block_name
+        return ipf_block
 
     def get_block(self, block_name):
         if block_name in self.__blocks:

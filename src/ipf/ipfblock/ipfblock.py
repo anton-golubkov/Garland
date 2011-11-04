@@ -20,14 +20,14 @@ class IPFBlock(object):
     
     # Block instanced number
     # Used for generation of unique block names
-    __block_number = 0
+    block_number = 0
     
     def __init__(self):
         self.input_ports = dict() # {"name" : IPort object}
         self.output_ports = dict() # {"name" : OPort object}
         self.properties = dict() # {"name" : Property object}
         self.processing_function = None # Image processing function
-        self.__block_number += 1
+        IPFBlock.block_number += 1
         
     def process(self):
         """ Execute IPFBlock process. Sets results to output ports values
