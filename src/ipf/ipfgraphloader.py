@@ -13,43 +13,8 @@ from ipfblock.ipfblock import IPFBlock
 from ipfgraph import IPFGraph
 from ipftype.ipftype import IPFType
 from ipfblock.property import Property
-
-
-def get_classes_from_module(base_class, 
-                            is_accepted=lambda x: True):
-    """ Create dict {"class_name" : class object } for all classes
-        based on given base_class
-        is_accepted function checks if given class need to be added in dict
-    """
-    parent_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
-    modules = [ cls for iter, cls, ispkg in \
-                pkgutil.walk_packages([parent_folder,]) ]
-    classes = dict()
-    for module_name in modules:
-        mod = __import__(module_name, fromlist = ["Whatever need for import"])
-        for name, obj in inspect.getmembers(mod):
-            if inspect.isclass(obj):
-                # Don`t add base_class to dict
-                if issubclass(obj, base_class) and obj != base_class:
-                    if is_accepted(obj):
-                        classes[name] = obj
-    return classes 
-
-def get_ipfblock_classes():
-    """ Create dict {"block_name" : IPFBlock class } for all IPFBlock subclasses
-    
-        This dict will be used in file loading process
-    """
-    return get_classes_from_module(IPFBlock, lambda x: not x.is_abstract_block)
-    
-    
-def get_type_classes():
-    """ Create dict {"typename" : Type class } for all IPFType subclasses
-    
-        This dict will be used in file loading process
-    """
-    return get_classes_from_module(IPFType) 
-
+from getblockclasses import get_ipfblock_classes
+from getblockclasses import get_type_classes
 
     
 def load(file):
@@ -116,11 +81,11 @@ def load(file):
         con_output_node = connection_node.find("ConnectionOutput")
         oblock_name = con_output_node.attrib["block"]
         oblock_port = con_output_node.attrib["port"]
-        oport = graph.blocks[oblock_name].output_ports[oblock_port]
+        oport = graph.__blocks[oblock_name].output_ports[oblock_port]
         con_input_node = connection_node.find("ConnectionInput")
         iblock_name = con_input_node.attrib["block"]
         iblock_port = con_input_node.attrib["port"]
-        iport = graph.blocks[iblock_name].input_ports[iblock_port]
+        iport = graph.__blocks[iblock_name].input_ports[iblock_port]
         graph.add_connection(oport, iport)
         
     return graph
