@@ -21,8 +21,10 @@ class Connection(object):
             raise ValueError("Can not create Connection with given ports")
             
     def __del__(self):
-        self._oport().decrease_binded_count()
-        self._iport().set_free()
+        if self._oport() is not None:
+            self._oport().decrease_binded_count()
+        if self._iport() is not None:
+            self._iport().set_free()
         
         
     def contains_port(self, port):
