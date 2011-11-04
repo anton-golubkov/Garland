@@ -210,6 +210,13 @@ def subtract(input_image_1, input_image_2, output_image):
            output_image)
 
 
+@process_2i_1o          
+def multiplication(input_image_1, input_image_2, output_image):
+    cv.Mul(input_image_1,
+           input_image_2,
+           output_image)
+
+
 def _sum(input):
     input_image_1 = input["input_image_1"]
     input_image_2 = input["input_image_2"]

@@ -1,4 +1,4 @@
-#Fri Nov 04 23:47:53 OMST 2011
+#Sat Nov 05 00:11:54 OMST 2011
 eclipse.preferences.version=1
 encoding//src/gui/geticon.py=utf-8
 encoding//src/gui/graphblock.py=utf-8
@@ -22,6 +22,7 @@ encoding//src/ipf/ipfblock/ioport.py=utf-8
 encoding//src/ipf/ipfblock/ipfblock.py=utf-8
 encoding//src/ipf/ipfblock/merge.py=utf-8
 encoding//src/ipf/ipfblock/morphology.py=utf-8
+encoding//src/ipf/ipfblock/multiplication.py=utf-8
 encoding//src/ipf/ipfblock/opening.py=utf-8
 encoding//src/ipf/ipfblock/processing.py=utf-8
 encoding//src/ipf/ipfblock/property.py=utf-8
