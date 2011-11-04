@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import objgraph
 
 from PySide import QtGui, QtCore
 
@@ -29,12 +29,12 @@ class GraphScheme( QtGui.QGraphicsScene):
         
     
     def add_block(self, block_type, row, column):
-        ipf_block = self.ipf_graph.add_block(block_type,
+        ipf_block_ref = self.ipf_graph.add_block(block_type,
                                              None, 
                                              row, 
                                              column)
-        block_name = self.ipf_graph.get_block_name(ipf_block)
-        block = graphblock.GraphBlock(ipf_block, block_name)
+        block_name = self.ipf_graph.get_block_name(ipf_block_ref())
+        block = graphblock.GraphBlock(ipf_block_ref, block_name)
         self._grid.add_block(block, row, column)
         
         
@@ -264,12 +264,12 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         for connection in self.ipf_graph.connections:
             iport = connection._iport()
             oport = connection._oport()
-            iblock = iport._owner_block()
-            oblock = oport._owner_block()
-            iport_name = iblock.get_port_name(iport)
-            oport_name = oblock.get_port_name(oport)
-            iblock_prim = self.get_block_primitive_from_block(iblock)
-            oblock_prim = self.get_block_primitive_from_block(oblock)
+            iblock_ref = iport._owner_block
+            oblock_ref = oport._owner_block
+            iport_name = iblock_ref().get_port_name(iport)
+            oport_name = oblock_ref().get_port_name(oport)
+            iblock_prim = self.get_block_primitive_from_block(iblock_ref)
+            oblock_prim = self.get_block_primitive_from_block(oblock_ref)
             if iblock_prim is None or oblock_prim is None:
                 raise ValueError("IPFBlock not found in scheme")
             
@@ -315,14 +315,14 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.selected_block.selected = True
         self.selected_block.update()
         
-        ipf_block = block_primitive.parentItem().ipf_block_ref()
+        ipf_block_ref = block_primitive.parentItem().ipf_block_ref
         main_form = self.scene().parent()
-        main_form.block_selected(ipf_block)
+        main_form.block_selected(ipf_block_ref)
         
         
-    def get_block_primitive_from_block(self, ipf_block):
+    def get_block_primitive_from_block(self, ipf_block_ref):
         for graph_block in self.graph_blocks:
-            if ipf_block == graph_block.ipf_block_ref():
+            if ipf_block_ref == graph_block.ipf_block_ref:
                 return graph_block
         return None
     
@@ -340,6 +340,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             self.remove_block(self.selected_block.parentItem())
             del self.selected_block
             self.selected_block = None
+
     
     
     def get_selected_block(self):

@@ -67,17 +67,17 @@ class MainForm(QtGui.QMainWindow):
         self.ui.blocks_tree.insertTopLevelItems(0, category_items.values())
         
         
-    def block_selected(self, ipf_block):
-        self.show_block_properties(ipf_block)
+    def block_selected(self, ipf_block_ref):
+        self.show_block_properties(ipf_block_ref)
         if not self.ui.keepPreview1.isChecked():
-            self.previewBlock1 = weakref.ref(ipf_block)
+            self.previewBlock1 = ipf_block_ref
         if not self.ui.keepPreview2.isChecked():
-            self.previewBlock2 = weakref.ref(ipf_block)
+            self.previewBlock2 = ipf_block_ref
         self.update_window()
         
         
-    def show_block_properties(self, block):
-        self.properties_model = propertiesmodel.PropertiesModel(block)
+    def show_block_properties(self, ipf_block_ref):
+        self.properties_model = propertiesmodel.PropertiesModel(ipf_block_ref)
         self.ui.propertyTable.setModel(self.properties_model)
 
 
@@ -194,24 +194,24 @@ class MainForm(QtGui.QMainWindow):
         self.scheme.ipf_graph.process()
         
         if self.previewBlock1 is not None:
-            self._update_preview(self.previewBlock1(), 
+            self._update_preview(self.previewBlock1, 
                                  self.previewPixmapItem1, 
                                  self.ui.previewView1)
         if self.previewBlock2 is not None:
-            self._update_preview(self.previewBlock2(), 
+            self._update_preview(self.previewBlock2, 
                                  self.previewPixmapItem2, 
                                  self.ui.previewView2)
         
         
     
-    def _update_preview(self, ipf_block, previewPixmapItem, previewView):
+    def _update_preview(self, ipf_block_ref, previewPixmapItem, previewView):
         """ Update preview image for block in previewPixmapItem
         
         """
-        if ipf_block is None:
+        if ipf_block_ref is None or ipf_block_ref() is None:
             previewPixmapItem.setPixmap(QtGui.QPixmap())
         else:
-            ipl_image = ipf_block.get_preview_image()
+            ipl_image = ipf_block_ref().get_preview_image()
             if ipl_image is not None:
                 qimage = image_convert.iplimage_to_qimage(ipl_image)
                 qpixmap = QtGui.QPixmap.fromImage(qimage)

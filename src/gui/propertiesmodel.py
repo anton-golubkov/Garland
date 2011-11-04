@@ -16,11 +16,11 @@ class PropertiesModel(QtCore.QAbstractTableModel):
     
     """
     
-    def __init__(self, ipf_block=None):
+    def __init__(self, ipf_block_ref=None):
         super(PropertiesModel, self).__init__()
         
-        if ipf_block is not None:
-            self.ipf_block_ref = weakref.ref(ipf_block)
+        if ipf_block_ref is not None:
+            self.ipf_block_ref = ipf_block_ref
         else:
             self.ipf_block_ref = None
         

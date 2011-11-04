@@ -20,9 +20,9 @@ class GraphBlock(QtGui.QGraphicsWidget):
     block_width = 80
     block_height = 64
     
-    def __init__(self, ipf_block, block_name):
+    def __init__(self, ipf_block_ref, block_name):
         super(GraphBlock, self).__init__()
-        self.ipf_block_ref = weakref.ref(ipf_block)
+        self.ipf_block_ref = ipf_block_ref
         self.block_name = block_name
         self.rect_item = BlockPrimitive(self)
         self.rect_item.setRect(0, 0, self.block_width, self.block_height)
