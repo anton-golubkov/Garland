@@ -37,27 +37,29 @@ class IPFGraph(object):
     
     
     def add_block(self, block_type, block_name=None, row=-1, column=-1):
-        if block_type in self.block_classes:
-            ipf_block = self.block_classes[block_type]()
-            if block_name is None:
-                block_name = block_type + str(ipf_block.__block_number)
-            if block_name in self.__blocks:
-                raise ValueError("Adding block, that already exist: '%s'" %
-                                 (block_name) )
-            self.__blocks[block_name] = ipf_block
+        if block_type not in self.block_classes:
+            raise ValueError("Unknown block class: '%s'" % (block_type))
             
-            if row >= 0 and column >= 0:
-                # Add block to grid_model
-                if not self.grid_cell_empty(row, column):
-                    # This cell is occupied 
-                    raise ValueError("Cell (%d, %d) already occupied" % 
-                                     (row, column))
-                if not self.cell_in_grid(row, column):
-                    raise ValueError("Wrong cell address: (%s, %s); grid size: (%s, %s)" % \
-                                  (column, row, self._grid_width, self._grid_height))
-                    
-                self._grid_model[row][column] = block_name
-    
+        ipf_block = self.block_classes[block_type]()
+        if block_name is None:
+            block_name = block_type + str(ipf_block.__block_number)
+        if block_name in self.__blocks:
+            raise ValueError("Adding block, that already exist: '%s'" %
+                             (block_name) )
+        self.__blocks[block_name] = ipf_block
+        
+        if row >= 0 and column >= 0:
+            # Add block to grid_model
+            if not self.grid_cell_empty(row, column):
+                # This cell is occupied 
+                raise ValueError("Cell (%d, %d) already occupied" % 
+                                 (row, column))
+            if not self.cell_in_grid(row, column):
+                raise ValueError("Wrong cell address: (%s, %s); grid size: (%s, %s)" % \
+                              (column, row, self._grid_width, self._grid_height))
+                
+            self._grid_model[row][column] = block_name
+
     def get_block(self, block_name):
         if block_name in self.__blocks:
             return self.__blocks[block_name]
