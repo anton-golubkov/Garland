@@ -6,6 +6,7 @@ from main_form_ui import Ui_MainWindow
 import os
 import sys
 import cv
+import weakref
 
 cmd_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
 if cmd_folder not in sys.path:
@@ -66,17 +67,17 @@ class MainForm(QtGui.QMainWindow):
         self.ui.blocks_tree.insertTopLevelItems(0, category_items.values())
         
         
-    def block_selected(self, block):
-        self.show_block_properties(block)
+    def block_selected(self, ipf_block_ref):
+        self.show_block_properties(ipf_block_ref)
         if not self.ui.keepPreview1.isChecked():
-            self.previewBlock1 = block
+            self.previewBlock1 = ipf_block_ref
         if not self.ui.keepPreview2.isChecked():
-            self.previewBlock2 = block
+            self.previewBlock2 = ipf_block_ref
         self.update_window()
         
         
-    def show_block_properties(self, block):
-        self.properties_model = propertiesmodel.PropertiesModel(block)
+    def show_block_properties(self, ipf_block_ref):
+        self.properties_model = propertiesmodel.PropertiesModel(ipf_block_ref)
         self.ui.propertyTable.setModel(self.properties_model)
 
 
@@ -136,9 +137,11 @@ class MainForm(QtGui.QMainWindow):
     
     def delete(self):
         selected_block = self.scheme.get_selected_block()
-        if self.previewBlock1 == selected_block:
+        if self.previewBlock1 is not None and \
+           self.previewBlock1() == selected_block:
             self.previewBlock1 = None
-        if self.previewBlock2 == selected_block:
+        if self.previewBlock2 is not None and \
+           self.previewBlock2() == selected_block:
             self.previewBlock2 = None
         self.properties_model = propertiesmodel.PropertiesModel()
         self.ui.propertyTable.setModel(self.properties_model)
@@ -190,23 +193,25 @@ class MainForm(QtGui.QMainWindow):
         # Perform image processing 
         self.scheme.ipf_graph.process()
         
-        self._update_preview(self.previewBlock1, 
-                             self.previewPixmapItem1, 
-                             self.ui.previewView1)
-        self._update_preview(self.previewBlock2, 
-                             self.previewPixmapItem2, 
-                             self.ui.previewView2)
+        if self.previewBlock1 is not None:
+            self._update_preview(self.previewBlock1, 
+                                 self.previewPixmapItem1, 
+                                 self.ui.previewView1)
+        if self.previewBlock2 is not None:
+            self._update_preview(self.previewBlock2, 
+                                 self.previewPixmapItem2, 
+                                 self.ui.previewView2)
         
         
     
-    def _update_preview(self, block, previewPixmapItem, previewView):
+    def _update_preview(self, ipf_block_ref, previewPixmapItem, previewView):
         """ Update preview image for block in previewPixmapItem
         
         """
-        if block is None:
+        if ipf_block_ref is None or ipf_block_ref() is None:
             previewPixmapItem.setPixmap(QtGui.QPixmap())
         else:
-            ipl_image = block.get_preview_image()
+            ipl_image = ipf_block_ref().get_preview_image()
             if ipl_image is not None:
                 qimage = image_convert.iplimage_to_qimage(ipl_image)
                 qpixmap = QtGui.QPixmap.fromImage(qimage)

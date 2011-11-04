@@ -14,17 +14,20 @@ class IPFBlock(object):
     # Class members
     type = "IPFBlock"
     category = ""
+    
     # Tells that block is abstract and can not be created
     is_abstract_block = True
     
+    # Block instanced number
+    # Used for generation of unique block names
+    block_number = 0
+    
     def __init__(self):
-        self.input_ports = dict()   # {"name" : IPort object}
-        self.output_ports = dict()  # {"name" : OPort object}
-        self.properties = dict()    # {"name" : Property object}
-        self.python_code = u""      # Python code of image processing
+        self.input_ports = dict() # {"name" : IPort object}
+        self.output_ports = dict() # {"name" : OPort object}
+        self.properties = dict() # {"name" : Property object}
         self.processing_function = None # Image processing function
-        self.c_code = u""           # C code of image processing
-        self.c_function = u""       # Name of C function
+        IPFBlock.block_number += 1
         
     def process(self):
         """ Execute IPFBlock process. Sets results to output ports values
@@ -80,8 +83,7 @@ class IPFBlock(object):
         """
         return None
             
-        
-        
+  
     
     
 

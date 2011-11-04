@@ -3,6 +3,7 @@
 from PySide import QtGui, QtCore
 import os
 import sys
+import weakref
 
 
 cmd_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
@@ -15,16 +16,21 @@ class PropertiesModel(QtCore.QAbstractTableModel):
     
     """
     
-    def __init__(self, block=None):
+    def __init__(self, ipf_block_ref=None):
         super(PropertiesModel, self).__init__()
-        self.block = block
+        
+        if ipf_block_ref is not None:
+            self.ipf_block_ref = ipf_block_ref
+        else:
+            self.ipf_block_ref = None
         
         
     def rowCount(self, index=None):
-        if self.block is None:
+        if self.ipf_block_ref is None or \
+           self.ipf_block_ref() is None :
             return 0
         else:
-            return len(self.block.properties)
+            return len(self.ipf_block_ref().properties)
     
     
     def columnCount(self, index=None):
@@ -42,11 +48,14 @@ class PropertiesModel(QtCore.QAbstractTableModel):
            index.column() >= self.columnCount(index):
             return None
         
-        if self.block is None:
+        if self.ipf_block_ref is None:
             return None
         
-        key = self.block.properties.keys()[index.row()]
-        value = self.block.properties[key].get_value_representation()
+        if self.ipf_block_ref() is None:
+            return None
+        
+        key = self.ipf_block_ref().properties.keys()[index.row()]
+        value = self.ipf_block_ref().properties[key].get_value_representation()
         
         if index.column() == 0:
             return key
@@ -57,11 +66,14 @@ class PropertiesModel(QtCore.QAbstractTableModel):
       
         
     def setData(self, index, value, role=QtCore.Qt.EditRole):
+        if self.ipf_block_ref is None or \
+           self.ipf_block_ref() is None:
+            return False
         if index.isValid() and \
            role == QtCore.Qt.EditRole and \
            index.column() == 1:
-            key = self.block.properties.keys()[index.row()]
-            self.block.properties[key].set_value(value)
+            key = self.ipf_block_ref().properties.keys()[index.row()]
+            self.ipf_block_ref().properties[key].set_value(value)
             self.dataChanged.emit(index, index)
             return True
         else:
@@ -101,8 +113,12 @@ class PropertiesModel(QtCore.QAbstractTableModel):
         if row >= self.rowCount():
             return None
         
-        key = self.block.properties.keys()[row]
-        return self.block.properties[key]
+        if self.ipf_block_ref is None or \
+           self.ipf_block_ref() is None:
+            return False
+        
+        key = self.ipf_block_ref().properties.keys()[row]
+        return self.ipf_block_ref().properties[key]
         
 
 

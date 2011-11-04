@@ -3,7 +3,7 @@
 from PySide import QtGui, QtCore
 import os
 import sys
-
+import weakref
 
 cmd_folder, f = os.path.split(os.path.dirname(os.path.abspath(__file__)))
 if cmd_folder not in sys.path:
@@ -20,9 +20,10 @@ class GraphBlock(QtGui.QGraphicsWidget):
     block_width = 80
     block_height = 64
     
-    def __init__(self, block):
+    def __init__(self, ipf_block_ref, block_name):
         super(GraphBlock, self).__init__()
-        self.ipf_block = block
+        self.ipf_block_ref = ipf_block_ref
+        self.block_name = block_name
         self.rect_item = BlockPrimitive(self)
         self.rect_item.setRect(0, 0, self.block_width, self.block_height)
         self.setSizePolicy(QtGui.QSizePolicy.Fixed,
@@ -33,15 +34,15 @@ class GraphBlock(QtGui.QGraphicsWidget):
         font = self.name_item.font()
         font.setPixelSize(10)
         self.name_item.setFont(font)
-        self.name_item.setHtml("<center>%s</center>" % (self.ipf_block.type))
+        self.name_item.setHtml("<center>%s</center>" % (self.ipf_block_ref().type))
         self.input_ports_items = dict()
         self.output_ports_items = dict()
-        for iport in self.ipf_block.input_ports:
+        for iport in self.ipf_block_ref().input_ports:
             self.input_ports_items[iport] = \
-                PortPrimitive(self, self.ipf_block.input_ports[iport])
-        for oport in self.ipf_block.output_ports:
+                PortPrimitive(self, self.ipf_block_ref().input_ports[iport])
+        for oport in self.ipf_block_ref().output_ports:
             self.output_ports_items[oport] = \
-                PortPrimitive(self, self.ipf_block.output_ports[oport])
+                PortPrimitive(self, self.ipf_block_ref().output_ports[oport])
     
         self.adjust_ports(self.input_ports_items.values(), 0)
         self.adjust_ports(self.output_ports_items.values(), self.block_height)    
@@ -179,7 +180,7 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         grid.disable_dummy_block()
         pos = self.mapToScene(event.pos())
         row, column = grid.get_cell_in_point( (pos.x(), pos.y()) )
-        block_row, block_column = grid.get_block_cell(block.ipf_block)
+        block_row, block_column = grid.get_block_cell(block.block_name)
         grid_width, grid_height = grid.get_grid_size()
         if (row != block_row or column != block_column) and \
            row >= 0 and \

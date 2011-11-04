@@ -38,13 +38,12 @@ class DragDropGraphicsView(QtGui.QGraphicsView):
         grid = main_form.scheme._grid
         model = QtGui.QStandardItemModel()
         model.dropMimeData(event.mimeData(), QtCore.Qt.CopyAction, 0,0, QtCore.QModelIndex())
-        block_name = model.item(0).text()
+        block_type = model.item(0).text()
         grid.disable_dummy_block()
         pos = self.mapToScene(event.pos())
         row, column = grid.get_cell_in_point( (pos.x(), pos.y()) )
-        if block_name in main_form.block_classes:
-            block = graphblock.GraphBlock(main_form.block_classes[block_name]())
-            main_form.scheme.add_block(block, row, column)
+        if block_type in main_form.block_classes:
+            main_form.scheme.add_block(block_type, row, column)
         event.acceptProposedAction()
 
     
