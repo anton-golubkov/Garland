@@ -21,70 +21,68 @@ class TestIPFGraph(unittest.TestCase):
 
     def setUp(self):
         self.ipf_graph = ipf.ipfgraph.IPFGraph()
-        self.input_block = ipf.ipfblock.imageinput.ImageInput()
-        self.rgb2gray_block = ipf.ipfblock.rgb2gray.RGB2Gray()
-        self.input_block.properties["file_name"].set_value("files/test.png")
 
     
     def test_add_block(self):
-        self.ipf_graph.add_block("input_image", self.input_block)
-        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
-        self.assertTrue("input_image" in self.ipf_graph.blocks.keys())
-        self.assertTrue("rgb2gray1" in self.ipf_graph.blocks.keys())
+        self.ipf_graph.add_block("ImageInput", "input_image")
+        self.ipf_graph.add_block("RGB2Gray", "rgb2gray1")
+        self.assertTrue(self.ipf_graph.get_block("input_image"))
+        self.assertTrue(self.ipf_graph.get_block("rgb2gray1"))
         
     
     def test_remove_block(self):
-        self.ipf_graph.add_block("input_image", self.input_block)
-        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
+        self.ipf_graph.add_block("ImageInput", "input_image")
+        self.ipf_graph.add_block("RGB2Gray", "rgb2gray1")
         self.ipf_graph.remove_block("input_image")
-        self.assertFalse("input_image" in self.ipf_graph.blocks.keys())
+        self.assertTrue(self.ipf_graph.get_block("input_image") is None)
         self.ipf_graph.remove_block("rgb2gray1")
-        self.assertFalse("rgb2gray1" in self.ipf_graph.blocks.keys())
-        self.assertTrue(len(self.ipf_graph.blocks) == 0)
+        self.assertTrue(self.ipf_graph.get_block("rgb2gray1") is None)
     
     
     def test_add_connection(self):
-        self.ipf_graph.add_block("input_image", self.input_block)
-        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
-        oport = self.input_block.output_ports["output_image"]
-        iport = self.rgb2gray_block.input_ports["input_image"]
+        self.ipf_graph.add_block("ImageInput", "input_image")
+        self.ipf_graph.add_block("RGB2Gray", "rgb2gray1")
+        oport = self.ipf_graph.get_block("input_image").output_ports["output_image"]
+        iport = self.ipf_graph.get_block("rgb2gray1").input_ports["input_image"]
         self.ipf_graph.add_connection(oport, iport)
         self.assertEqual(len(self.ipf_graph.connections), 1 )
         for connection in self.ipf_graph.connections:
-            self.assertEqual(connection._oport, oport)
-            self.assertEqual(connection._iport, iport)
+            self.assertEqual(connection._oport(), oport)
+            self.assertEqual(connection._iport(), iport)
     
     
     def test_delete_block_with_connections(self):
-        self.ipf_graph.add_block("input_image", self.input_block)
-        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
-        oport = self.input_block.output_ports["output_image"]
-        iport = self.rgb2gray_block.input_ports["input_image"]
+        self.ipf_graph.add_block("ImageInput", "input_image")
+        self.ipf_graph.add_block("RGB2Gray", "rgb2gray1")
+        oport = self.ipf_graph.get_block("input_image").output_ports["output_image"]
+        iport = self.ipf_graph.get_block("rgb2gray1").input_ports["input_image"]
         self.ipf_graph.add_connection(oport, iport)
         self.ipf_graph.remove_block("input_image")
         self.assertEqual(len(self.ipf_graph.connections), 0 )
         
     
     def test_process(self):
-        self.ipf_graph.add_block("input_image", self.input_block)
-        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
-        oport = self.input_block.output_ports["output_image"]
-        iport = self.rgb2gray_block.input_ports["input_image"]
+        self.ipf_graph.add_block("ImageInput", "input_image")
+        self.ipf_graph.get_block("input_image").properties["file_name"].set_value("files/test.png")
+        self.ipf_graph.add_block("RGB2Gray", "rgb2gray1")
+        oport = self.ipf_graph.get_block("input_image").output_ports["output_image"]
+        iport = self.ipf_graph.get_block("rgb2gray1").input_ports["input_image"]
         self.ipf_graph.add_connection(oport, iport)
         self.ipf_graph.process()
         # This flow must return gray image
         test_image = cv.LoadImage("files/test.png")
         gray_image = cv.CreateImage(cv.GetSize(test_image), cv.IPL_DEPTH_8U, 1)
         cv.CvtColor(test_image, gray_image, cv.CV_RGB2GRAY)
-        processed_image = self.rgb2gray_block.output_ports["output_image"].get_value() 
+        processed_image = self.ipf_graph.get_block("rgb2gray1").output_ports["output_image"].get_value() 
         self.assertEqual(processed_image.tostring(), gray_image.tostring())
         
     
     def test_save(self):
-        self.ipf_graph.add_block("input_image", self.input_block)
-        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block)
-        oport = self.input_block.output_ports["output_image"]
-        iport = self.rgb2gray_block.input_ports["input_image"]
+        self.ipf_graph.add_block("ImageInput", "input_image")
+        self.ipf_graph.get_block("input_image").properties["file_name"].set_value("files/test.png")
+        self.ipf_graph.add_block("RGB2Gray", "rgb2gray1")
+        oport = self.ipf_graph.get_block("input_image").output_ports["output_image"]
+        iport = self.ipf_graph.get_block("rgb2gray1").input_ports["input_image"]
         self.ipf_graph.add_connection(oport, iport)
         self.ipf_graph.process()
         self.ipf_graph.save("files/test.xml")
@@ -97,13 +95,13 @@ class TestIPFGraph(unittest.TestCase):
         
     def test_save_and_load_all_blocks(self):
         block_classes = ipf.ipfgraphloader.get_ipfblock_classes()
-        for block_name in block_classes:
-            self.help_test_save_and_load_block( block_classes[block_name])
+        for block_class_name in block_classes:
+            self.help_test_save_and_load_block( block_class_name)
         
         
-    def help_test_save_and_load_block(self, block_class):
+    def help_test_save_and_load_block(self, block_class_name):
         graph = ipf.ipfgraph.IPFGraph()
-        graph.add_block(block_class.__name__, block_class())
+        graph.add_block(block_class_name, block_class_name)
         graph.save("files/test_block.xml")
         new_graph = ipf.ipfgraphloader.load("files/test_block.xml")
         new_graph.save("files/test_block_load.xml")
@@ -113,32 +111,29 @@ class TestIPFGraph(unittest.TestCase):
         
     def test_add_block_to_grid(self):
         self.assertTrue(self.ipf_graph.grid_cell_empty(1, 1))
-        self.ipf_graph.add_block("input_image", self.input_block, 1, 1)
-        self.assertTrue("input_image" in self.ipf_graph.blocks.keys())
+        self.ipf_graph.add_block("ImageInput", "input_image", 1, 1)
+        self.assertTrue(self.ipf_graph.get_block("input_image"))
         self.assertFalse(self.ipf_graph.grid_cell_empty(1, 1))
         
         self.assertTrue(self.ipf_graph.grid_cell_empty(2, 2))
-        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block, 2, 2)
-        self.assertTrue("rgb2gray1" in self.ipf_graph.blocks.keys())
+        self.ipf_graph.add_block("RGB2Gray", "rgb2gray1", 2, 2)
+        self.assertTrue(self.ipf_graph.get_block("rgb2gray1"))
         self.assertFalse(self.ipf_graph.grid_cell_empty(2, 2))
         
         
     def test_delete_block_from_grid(self):
-        self.ipf_graph.add_block("input_image", self.input_block, 1, 1)
-        self.ipf_graph.add_block("rgb2gray1", self.rgb2gray_block, 2, 2)
+        self.ipf_graph.add_block("ImageInput", "input_image", 1, 1)
+        self.ipf_graph.add_block("RGB2Gray", "rgb2gray1", 2, 2)
         
         self.ipf_graph.remove_block("input_image")
-        self.assertFalse("input_image" in self.ipf_graph.blocks.keys())
+        self.assertFalse(self.ipf_graph.get_block("input_image"))
         
         self.ipf_graph.remove_block("rgb2gray1")
-        self.assertFalse("rgb2gray1" in self.ipf_graph.blocks.keys())
+        self.assertTrue(self.ipf_graph.get_block("rgb2gray1") is None)
         
-        self.assertTrue(len(self.ipf_graph.blocks) == 0)
         
-        self.assertEqual(self.ipf_graph.get_block_cell(self.input_block), 
-                         None)
-        self.assertEqual(self.ipf_graph.get_block_cell(self.rgb2gray_block), 
-                         None)
+        self.assertTrue(self.ipf_graph.get_block_cell("input_image") is None)
+        self.assertTrue(self.ipf_graph.get_block_cell("rgb2gray1") is None)
         self.assertTrue(self.ipf_graph.grid_cell_empty(1, 1))
         self.assertTrue(self.ipf_graph.grid_cell_empty(2, 2))
 
