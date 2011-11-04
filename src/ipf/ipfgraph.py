@@ -104,8 +104,8 @@ class IPFGraph(object):
                 graph.add_edge( (self.__blocks[block], oport) )
         for connection in self.connections:
             graph.add_node(connection)
-            graph.add_edge( (connection._oport, connection) )
-            graph.add_edge( (connection, connection._iport) )
+            graph.add_edge( (connection._oport(), connection) )
+            graph.add_edge( (connection, connection._iport()) )
         
         sorted_graph = topological_sorting(graph)
         for node in sorted_graph:
@@ -124,13 +124,13 @@ class IPFGraph(object):
         for name in self.__blocks:
             block_element = SubElement(block_tree, "Block", {"name": name})
             block_element.append(self.__blocks[name].xml())
-        
+            
         connection_tree = SubElement(graph, "Connections")
         for connection in self.connections:
-            oport = connection._oport
-            iport = connection._iport
-            oblock = oport._owner_block
-            iblock = iport._owner_block
+            oport = connection._oport()
+            iport = connection._iport()
+            oblock = oport._owner_block()
+            iblock = iport._owner_block()
             oblock_name = self.get_block_name(oblock)
             iblock_name = self.get_block_name(iblock)
             oport_name = oblock.get_port_name(oport)
