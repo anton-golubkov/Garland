@@ -3,6 +3,8 @@
 import xml.etree.ElementTree
 from xml.etree.ElementTree import Element 
 from xml.etree.ElementTree import SubElement
+import weakref
+
 
 class Port(object):
     """ Base IPFBlock port class
@@ -11,7 +13,8 @@ class Port(object):
     
     def __init__(self, ipfblock, data_type):
         """ Base port class constructor """
-        self._owner_block = ipfblock
+        if ipfblock is not None:
+            self._owner_block = weakref.ref(ipfblock)
         self._data_type = data_type
         self._value = data_type.default_value()
         
