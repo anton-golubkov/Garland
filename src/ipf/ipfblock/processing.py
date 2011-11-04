@@ -171,7 +171,46 @@ def merge(input):
     return output
         
 
-def sum(input):
+
+class process_2i_1o(object):
+    # Decorator class for processing 2 input images and one output image
+    def __init__(self, f):
+        self.f = f
+
+    def __call__(self, *args, **kwargs):
+        input_image_1 = args[0]["input_image_1"]
+        input_image_2 = args[0]["input_image_2"]
+        if not image_empty(input_image_1) and \
+           not image_empty(input_image_2):
+            # Test same size of input images
+            if cv.GetSize(input_image_1) != cv.GetSize(input_image_2):
+                output = {"output_image" : zero_image()}
+            else:
+                output_image = cv.CreateImage(cv.GetSize(input_image_1), cv.IPL_DEPTH_8U, 3)
+                self.f(input_image_1,
+                       input_image_2,
+                       output_image)
+                output = {"output_image" : output_image}
+        else:
+            output = {"output_image" : zero_image()}
+        return output
+
+
+@process_2i_1o
+def sum(input_image_1, input_image_2, output_image):
+    cv.Add(input_image_1,
+           input_image_2,
+           output_image)
+        
+            
+@process_2i_1o          
+def subtract(input_image_1, input_image_2, output_image):
+    cv.Sub(input_image_1,
+           input_image_2,
+           output_image)
+
+
+def _sum(input):
     input_image_1 = input["input_image_1"]
     input_image_2 = input["input_image_2"]
     if not image_empty(input_image_1) and \

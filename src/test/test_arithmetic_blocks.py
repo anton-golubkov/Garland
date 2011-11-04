@@ -11,6 +11,7 @@ if cmd_folder not in sys.path:
 
 
 import ipf.ipfblock.sum
+import ipf.ipfblock.subtract
 
 # Base test class for arithmetics blocks
 class TestArithmeticBlock(unittest.TestCase):
@@ -108,6 +109,10 @@ class TestSumBlock(TestArithmeticBlock):
     test_class = ipf.ipfblock.sum.Sum
     test_file_name = "sum"
 
+
+class TestSubtractBlock(TestArithmeticBlock):
+    test_class = ipf.ipfblock.subtract.Subtract
+    test_file_name = "subtract"
 
 if __name__ == '__main__':
     unittest.main()
