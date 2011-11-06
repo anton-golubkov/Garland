@@ -270,7 +270,42 @@ def invert(input_image, output_image):
     
 
 
+class process_threshold(object):
+    # Decorator class for processing threshold operation 
+    # on one 1-channel input image and one output image
+    def __init__(self, f):
+        self.f = f
+
+    def __call__(self, *args, **kwargs):
+        input_image = args[0]["input_image"]
+        threshold_type = args[0]["threshold_type"]
+        threshold_value = args[0]["threshold"]
+        max_value = args[0]["max_value"]
+        if not image_empty(input_image):
+            output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
+            self.f(input_image,
+                   threshold_type,
+                   threshold_value,
+                   max_value,
+                   output_image)
+            output = {"output_image" : output_image}
+        else:
+            output = {"output_image" : zero_image()}
+        return output
 
 
 
+@process_threshold
+def threshold(input_image,
+              threshold_type,
+              threshold_value,
+              max_value,
+              output_image):
+    cv.Threshold(input_image, 
+                 output_image, 
+                 threshold_value, 
+                 max_value, 
+                 threshold_type)
+
+    
 
