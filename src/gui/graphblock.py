@@ -35,6 +35,8 @@ class GraphBlock(QtGui.QGraphicsWidget):
         font.setPixelSize(10)
         self.name_item.setFont(font)
         self.name_item.setHtml("<center>%s</center>" % (self.ipf_block_ref().type))
+        x = self.name_item.pos().x()
+        self.name_item.setPos(x, self.block_height / 3)
         self.input_ports_items = dict()
         self.output_ports_items = dict()
         for iport in self.ipf_block_ref().input_ports:
