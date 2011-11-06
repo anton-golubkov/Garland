@@ -279,15 +279,24 @@ class process_threshold(object):
     def __call__(self, *args, **kwargs):
         input_image = args[0]["input_image"]
         threshold_type = args[0]["threshold_type"]
-        threshold_value = args[0]["threshold"]
+        if "threshold" in args[0]:
+            threshold_value = args[0]["threshold"]
+        else:
+            threshold_value = None
         max_value = args[0]["max_value"]
         if not image_empty(input_image):
             output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
-            self.f(input_image,
-                   threshold_type,
-                   threshold_value,
-                   max_value,
-                   output_image)
+            if threshold_value is not None:
+                self.f(input_image,
+                       threshold_type,
+                       threshold_value,
+                       max_value,
+                       output_image)
+            else:
+                self.f(input_image,
+                       threshold_type,
+                       max_value,
+                       output_image)
             output = {"output_image" : output_image}
         else:
             output = {"output_image" : zero_image()}
@@ -307,5 +316,16 @@ def threshold(input_image,
                  max_value, 
                  threshold_type)
 
+
+@process_threshold
+def threshold_otsu(input_image,
+                   threshold_type,
+                   max_value,
+                   output_image):
+    cv.Threshold(input_image, 
+                 output_image, 
+                 0, 
+                 max_value, 
+                 threshold_type | cv.CV_THRESH_OTSU)
     
 
