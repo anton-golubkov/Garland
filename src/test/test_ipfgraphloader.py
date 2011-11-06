@@ -27,17 +27,20 @@ class TestIPFGraphLoader(unittest.TestCase):
         self.assertEqual(block_classes['ImageInput'], ImageInput)
     
     
-    def test_load_and_save_file(self):
-        graph = ipf.ipfgraphloader.load("files/test.xml")
-        graph.save("files/test_load_save.xml")
-        self.assertTrue(filecmp.cmp("files/test_load_save.xml", "files/test.xml"))
+    def test_load_and_save_files(self):
+        test_files = ["test",
+                      "test_cells",
+                      "test_large",]
+        for file_name in test_files:
+            self.help_test_load_and_save_file(file_name)
         
     
-    def test_load_and_save_file_cells(self):
-        graph = ipf.ipfgraphloader.load("files/test_cells.xml")
-        graph.save("files/test_load_save_cells.xml")
-        self.assertTrue(filecmp.cmp("files/test_load_save_cells.xml", "files/test_cells.xml"))
-        
+    def help_test_load_and_save_file(self, file_name):
+        graph = ipf.ipfgraphloader.load("files/%s.xml" % (file_name))
+        graph.save("files/%s_load_save.xml" % (file_name))
+        self.assertTrue(filecmp.cmp("files/%s_load_save.xml" % (file_name),
+                                    "files/%s.xml" % (file_name) ),
+                                    "Load save failed: %s" % (file_name)) 
         
 if __name__ == "__main__":
     unittest.main()
