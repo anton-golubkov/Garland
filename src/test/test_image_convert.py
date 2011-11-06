@@ -19,6 +19,7 @@ class TestImageConvert(unittest.TestCase):
         self.iplimage = cv.LoadImage("files/test.png")
         self.pilimage = PIL.Image.open("files/test.png")
         self.qimage = QtGui.QImage("files/test.png")
+        self.gray_iplimage = cv.LoadImage("files/test.png", 0)
         self.zero_iplimage = cv.CreateImage( (0, 0), cv.IPL_DEPTH_8U, 3)
         self.zero_pilimage = PIL.Image.Image()
         self.zero_qimage = QtGui.QImage()
@@ -94,6 +95,13 @@ class TestImageConvert(unittest.TestCase):
     def test_zero_q_to_pil(self):
         result_pil = gui.image_convert.qimage_to_pilimage(self.zero_qimage)
         self.assertEqual(result_pil.size, (0, 0))
+        
+        
+    def test_gray_ipl_to_pil(self):
+        result_pil = gui.image_convert.iplimage_to_pilimage(self.gray_iplimage)
+        result_pil.save("files/test_gray_ipl_pil.png", "PNG")
+        self.assertTrue(self.images_equal("files/test_gray_pil.png", 
+                                          "files/test_gray_ipl_pil.png"))
     
 
 if __name__ == '__main__':

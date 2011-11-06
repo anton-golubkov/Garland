@@ -38,10 +38,16 @@ def iplimage_to_pilimage(ipl_image):
         
         This function may be obsolete. Use ipl_image.as_pil_image() instead.
         """
-         # Check zero size of image
+        # Check zero size of image
         if cv.GetSize(ipl_image) == (0, 0):
             return PIL.Image.Image()
 
+        # Check 1-channel input image and convert it to 3-channel
+        if( ipl_image.nChannels == 1):
+            image3c = cv.CreateImage(cv.GetSize(ipl_image), cv.IPL_DEPTH_8U, 3)
+            cv.Merge(ipl_image, ipl_image, ipl_image, None, image3c)
+            ipl_image = image3c
+            
         size = cv.GetSize(ipl_image)
         data = ipl_image.tostring()
         im_pil = PIL.Image.fromstring(
