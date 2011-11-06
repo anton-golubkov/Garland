@@ -1,4 +1,4 @@
-#Sat Nov 05 01:06:18 OMST 2011
+#Mon Nov 07 00:35:28 OMST 2011
 eclipse.preferences.version=1
 encoding//src/gui/geticon.py=utf-8
 encoding//src/gui/graphblock.py=utf-8
@@ -10,6 +10,7 @@ encoding//src/gui/main_form_ui.py=utf-8
 encoding//src/gui/propertiesmodel.py=utf-8
 encoding//src/gui/propertyeditor.py=utf-8
 encoding//src/ipf/getblockclasses.py=utf-8
+encoding//src/ipf/ipfblock/adaptivethreshold.py=utf-8
 encoding//src/ipf/ipfblock/and_block.py=utf-8
 encoding//src/ipf/ipfblock/arithmetic.py=utf-8
 encoding//src/ipf/ipfblock/blackhat.py=utf-8
@@ -34,10 +35,15 @@ encoding//src/ipf/ipfblock/rgb2gray.py=utf-8
 encoding//src/ipf/ipfblock/split.py=utf-8
 encoding//src/ipf/ipfblock/subtract.py=utf-8
 encoding//src/ipf/ipfblock/sum.py=utf-8
+encoding//src/ipf/ipfblock/threshold.py=utf-8
+encoding//src/ipf/ipfblock/threshold_otsu.py=utf-8
 encoding//src/ipf/ipfblock/tophat.py=utf-8
 encoding//src/ipf/ipfblock/xor_block.py=utf-8
 encoding//src/ipf/ipfgraph.py=utf-8
 encoding//src/ipf/ipfgraphloader.py=utf-8
+encoding//src/ipf/ipftype/ipfadaptivethresholdmethod.py=utf-8
+encoding//src/ipf/ipftype/ipfadaptivethresholdtype.py=utf-8
+encoding//src/ipf/ipftype/ipfblocksizetype.py=utf-8
 encoding//src/ipf/ipftype/ipfdicttype.py=utf-8
 encoding//src/ipf/ipftype/ipfelementstype.py=utf-8
 encoding//src/ipf/ipftype/ipffloattype.py=utf-8
@@ -46,6 +52,7 @@ encoding//src/ipf/ipftype/ipfimage3ctype.py=utf-8
 encoding//src/ipf/ipftype/ipfinttype.py=utf-8
 encoding//src/ipf/ipftype/ipfrgbtype.py=utf-8
 encoding//src/ipf/ipftype/ipfstringtype.py=utf-8
+encoding//src/ipf/ipftype/ipfthresholdtype.py=utf-8
 encoding//src/ipf/ipftype/ipftype.py=utf-8
 encoding//src/test/test_arithmetic_blocks.py=utf-8
 encoding//src/test/test_blackhat.py=utf-8
