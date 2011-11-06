@@ -283,6 +283,13 @@ class process_threshold(object):
             threshold_value = args[0]["threshold"]
         else:
             threshold_value = None
+        
+        if "adaptive_method" in args[0]:
+            adaptive_method = args[0]["adaptive_method"]
+            block_size = args[0]["block_size"]
+            param = args[0]["param"]
+        else:
+            adaptive_method = None
         max_value = args[0]["max_value"]
         if not image_empty(input_image):
             output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
@@ -291,6 +298,14 @@ class process_threshold(object):
                        threshold_type,
                        threshold_value,
                        max_value,
+                       output_image)
+            elif adaptive_method is not None:
+                self.f(input_image,
+                       threshold_type,
+                       max_value,
+                       adaptive_method,
+                       block_size,
+                       param,
                        output_image)
             else:
                 self.f(input_image,
@@ -327,5 +342,23 @@ def threshold_otsu(input_image,
                  0, 
                  max_value, 
                  threshold_type | cv.CV_THRESH_OTSU)
+
+
+@process_threshold
+def adaptive_threshold(input_image,
+                       threshold_type,
+                       max_value,
+                       adaptive_method,
+                       block_size,
+                       param,
+                       output_image):
+    cv.AdaptiveThreshold(input_image,
+                         output_image,
+                         max_value,
+                         adaptive_method,
+                         threshold_type,
+                         block_size,
+                         param)
     
+
 
