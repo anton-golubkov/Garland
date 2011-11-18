@@ -177,6 +177,25 @@ class TestIPFGraph(unittest.TestCase):
             "input_image1")
         
         
+    def test_is_accessible(self):
+        self.ipf_graph.add_block("Dilate", "block1")
+        self.ipf_graph.add_block("Dilate", "block2")
+        block1 = self.ipf_graph.get_block("block1")
+        block2 = self.ipf_graph.get_block("block2")
+        iport1 = self.ipf_graph.get_block("block1").input_ports["input_image"]
+        oport1 = self.ipf_graph.get_block("block1").output_ports["output_image"]
+        iport2 = self.ipf_graph.get_block("block2").input_ports["input_image"]
+        oport2 = self.ipf_graph.get_block("block2").output_ports["output_image"]
+        self.ipf_graph.add_connection(oport1, iport2)
+        self.assertTrue(self.ipf_graph.is_accessible(oport1, iport2))
+        self.assertFalse(self.ipf_graph.is_accessible(iport2, oport1))
+        self.assertTrue(self.ipf_graph.is_accessible(iport1, oport2))
+        self.assertTrue(self.ipf_graph.is_accessible(iport1, iport2))
+        self.assertTrue(self.ipf_graph.is_accessible(block1, block2))
+        self.assertFalse(self.ipf_graph.is_accessible(block2, block1))
+        
+        
+        
         
         
 

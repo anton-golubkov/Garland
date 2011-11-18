@@ -2,6 +2,7 @@
 
 from pygraph.classes.digraph import digraph
 from pygraph.algorithms.sorting import topological_sorting
+from pygraph.algorithms.accessibility import accessibility
 import xml.etree.ElementTree
 from xml.etree.ElementTree import Element 
 from xml.etree.ElementTree import SubElement
@@ -10,6 +11,7 @@ import weakref
 from keyfromvalue import dict_key_from_value
 import ipfblock
 import ipfblock.connection
+import ipfblock.ioport
 from getblockclasses import get_ipfblock_classes
 
 class IPFGraph(object):
@@ -89,10 +91,21 @@ class IPFGraph(object):
     def add_connection(self, oport, iport):
         """ Add connection between input (iport) and output (oport) ports 
             
-            Function raises exception ValueError if ports can`t be connected.
+            Function returns error message if connection can`t be created
         """
+        
+        # Test loop connection
+        if self.is_accessible(iport, oport):
+            # Prevent loop connection
+            return "Error: Loop connection"
+        
+        # Test port connection allowed
+        if not ipfblock.ioport.is_connect_allowed(oport, iport):
+            return "Error: Port types not match"
+        
         con = ipfblock.connection.Connection(oport, iport)
         self.connections.add(con)
+
         
         
     def process(self):
@@ -102,27 +115,14 @@ class IPFGraph(object):
         ((iport.invalidate() for iport in block.input_ports.values()) 
                              for block in self.__blocks.values())
         
-        # Map image processing flow to directed graph
-        # apply topological sorting and execute processing blocks in
-        # topological order 
+        graph = self._make_flow_graph()
         
-        graph = digraph()
-        for block in self.__blocks:
-            graph.add_node(weakref.ref(self.__blocks[block]))
-            for iport in self.__blocks[block].input_ports.values():
-                graph.add_node(weakref.ref(iport))
-                graph.add_edge( (weakref.ref(iport), weakref.ref(self.__blocks[block])) )
-            for oport in self.__blocks[block].output_ports.values():
-                graph.add_node(weakref.ref(oport))
-                graph.add_edge( (weakref.ref(self.__blocks[block]), weakref.ref(oport)) )
-        for connection in self.connections:
-            graph.add_node(weakref.ref(connection))
-            graph.add_edge( (connection._oport, weakref.ref(connection)) )
-            graph.add_edge( (weakref.ref(connection), connection._iport ) )
-
+        # Apply topological sorting and execute processing blocks in
+        # topological order 
         sorted_graph = topological_sorting(graph)
         for node in sorted_graph:
             node().process()
+    
     
     def get_block_name(self, block):
         return dict_key_from_value(self.__blocks, block)
@@ -247,3 +247,35 @@ class IPFGraph(object):
     def blocks(self):
         # Returns iterator for __blocks dictionary keys
         return self.__blocks.keys()
+    
+    
+    def is_accessible(self, node1, node2):
+        """ Checks that is two nodes of blocks graph are connected
+        Connection checked directionally: node1 -> node2
+        """
+        graph = self._make_flow_graph()
+        acc = accessibility(graph)
+        return weakref.ref(node2) in acc[weakref.ref(node1)]
+        
+        
+
+    def _make_flow_graph(self):
+        """ Map image processing flow to directed graph
+        
+        """
+               
+        graph = digraph()
+        for block in self.__blocks:
+            graph.add_node(weakref.ref(self.__blocks[block]))
+            for iport in self.__blocks[block].input_ports.values():
+                graph.add_node(weakref.ref(iport))
+                graph.add_edge( (weakref.ref(iport), weakref.ref(self.__blocks[block])) )
+            for oport in self.__blocks[block].output_ports.values():
+                graph.add_node(weakref.ref(oport))
+                graph.add_edge( (weakref.ref(self.__blocks[block]), weakref.ref(oport)) )
+        for connection in self.connections:
+            graph.add_node(weakref.ref(connection))
+            graph.add_edge( (connection._oport, weakref.ref(connection)) )
+            graph.add_edge( (weakref.ref(connection), connection._iport ) )
+        return graph    
+
