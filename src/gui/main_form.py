@@ -18,6 +18,7 @@ import graphscheme
 import propertiesmodel
 import image_convert
 import propertyeditor
+from graphblock import GraphBlock
 
 
 class MainForm(QtGui.QMainWindow):
@@ -200,15 +201,15 @@ class MainForm(QtGui.QMainWindow):
     
     
     def text_mode(self):
-        pass
+        self.scheme.set_block_paint_mode(GraphBlock.TEXT_PAINT_MODE)
     
     
     def image_mode(self):
-        pass
+        self.scheme.set_block_paint_mode(GraphBlock.IMAGE_PAINT_MODE)
     
     
     def icon_mode(self):
-        pass
+        self.scheme.set_block_paint_mode(GraphBlock.ICON_PAINT_MODE)
     
     
     def help_contents(self):

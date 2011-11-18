@@ -55,7 +55,11 @@ class GraphScheme( QtGui.QGraphicsScene):
     
     
     def save_graph(self, file_name):
-        self._grid.ipf_graph.save(file_name) 
+        self._grid.ipf_graph.save(file_name)
+        
+        
+    def set_block_paint_mode(self, mode):
+        self._grid.set_block_paint_mode(mode)
 
 
 class GraphGrid(QtGui.QGraphicsRectItem):
@@ -355,7 +359,6 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             self.selected_block = None
 
     
-    
     def get_selected_block(self):
         return self.selected_block.parentItem().ipf_block_ref()
     
@@ -375,4 +378,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             self.add_block(block, row, column)
         self.update_connection_arrows()
             
+    
+    def set_block_paint_mode(self, mode):
+        for block in self.graph_blocks:
+            block.set_paint_mode(mode)
+        
     

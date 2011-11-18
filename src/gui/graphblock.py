@@ -11,6 +11,8 @@ if cmd_folder not in sys.path:
 
 import ipf.ipfblock.ioport
 import geticon
+import image_convert
+
 
 class GraphBlock(QtGui.QGraphicsWidget):
     """ GraphBlock represents IPFBlock in graphics scene
@@ -19,6 +21,11 @@ class GraphBlock(QtGui.QGraphicsWidget):
     
     block_width = 80
     block_height = 64
+    
+    # Paint mode constants
+    TEXT_PAINT_MODE = 1
+    ICON_PAINT_MODE = 2
+    IMAGE_PAINT_MODE = 3
     
     def __init__(self, ipf_block_ref, block_name):
         super(GraphBlock, self).__init__()
@@ -29,14 +36,6 @@ class GraphBlock(QtGui.QGraphicsWidget):
         self.setSizePolicy(QtGui.QSizePolicy.Fixed,
                            QtGui.QSizePolicy.Fixed)
         self.resize(self.block_width, self.block_height)
-        self.name_item = QtGui.QGraphicsTextItem(self.rect_item)
-        self.name_item.setTextWidth(self.block_width)
-        font = self.name_item.font()
-        font.setPixelSize(10)
-        self.name_item.setFont(font)
-        self.name_item.setHtml("<center>%s</center>" % (self.ipf_block_ref().type))
-        x = self.name_item.pos().x()
-        self.name_item.setPos(x, self.block_height / 3)
         self.input_ports_items = dict()
         self.output_ports_items = dict()
         for iport in self.ipf_block_ref().input_ports:
@@ -51,6 +50,8 @@ class GraphBlock(QtGui.QGraphicsWidget):
         
         self.setAcceptedMouseButtons(QtCore.Qt.LeftButton)
         
+        
+        
     
     def adjust_ports(self, ports, y_base):
         port_count = len(ports)
@@ -64,6 +65,23 @@ class GraphBlock(QtGui.QGraphicsWidget):
                 port_item.setPos((i+1) * port_distance - port_item.port_size / 2, 
                                   y_base - port_item.port_size / 2)
 
+    
+    
+    
+    def set_paint_mode(self, mode):
+        """ Sets visualization mode of block
+            
+            There is 3 paint mode:
+            Text - show block type
+            Image - show block processing image
+            Icon - show block icon
+        
+        """
+        self.rect_item.set_paint_mode(mode)
+        
+        
+        pass
+    
                 
                 
 
@@ -142,7 +160,22 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
     def __init__(self, parent):
         super(BlockPrimitive, self).__init__(parent)
         self.selected = False
-
+        self.paint_mode = GraphBlock.TEXT_PAINT_MODE
+        self.name_item = QtGui.QGraphicsTextItem(self)
+        self.name_item.setTextWidth(GraphBlock.block_width)
+        font = self.name_item.font()
+        font.setPixelSize(10)
+        self.name_item.setFont(font)
+        self.name_item.setHtml("<center>%s</center>" % 
+                               (self.parentItem().ipf_block_ref().type))
+        x = self.name_item.pos().x()
+        self.name_item.setPos(x, self.parentItem().block_height / 3)
+        
+        self.image_item = QtGui.QGraphicsPixmapItem(self)
+        x = self.image_item.pos().x()
+        y = self.image_item.pos().y()
+        self.image_item.setPos(x + self.parentItem().block_width / 4,
+                               y + self.parentItem().block_height / 4)
         
     
     def paint(self, painter, option, widget):
@@ -155,6 +188,16 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
             brush.setColor(QtCore.Qt.white)
         painter.setBrush(brush)
         painter.drawRoundedRect( rect, 5, 5)
+        
+        if self.paint_mode == GraphBlock.IMAGE_PAINT_MODE:
+            ipl_image = self.parentItem().ipf_block_ref().get_preview_image()
+            if ipl_image is not None:
+                qimage = image_convert.iplimage_to_qimage(ipl_image)
+                qimage = qimage.scaled(GraphBlock.block_width / 2,
+                              GraphBlock.block_height / 2,
+                              QtCore.Qt.KeepAspectRatio)
+                qpixmap = QtGui.QPixmap.fromImage(qimage)
+                self.image_item.setPixmap(qpixmap)
         
         
     def mousePressEvent(self, event):
@@ -191,4 +234,23 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
            column < grid_width:
             grid.move_block(block, row, column)
         self.setCursor(QtCore.Qt.ArrowCursor)
+
+
+    def set_paint_mode(self, mode):
+        if mode == GraphBlock.IMAGE_PAINT_MODE:
+            self.paint_mode = mode
+            self.name_item.hide()
+            self.image_item.show()
+        elif mode == GraphBlock.ICON_PAINT_MODE:
+            self.paint_mode = mode
+            self.name_item.hide()
+            self.image_item.show()
+        else:
+            # Default paint mode is TEXT_PAINT_MODE
+            self.paint_mode = GraphBlock.TEXT_PAINT_MODE
+            self.name_item.show()
+            self.image_item.hide()
+        
+        
+        
         
