@@ -82,6 +82,10 @@ class GraphBlock(QtGui.QGraphicsWidget):
         
     def update_preview_image(self):
         self.rect_item.update_preview_image()
+        
+        
+    def get_preview_image(self):
+        return self.rect_item.get_preview_image()
                 
                 
                 
@@ -178,6 +182,8 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         self.image_item.setPos(x + self.parentItem().block_width / 4,
                                y + self.parentItem().block_height / 4)
         
+        self.preview_pixmap = QtGui.QPixmap()
+        
     
     def paint(self, painter, option, widget):
         rect = self.rect()
@@ -195,11 +201,15 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         ipl_image = self.parentItem().ipf_block_ref().get_preview_image()
         if ipl_image is not None:
             qimage = image_convert.iplimage_to_qimage(ipl_image)
-            qimage = qimage.scaled(GraphBlock.block_width / 2,
+            self.preview_pixmap = QtGui.QPixmap.fromImage(qimage)
+            qpixmap = self.preview_pixmap.scaled(GraphBlock.block_width / 2,
                           GraphBlock.block_height / 2,
                           QtCore.Qt.KeepAspectRatio)
-            qpixmap = QtGui.QPixmap.fromImage(qimage)
             self.image_item.setPixmap(qpixmap)
+    
+    
+    def get_preview_image(self):
+        return self.preview_pixmap
         
         
     def mousePressEvent(self, event):

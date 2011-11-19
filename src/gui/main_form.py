@@ -50,8 +50,8 @@ class MainForm(QtGui.QMainWindow):
         self.editor_delegate.closeEditor.connect(self.update_window)
         
         # Preview block
-        self.previewBlock1 = None
-        self.previewBlock2 = None
+        self.previewGraphBlock1 = None
+        self.previewGraphBlock2 = None
         
         # File name of current file, new file have None as file name
         self.current_file_name = None
@@ -74,12 +74,12 @@ class MainForm(QtGui.QMainWindow):
         self.ui.blocks_tree.insertTopLevelItems(0, category_items.values())
         
         
-    def block_selected(self, ipf_block_ref):
-        self.show_block_properties(ipf_block_ref)
+    def block_selected(self, graph_block_ref):
+        self.show_block_properties(graph_block_ref().ipf_block_ref)
         if not self.ui.keepPreview1.isChecked():
-            self.previewBlock1 = ipf_block_ref
+            self.previewBlock1 = graph_block_ref
         if not self.ui.keepPreview2.isChecked():
-            self.previewBlock2 = ipf_block_ref
+            self.previewBlock2 = graph_block_ref
         self.update_window()
         
         
@@ -241,20 +241,17 @@ class MainForm(QtGui.QMainWindow):
         self.update_window()
     
     
-    def _update_preview(self, ipf_block_ref, previewPixmapItem, previewView):
+    def _update_preview(self, graph_block_ref, previewPixmapItem, previewView):
         """ Update preview image for block in previewPixmapItem
         
         """
-        if ipf_block_ref is None or ipf_block_ref() is None:
+        if graph_block_ref is None or graph_block_ref() is None:
             previewPixmapItem.setPixmap(QtGui.QPixmap())
         else:
-            ipl_image = ipf_block_ref().get_preview_image()
-            if ipl_image is not None:
-                qimage = image_convert.iplimage_to_qimage(ipl_image)
-                qpixmap = QtGui.QPixmap.fromImage(qimage)
-                previewPixmapItem.setPixmap(qpixmap)
-                previewView.fitInView(previewPixmapItem, \
-                                               QtCore.Qt.KeepAspectRatio)
+            pixmap = graph_block_ref().get_preview_image()
+            previewPixmapItem.setPixmap(pixmap)
+            previewView.fitInView(previewPixmapItem, \
+                                  QtCore.Qt.KeepAspectRatio)
         
     def graph_changed(self):
         """ Notify function, called when image processing graph is changed

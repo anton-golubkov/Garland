@@ -342,9 +342,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.selected_block.selected = True
         self.selected_block.update()
         
-        ipf_block_ref = block_primitive.parentItem().ipf_block_ref
+        graph_block_ref = weakref.ref(block_primitive.parentItem())
         main_form = self.scene().parent()
-        main_form.block_selected(ipf_block_ref)
+        main_form.block_selected(graph_block_ref)
         
         
     def get_block_primitive_from_block(self, ipf_block_ref):
