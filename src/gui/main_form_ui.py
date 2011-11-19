@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'main_form.ui'
 #
-# Created: Sun Oct  9 11:47:29 2011
+# Created: Sat Nov 19 19:07:23 2011
 #      by: PySide UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -108,8 +108,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.propertyTable = QtGui.QTableView(self.propertiesContents)
         self.propertyTable.setObjectName("propertyTable")
-        self.propertyTable.horizontalHeader().setVisible(False)
+        self.propertyTable.horizontalHeader().setVisible(True)
         self.propertyTable.horizontalHeader().setHighlightSections(False)
+        self.propertyTable.verticalHeader().setVisible(False)
         self.propertyTable.verticalHeader().setDefaultSectionSize(100)
         self.verticalLayout_4.addWidget(self.propertyTable)
         self.propertiesDock.setWidget(self.propertiesContents)

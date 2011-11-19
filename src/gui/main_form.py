@@ -87,6 +87,9 @@ class MainForm(QtGui.QMainWindow):
         self.properties_model = propertiesmodel.PropertiesModel(ipf_block_ref)
         self.ui.propertyTable.setModel(self.properties_model)
         self.properties_model.dataChanged.connect(self.process_flow_and_update_window)
+        self.ui.propertyTable.resizeRowsToContents()
+        self.ui.propertyTable.setColumnWidth(0, 120)
+        self.ui.propertyTable.setColumnWidth(1, 120)
 
 
     def init_actions(self):
