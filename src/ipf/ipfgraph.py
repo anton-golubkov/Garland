@@ -134,7 +134,7 @@ class IPFGraph(object):
         """
         graph = Element("IPFGraph")
         block_tree = SubElement(graph, "Blocks")
-        for name in self.__blocks:
+        for name in sorted(self.__blocks):
             row, column = self.get_block_cell(name)
             block_element = SubElement(block_tree, "Block", 
                                        {"name":name,
@@ -143,7 +143,7 @@ class IPFGraph(object):
             block_element.append(self.__blocks[name].xml())
             
         connection_tree = SubElement(graph, "Connections")
-        for connection in self.connections:
+        for connection in sorted(self.connections):
             oport = connection._oport()
             iport = connection._iport()
             oblock = oport._owner_block()
