@@ -20,7 +20,7 @@ class GraphBlock(QtGui.QGraphicsWidget):
     """
     
     block_width = 80
-    block_height = 64
+    block_height = 80
     
     # Paint mode constants
     TEXT_PAINT_MODE = 1
@@ -180,7 +180,7 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         x = self.image_item.pos().x()
         y = self.image_item.pos().y()
         self.image_item.setPos(x + self.parentItem().block_width / 4,
-                               y + self.parentItem().block_height / 4)
+                               y + 10)
         
         self.preview_pixmap = QtGui.QPixmap()
         
@@ -254,17 +254,20 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
     def set_paint_mode(self, mode):
         if mode == GraphBlock.IMAGE_PAINT_MODE:
             self.paint_mode = mode
-            self.name_item.hide()
             self.image_item.show()
+            x = self.name_item.pos().x()
+            self.name_item.setPos(x, self.parentItem().block_height - 30)
         elif mode == GraphBlock.ICON_PAINT_MODE:
             self.paint_mode = mode
-            self.name_item.hide()
             self.image_item.show()
+            x = self.name_item.pos().x()
+            self.name_item.setPos(x, self.parentItem().block_height - 30)
         else:
             # Default paint mode is TEXT_PAINT_MODE
             self.paint_mode = GraphBlock.TEXT_PAINT_MODE
-            self.name_item.show()
             self.image_item.hide()
+            x = self.name_item.pos().x()
+            self.name_item.setPos(x, self.parentItem().block_height / 3)
         
         
         
