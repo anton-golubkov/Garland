@@ -80,8 +80,9 @@ class GraphBlock(QtGui.QGraphicsWidget):
         self.rect_item.set_paint_mode(mode)
         
         
-        pass
-    
+    def update_preview_image(self):
+        self.rect_item.update_preview_image()
+                
                 
                 
 
@@ -189,15 +190,16 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         painter.setBrush(brush)
         painter.drawRoundedRect( rect, 5, 5)
         
-        if self.paint_mode == GraphBlock.IMAGE_PAINT_MODE:
-            ipl_image = self.parentItem().ipf_block_ref().get_preview_image()
-            if ipl_image is not None:
-                qimage = image_convert.iplimage_to_qimage(ipl_image)
-                qimage = qimage.scaled(GraphBlock.block_width / 2,
-                              GraphBlock.block_height / 2,
-                              QtCore.Qt.KeepAspectRatio)
-                qpixmap = QtGui.QPixmap.fromImage(qimage)
-                self.image_item.setPixmap(qpixmap)
+        
+    def update_preview_image(self):
+        ipl_image = self.parentItem().ipf_block_ref().get_preview_image()
+        if ipl_image is not None:
+            qimage = image_convert.iplimage_to_qimage(ipl_image)
+            qimage = qimage.scaled(GraphBlock.block_width / 2,
+                          GraphBlock.block_height / 2,
+                          QtCore.Qt.KeepAspectRatio)
+            qpixmap = QtGui.QPixmap.fromImage(qimage)
+            self.image_item.setPixmap(qpixmap)
         
         
     def mousePressEvent(self, event):

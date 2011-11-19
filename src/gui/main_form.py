@@ -86,6 +86,7 @@ class MainForm(QtGui.QMainWindow):
     def show_block_properties(self, ipf_block_ref):
         self.properties_model = propertiesmodel.PropertiesModel(ipf_block_ref)
         self.ui.propertyTable.setModel(self.properties_model)
+        self.properties_model.dataChanged.connect(self.process_flow_and_update_window)
 
 
     def init_actions(self):
@@ -180,12 +181,11 @@ class MainForm(QtGui.QMainWindow):
         self.properties_model = propertiesmodel.PropertiesModel()
         self.ui.propertyTable.setModel(self.properties_model)
         self.scheme.delete_selected()
-        self.update_window()
+        self.process_flow_and_update_window()
     
     
     def processing_start(self):
-        self.scheme.ipf_graph.process()
-        self.update_window()
+        self.process_flow_and_update_window()
     
     
     def processing_stop(self):
@@ -224,9 +224,6 @@ class MainForm(QtGui.QMainWindow):
         """ Update all window GUI elements
         
         """
-        # Perform image processing 
-        self.scheme.process()
-        
         if self.previewBlock1 is not None:
             self._update_preview(self.previewBlock1, 
                                  self.previewPixmapItem1, 
@@ -236,7 +233,13 @@ class MainForm(QtGui.QMainWindow):
                                  self.previewPixmapItem2, 
                                  self.ui.previewView2)
         
-        
+                    
+    def process_flow_and_update_window(self):
+        # Perform image processing
+        self.scheme.process()
+        self.scheme.update()
+        self.update_window()
+    
     
     def _update_preview(self, ipf_block_ref, previewPixmapItem, previewView):
         """ Update preview image for block in previewPixmapItem
@@ -257,7 +260,7 @@ class MainForm(QtGui.QMainWindow):
         """ Notify function, called when image processing graph is changed
         
         """
-        self.update_window()
+        self.process_flow_and_update_window()
         
         
     def update_window_title(self):
@@ -266,3 +269,7 @@ class MainForm(QtGui.QMainWindow):
             self.setWindowTitle(self.tr("Untitled"))
         else:
             self.setWindowTitle(self.current_file_name)
+
+
+
+

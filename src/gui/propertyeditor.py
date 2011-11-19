@@ -82,6 +82,7 @@ class PropertyEditorDelegate(QtGui.QItemDelegate):
             item_index = editor.findText(value_repr)
             editor.setCurrentIndex(item_index)
             
+            
     def setModelData(self, editor, model, index):
         row = index.row()
         property = index.model().get_property(row)
@@ -104,6 +105,7 @@ class PropertyEditorDelegate(QtGui.QItemDelegate):
             value =  editor.currentText()
         
         property.set_value(value)
+        index.model().dataChanged.emit(index, index)
     
     
     def updateEditorGeometry(self, editor, option, index):

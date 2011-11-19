@@ -62,6 +62,13 @@ class GraphScheme( QtGui.QGraphicsScene):
         self._grid.set_block_paint_mode(mode)
 
 
+    def update(self):
+        self._grid.update()
+
+
+
+
+
 class GraphGrid(QtGui.QGraphicsRectItem):
     """ Graphics grid class, used in GraphScheme
     
@@ -99,6 +106,8 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         
         # Current selected block
         self.selected_block = None
+        
+        self.paint_mode = GraphBlock.TEXT_PAINT_MODE
         
         
     def paint(self, painter, option, widget):
@@ -247,6 +256,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
                 if type(item) == graphblock.PortPrimitive:
                     return item
     
+    
     def create_connection(self, port1, port2):
         iport_prim = None
         oport_prim = None
@@ -380,7 +390,13 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             
     
     def set_block_paint_mode(self, mode):
+        self.paint_mode = mode
         for block in self.graph_blocks:
             block.set_paint_mode(mode)
         
+    
+    def update(self):
+        for block in self.graph_blocks:
+            block.set_paint_mode(self.paint_mode)
+            block.update_preview_image()
     
