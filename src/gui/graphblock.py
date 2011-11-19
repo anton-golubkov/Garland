@@ -202,10 +202,13 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
         if ipl_image is not None:
             qimage = image_convert.iplimage_to_qimage(ipl_image)
             self.preview_pixmap = QtGui.QPixmap.fromImage(qimage)
-            qpixmap = self.preview_pixmap.scaled(GraphBlock.block_width / 2,
+            if qimage.isNull():
+                self.image_item.setPixmap(QtGui.QPixmap())
+            else:
+                qpixmap = self.preview_pixmap.scaled(GraphBlock.block_width / 2,
                           GraphBlock.block_height / 2,
                           QtCore.Qt.KeepAspectRatio)
-            self.image_item.setPixmap(qpixmap)
+                self.image_item.setPixmap(qpixmap)
     
     
     def get_preview_image(self):

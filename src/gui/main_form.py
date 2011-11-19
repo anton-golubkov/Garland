@@ -50,8 +50,8 @@ class MainForm(QtGui.QMainWindow):
         self.editor_delegate.closeEditor.connect(self.update_window)
         
         # Preview block
-        self.previewGraphBlock1 = None
-        self.previewGraphBlock2 = None
+        self.previewBlock1 = None
+        self.previewBlock2 = None
         
         # File name of current file, new file have None as file name
         self.current_file_name = None
