@@ -32,6 +32,7 @@ def rgb2gray(input):
         output = {"output_image" : zero_image_1c()}
     return output
 
+
 def load_image(input):
     file_name = input["file_name"]
     try:
@@ -42,6 +43,7 @@ def load_image(input):
     else: 
         output = {"output_image" : output_image}
     return output
+
 
 def save_image(input):
     file_name = input["file_name"]
@@ -362,3 +364,20 @@ def adaptive_threshold(input_image,
     
 
 
+
+def smooth(input):
+    input_image = input["input_image"]
+    smoothing_type = input["smoothing_type"]
+    aperture_width = input["aperture_width"]
+    aperture_height = input["aperture_height"]
+    if not image_empty(input_image):
+        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
+        cv.Smooth(input_image, 
+                  output_image, 
+                  smoothing_type,
+                  aperture_width,
+                  aperture_height)
+        output = {"output_image" : output_image}
+    else:
+        output = {"output_image" : zero_image()}
+    return output
