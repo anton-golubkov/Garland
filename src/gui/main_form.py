@@ -56,6 +56,8 @@ class MainForm(QtGui.QMainWindow):
         # File name of current file, new file have None as file name
         self.current_file_name = None
         self.update_window_title()
+        
+        self.scale_factor = 1.0
     
         
     def _init_blocks_widget(self):
@@ -196,10 +198,16 @@ class MainForm(QtGui.QMainWindow):
     
     
     def zoom_in(self):
+        self.scale_factor += 0.1
+        self.ui.graphicsView.resetTransform()
+        self.ui.graphicsView.scale(self.scale_factor, self.scale_factor)
         pass
     
     
     def zoom_out(self):
+        self.scale_factor -= 0.1
+        self.ui.graphicsView.resetTransform()
+        self.ui.graphicsView.scale(self.scale_factor, self.scale_factor)
         pass
     
     
