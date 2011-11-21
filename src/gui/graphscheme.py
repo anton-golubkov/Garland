@@ -80,6 +80,29 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     top_margin = 40
     
     
+    # Inner class for represent connection arrow between blocks     
+    class ConnectionArrow(QtGui.QGraphicsPathItem):
+    
+        def __init__(self, parent, begin, end):
+            super(GraphGrid.ConnectionArrow, self).__init__(parent)
+            row = int( (begin.y() - GraphGrid.top_margin) / GraphGrid.cell_height) + 1
+            grid_line_y = GraphGrid.top_margin + row * GraphGrid.cell_height
+            
+            path = QtGui.QPainterPath()
+            path.moveTo(begin.x(), begin.y())
+            path.lineTo(begin.x(), grid_line_y)
+            path.lineTo(end.x(), grid_line_y)
+            path.lineTo(end.x(), end.y())  
+            self.setPath(path)
+            pen = self.pen()
+            pen.setWidth(4)
+            pen.setColor( QtGui.QColor(113, 153, 213))
+            pen.setJoinStyle(QtCore.Qt.RoundJoin)
+            pen.setCapStyle(QtCore.Qt.RoundCap)
+            self.setPen(pen)
+
+    
+    
     def __init__(self, ipf_graph, parent=None):
         super(GraphGrid, self).__init__(parent)
         if ipf_graph is None:
@@ -310,23 +333,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     def create_connection_arrow(self, oport_prim, iport_prim):
         begin = oport_prim.get_port_center()
         end = iport_prim.get_port_center()
-        row = int( (begin.y() - self.top_margin) / self.cell_height) + 1
-        grid_line_y = self.top_margin + row * self.cell_height
-        
-        arrow = QtGui.QGraphicsPathItem(self)
-        path = QtGui.QPainterPath()
-        path.moveTo(begin.x(), begin.y())
-        path.lineTo(begin.x(), grid_line_y)
-        path.lineTo(end.x(), grid_line_y)
-        path.lineTo(end.x(), end.y())  
-        arrow.setPath(path)
-        pen = arrow.pen()
-        pen.setWidth(4)
-        pen.setColor( QtGui.QColor(113, 153, 213))
-        pen.setJoinStyle(QtCore.Qt.RoundJoin)
-        pen.setCapStyle(QtCore.Qt.RoundCap)
-        arrow.setPen(pen)
-
+        arrow = GraphGrid.ConnectionArrow(self, begin, end)
         return arrow
     
     
