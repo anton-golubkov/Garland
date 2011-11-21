@@ -243,6 +243,12 @@ class IPFGraph(object):
         for connection in connections_to_delete:
             self.connections.remove(connection)
             
+            
+    def delete_connection(self, connection):
+        if connection in self.connections:
+            self.connections.remove(connection)
+        
+        
     
     def blocks(self):
         # Returns iterator for __blocks dictionary keys

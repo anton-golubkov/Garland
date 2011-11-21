@@ -87,8 +87,26 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         SELECTED_COLOR = QtGui.QColor(240, 30, 20)
         
         
-        def __init__(self, parent, begin, end):
+        def __init__(self, parent, connection):
             super(GraphGrid.ConnectionArrow, self).__init__(parent)
+
+            self.connection_ref = weakref.ref(connection)
+            iport_name = connection._iport()._owner_block()\
+                            .get_port_name(connection._iport())
+            oport_name = connection._oport()._owner_block()\
+                            .get_port_name(connection._oport())
+            iblock_prim = parent.get_block_primitive_from_block(
+                            connection._iport()._owner_block)
+            oblock_prim = parent.get_block_primitive_from_block(
+                            connection._oport()._owner_block)
+            if iblock_prim is None or oblock_prim is None:
+                raise ValueError("IPFBlock not found in scheme")
+            
+            # Find port primitives
+            iport_prim = iblock_prim.input_ports_items[iport_name]
+            oport_prim = oblock_prim.output_ports_items[oport_name]
+            begin = oport_prim.get_port_center()
+            end = iport_prim.get_port_center()
             row = int( (begin.y() - GraphGrid.top_margin) / GraphGrid.cell_height) + 1
             grid_line_y = GraphGrid.top_margin + row * GraphGrid.cell_height
             
@@ -217,7 +235,17 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.ipf_graph.remove_block(block_name)
         self.graph_blocks.remove(block)
         self.update_connection_arrows()
+        self.selected_block = None
     
+
+    def remove_arrow(self, arrow):
+        arrow.setParentItem(None)
+        self.scene().removeItem(arrow)
+        self.ipf_graph.delete_connection(arrow.connection_ref())
+        self.connection_arrows.remove(arrow)
+        self.update_connection_arrows()
+    
+
     
     def update_block_positions(self):
         for graph_block in self.graph_blocks:
@@ -330,33 +358,16 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             arrow.setParentItem(None)
             self.scene().removeItem(arrow)
         self.connection_arrows = []
-        
 
         grid_width, grid_height = self.ipf_graph.get_grid_size()
         
         for connection in self.ipf_graph.connections:
-            iport = connection._iport()
-            oport = connection._oport()
-            iblock_ref = iport._owner_block
-            oblock_ref = oport._owner_block
-            iport_name = iblock_ref().get_port_name(iport)
-            oport_name = oblock_ref().get_port_name(oport)
-            iblock_prim = self.get_block_primitive_from_block(iblock_ref)
-            oblock_prim = self.get_block_primitive_from_block(oblock_ref)
-            if iblock_prim is None or oblock_prim is None:
-                raise ValueError("IPFBlock not found in scheme")
-            
-            # Find port primitives
-            iport_prim = iblock_prim.input_ports_items[iport_name]
-            oport_prim = oblock_prim.output_ports_items[oport_name]
-            arrow = self.create_connection_arrow(oport_prim, iport_prim)
+            arrow = self.create_connection_arrow(connection)
             self.connection_arrows.append(arrow)
        
             
-    def create_connection_arrow(self, oport_prim, iport_prim):
-        begin = oport_prim.get_port_center()
-        end = iport_prim.get_port_center()
-        arrow = GraphGrid.ConnectionArrow(self, begin, end)
+    def create_connection_arrow(self, connection):
+        arrow = GraphGrid.ConnectionArrow(self, connection)
         return arrow
     
     
@@ -371,6 +382,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         if self.selected_arrow is not None:
             self.selected_arrow.selected = False
             self.selected_arrow.update()
+            self.selected_arrow = None
             
         self.selected_block = block_primitive
         self.selected_block.selected = True
@@ -387,8 +399,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         """
         if self.selected_block is not None:
             self.selected_block.selected = False
-            self.selected_block.update() 
-        
+            self.selected_block.update()
+            self.selected_block = None 
+
         if self.selected_arrow is not None:
             self.selected_arrow.selected = False
             self.selected_arrow.update()
@@ -418,10 +431,17 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             self.remove_block(self.selected_block.parentItem())
             del self.selected_block
             self.selected_block = None
+        if self.selected_arrow is not None:
+            self.remove_arrow(self.selected_arrow)
+            del self.selected_arrow
+            self.selected_arrow = None
 
     
     def get_selected_block(self):
-        return self.selected_block.parentItem().ipf_block_ref()
+        if self.selected_block is not None:
+            return self.selected_block.parentItem().ipf_block_ref()
+        else:
+            return None
     
     
     def load_graph(self, ipf_graph):
