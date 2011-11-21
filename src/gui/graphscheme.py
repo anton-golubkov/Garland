@@ -83,6 +83,10 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     # Inner class for represent connection arrow between blocks     
     class ConnectionArrow(QtGui.QGraphicsPathItem):
     
+        NORMAL_COLOR = QtGui.QColor(113, 153, 213)
+        SELECTED_COLOR = QtGui.QColor(240, 30, 20)
+        
+        
         def __init__(self, parent, begin, end):
             super(GraphGrid.ConnectionArrow, self).__init__(parent)
             row = int( (begin.y() - GraphGrid.top_margin) / GraphGrid.cell_height) + 1
@@ -96,10 +100,26 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             self.setPath(path)
             pen = self.pen()
             pen.setWidth(4)
-            pen.setColor( QtGui.QColor(113, 153, 213))
+            pen.setColor( self.NORMAL_COLOR)
             pen.setJoinStyle(QtCore.Qt.RoundJoin)
             pen.setCapStyle(QtCore.Qt.RoundCap)
             self.setPen(pen)
+            self.selected = False
+            self.setZValue(-1)
+            
+            
+        def mousePressEvent(self, event):
+            grid = self.parentItem()
+            grid.connection_arrow_selected(self)
+            
+            
+        def update(self):
+            pen = self.pen()
+            if self.selected:
+                pen.setColor(self.SELECTED_COLOR)
+            else:
+                pen.setColor(self.NORMAL_COLOR)
+            self.setPen(pen)   
 
     
     
@@ -131,6 +151,9 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         self.selected_block = None
         
         self.paint_mode = GraphBlock.TEXT_PAINT_MODE
+        
+        # Current selected arrow
+        self.selected_arrow = None
         
         
     def paint(self, painter, option, widget):
@@ -345,6 +368,10 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             self.selected_block.selected = False
             self.selected_block.update()
             
+        if self.selected_arrow is not None:
+            self.selected_arrow.selected = False
+            self.selected_arrow.update()
+            
         self.selected_block = block_primitive
         self.selected_block.selected = True
         self.selected_block.update()
@@ -352,8 +379,25 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         graph_block_ref = weakref.ref(block_primitive.parentItem())
         main_form = self.scene().parent()
         main_form.block_selected(graph_block_ref)
+    
+    
+    def connection_arrow_selected(self, arrow):
+        """ Notification of connection arrow selected
         
+        """
+        if self.selected_block is not None:
+            self.selected_block.selected = False
+            self.selected_block.update() 
         
+        if self.selected_arrow is not None:
+            self.selected_arrow.selected = False
+            self.selected_arrow.update()
+
+        self.selected_arrow = arrow
+        self.selected_arrow.selected = True
+        self.selected_arrow.update()
+
+
     def get_block_primitive_from_block(self, ipf_block_ref):
         for graph_block in self.graph_blocks:
             if ipf_block_ref == graph_block.ipf_block_ref:
