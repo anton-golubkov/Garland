@@ -13,6 +13,8 @@ __type_icons = {"IPFImage3cType" : "icons/picture.png",
                 "IPFStringType" : "icons/text.png",
                 "IPFIntType" : "icons/integer.png",
                 "IPFFloatType" : "icons/integer.png",
+                "IPFArrayType" : "icons/array.png",
+                
                 }
 
 
