@@ -381,3 +381,20 @@ def smooth(input):
     else:
         output = {"output_image" : zero_image()}
     return output
+
+
+def find_chessboard(input):
+    input_image = input["input_image"]
+    width = input["width"]
+    height = input["height"]
+    find_type = input["type"] 
+    
+    if not image_empty(input_image):
+        corners = cv.FindChessboardCorners(input_image,
+                                           (width, height),
+                                           find_type)
+        output = {"output_array" : corners[1]}
+    else:
+        output = {"output_array" : []}
+    return output
+
