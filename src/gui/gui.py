@@ -20,7 +20,7 @@ if __name__ == "__main__":
     # Load russian translation
     translator = QtCore.QTranslator()
     translator.load('i18n/ru_RU')
-    app.installTranslator(translator)
+    #app.installTranslator(translator)
 
     main_form = MainForm()
     main_form.show()
