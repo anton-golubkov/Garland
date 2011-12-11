@@ -1,18 +1,8 @@
-#-------------------------------------------------------------------------------
-# Copyright (c) 2011 Anton Golubkov.
-# All rights reserved. This program and the accompanying materials
-# are made available under the terms of the GNU Public License v2.0
-# which accompanies this distribution, and is available at
-# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-# 
-# Contributors:
-#     Anton Golubkov - initial API and implementation
-#-------------------------------------------------------------------------------
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'main_form.ui'
 #
-# Created: Sat Nov 19 19:07:23 2011
+# Created: Sun Dec 11 22:12:19 2011
 #      by: PySide UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!

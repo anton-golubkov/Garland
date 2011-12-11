@@ -1,4 +1,4 @@
-#Mon Nov 21 00:38:29 OMST 2011
+#Thu Dec 08 21:45:13 OMST 2011
 eclipse.preferences.version=1
 encoding//src/gui/geticon.py=utf-8
 encoding//src/gui/graphblock.py=utf-8
@@ -19,6 +19,7 @@ encoding//src/ipf/ipfblock/connection.py=utf-8
 encoding//src/ipf/ipfblock/dilate.py=utf-8
 encoding//src/ipf/ipfblock/division.py=utf-8
 encoding//src/ipf/ipfblock/erosion.py=utf-8
+encoding//src/ipf/ipfblock/findchessboard.py=utf-8
 encoding//src/ipf/ipfblock/imageinput.py=utf-8
 encoding//src/ipf/ipfblock/imagesave.py=utf-8
 encoding//src/ipf/ipfblock/ioport.py=utf-8
@@ -45,9 +46,11 @@ encoding//src/ipf/ipfgraphloader.py=utf-8
 encoding//src/ipf/ipftype/ipfadaptivethresholdmethod.py=utf-8
 encoding//src/ipf/ipftype/ipfadaptivethresholdtype.py=utf-8
 encoding//src/ipf/ipftype/ipfaperturesizetype.py=utf-8
+encoding//src/ipf/ipftype/ipfarraytype.py=utf-8
 encoding//src/ipf/ipftype/ipfblocksizetype.py=utf-8
 encoding//src/ipf/ipftype/ipfdicttype.py=utf-8
 encoding//src/ipf/ipftype/ipfelementstype.py=utf-8
+encoding//src/ipf/ipftype/ipffindchessboardtype.py=utf-8
 encoding//src/ipf/ipftype/ipffloattype.py=utf-8
 encoding//src/ipf/ipftype/ipfimage1ctype.py=utf-8
 encoding//src/ipf/ipftype/ipfimage3ctype.py=utf-8
@@ -64,6 +67,7 @@ encoding//src/test/test_connection.py=utf-8
 encoding//src/test/test_dilateblock.py=utf-8
 encoding//src/test/test_erosionblock.py=utf-8
 encoding//src/test/test_filter_blocks.py=utf-8
+encoding//src/test/test_findchessboard.py=utf-8
 encoding//src/test/test_image_convert.py=utf-8
 encoding//src/test/test_imageinputblock.py=utf-8
 encoding//src/test/test_imagesaveblock.py=utf-8

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #-------------------------------------------------------------------------------
 # Copyright (c) 2011 Anton Golubkov.
 # All rights reserved. This program and the accompanying materials
@@ -8,21 +9,26 @@
 # Contributors:
 #     Anton Golubkov - initial API and implementation
 #-------------------------------------------------------------------------------
-# -*- coding: utf-8 -*-
+
 
 from pygraph.classes.digraph import digraph
 from pygraph.algorithms.sorting import topological_sorting
 from pygraph.algorithms.accessibility import accessibility
+import pygraph.readwrite.dot
+import pygraphviz
 import xml.etree.ElementTree
 from xml.etree.ElementTree import Element 
 from xml.etree.ElementTree import SubElement
 import weakref
+import re
+from math import floor
 
 from keyfromvalue import dict_key_from_value
 import ipfblock
 import ipfblock.connection
 import ipfblock.ioport
 from getblockclasses import get_ipfblock_classes
+
 
 class IPFGraph(object):
     """ Image processing flow graph
@@ -41,13 +47,16 @@ class IPFGraph(object):
         self._grid_height = 5
         
         # Create empty 2-dimension list for __blocks in grid
-        self._grid_model = [ [None for j in xrange(self.max_grid_width)] \
-                             for i in xrange(self.max_grid_height) ]
+        self._grid_model = self._get_clear_grid_model()
         
         
         # Block classes list
         self.block_classes = get_ipfblock_classes()
     
+    
+    def _get_clear_grid_model(self):
+        return [ [None for j in xrange(self.max_grid_width)] \
+                       for i in xrange(self.max_grid_height) ]
     
     def add_block(self, block_type, block_name=None, row=-1, column=-1):
         if block_type not in self.block_classes:
@@ -272,9 +281,72 @@ class IPFGraph(object):
         graph = self._make_flow_graph()
         acc = accessibility(graph)
         return weakref.ref(node2) in acc[weakref.ref(node1)]
+    
+    
+    def rearrange(self):
+        """ Rearranges graph to layered structure
         
+        """
+        block_dict = dict()
+        graph = digraph()
+        for i, block_name in enumerate(self.__blocks):
+            # Add 100 for each block number for make equal length of names
+            # need check if blocks count greater than 900
+            block_dict[block_name] = str(i + 100)
+            graph.add_node(block_dict[block_name])
+        for connection in self.connections:
+            out_block_name = self.get_block_name(connection._oport()._owner_block())
+            in_block_name = self.get_block_name(connection._iport()._owner_block())
+            try:
+                graph.add_edge( (block_dict[out_block_name],
+                                 block_dict[in_block_name]) )
+            except pygraph.classes.exceptions.AdditionError:
+                continue
         
-
+        # Export graph to DOT format
+        dot = pygraph.readwrite.dot.write(graph)
+        gvv = pygraphviz.AGraph()
+        gvv.from_string(dot)
+        # Arrange graph in layers
+        gvv.layout('dot')
+        
+        # Parse DOT graph format to get nodes coordinates  
+        dot =  gvv.to_string()
+        dot = dot.replace('\n', ' ')
+        x_coords = set()
+        y_coords = set()
+        nodes = []
+        lines = dot.split(";")
+        for line in lines:
+            r = re.compile(r'\s*(?P<node_name>\w+)\s*\[height=".*",\s*pos="(?P<pos_x>[\w\.]+),(?P<pos_y>[\w\.]+)",\s*width=".*"\]')
+            m = r.search(line)
+            if m is not None:
+                x = int(floor(float(m.group('pos_x'))/20)*20)
+                y = int(floor(float(m.group('pos_y'))/20)*20)
+                nodes.append( (m.group('node_name'), x, y) )
+                x_coords.add(x)
+                y_coords.add(y)
+ 
+            xs = sorted(x_coords)
+            ys = sorted(y_coords)
+            row = dict()
+            column = dict()
+            for i, x in enumerate(xs):
+                column[x] = i
+            for i, y in enumerate(ys):
+                row[y] = len(ys) - i - 1
+    
+            cell_nodes = []
+            for node, x, y in nodes:
+                cell_nodes.append( (node, row[y], column[x]) )
+    
+            self._grid_model = self._get_clear_grid_model()
+            for node, row, column in cell_nodes:
+                self._grid_model[row][column] = dict_key_from_value(block_dict, node)
+                self._grid_height = max(self._grid_height, row + 1)
+                self._grid_width = max(self._grid_width, column + 1)
+                
+       
     def _make_flow_graph(self):
         """ Map image processing flow to directed graph
         

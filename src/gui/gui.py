@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 #-------------------------------------------------------------------------------
 # Copyright (c) 2011 Anton Golubkov.
 # All rights reserved. This program and the accompanying materials
@@ -8,8 +10,7 @@
 # Contributors:
 #     Anton Golubkov - initial API and implementation
 #-------------------------------------------------------------------------------
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+
 
 from main_form import MainForm
 from PySide import QtGui, QtCore

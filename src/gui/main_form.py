@@ -178,7 +178,8 @@ class MainForm(QtGui.QMainWindow):
     
     
     def arrange_scheme(self):
-        pass
+        self.scheme.rearrange()
+        
     
     
     def find(self):

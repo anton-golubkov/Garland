@@ -74,6 +74,10 @@ class GraphScheme( QtGui.QGraphicsScene):
 
     def update(self):
         self._grid.update()
+        
+    def rearrange(self):
+        self._grid.rearrange()
+        
 
 
 
@@ -480,4 +484,12 @@ class GraphGrid(QtGui.QGraphicsRectItem):
         for block in self.graph_blocks:
             block.set_paint_mode(self.paint_mode)
             block.update_preview_image()
+    
+    
+    def rearrange(self):
+        self.ipf_graph.rearrange()
+        self.update_block_positions()
+        self.update_connection_arrows()
+
+
     
