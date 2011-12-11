@@ -99,6 +99,7 @@ class GraphGrid(QtGui.QGraphicsRectItem):
     
         NORMAL_COLOR = QtGui.QColor(113, 153, 213)
         SELECTED_COLOR = QtGui.QColor(240, 30, 20)
+        ROUND_CORNER_RADIUS = 5
         
         
         def __init__(self, parent, connection):
@@ -124,11 +125,8 @@ class GraphGrid(QtGui.QGraphicsRectItem):
             row = int( (begin.y() - GraphGrid.top_margin) / GraphGrid.cell_height) + 1
             grid_line_y = GraphGrid.top_margin + row * GraphGrid.cell_height
             
-            path = QtGui.QPainterPath()
-            path.moveTo(begin.x(), begin.y())
-            path.lineTo(begin.x(), grid_line_y)
-            path.lineTo(end.x(), grid_line_y)
-            path.lineTo(end.x(), end.y())  
+            path = self._create_path(begin.x(), begin.y(),
+                                     end.x(), end.y(), grid_line_y)
             self.setPath(path)
             pen = self.pen()
             pen.setWidth(4)
@@ -151,8 +149,53 @@ class GraphGrid(QtGui.QGraphicsRectItem):
                 pen.setColor(self.SELECTED_COLOR)
             else:
                 pen.setColor(self.NORMAL_COLOR)
-            self.setPen(pen)   
-
+            self.setPen(pen)
+        
+        def _create_path(self, beg_x, beg_y, end_x, end_y, corner_y):
+            path = QtGui.QPainterPath()
+            if beg_x == end_x:
+                # Begin and end arranged vertically
+                path.moveTo(beg_x, beg_y)
+                path.lineTo(end_x, end_y)
+                return path
+            
+            if beg_y > end_y:
+                # Swap begin and end points
+                beg_x, end_x = end_x, beg_x
+                beg_y, end_y = end_y, beg_y
+            
+            r = self.ROUND_CORNER_RADIUS    
+            # Choose line type (left-to right or right-to-left)
+            if beg_x < end_x:
+                # Left-to-right line
+                path.moveTo(beg_x, beg_y)
+                path.lineTo(beg_x, corner_y - r)
+                path.arcTo(beg_x, corner_y - 2*r, 2*r, 2*r, 180, 90)
+                path.moveTo(beg_x + r, corner_y)
+                path.lineTo(end_x - r, corner_y)
+                if end_y < corner_y:
+                    # Backward line
+                    path.arcTo(end_x - 2*r, corner_y-2*r, 2*r, 2*r, 270, 90)
+                    path.moveTo(end_x, corner_y - r)
+                else:
+                    path.arcTo(end_x - 2*r, corner_y, 2*r, 2*r, 0, 90)
+                    path.moveTo(end_x, corner_y + r)
+                path.lineTo(end_x, end_y)
+            elif beg_x > end_x:
+                # Right-to-left line
+                path.moveTo(beg_x, beg_y)
+                path.lineTo(beg_x, corner_y - r)
+                path.arcTo(beg_x - 2*r, corner_y - 2*r, 2*r, 2*r, 270, 90)
+                path.moveTo(beg_x - r, corner_y)
+                path.lineTo(end_x + r, corner_y)
+                if end_y < corner_y:
+                    path.arcTo(end_x, corner_y - 2*r, 2*r, 2*r, 180, 90)
+                    path.moveTo(end_x, corner_y - r)
+                else:
+                    path.arcTo(end_x, corner_y, 2*r, 2*r, 90, 90)
+                    path.moveTo(end_x, corner_y + r)
+                path.lineTo(end_x, end_y)
+            return path
     
     
     def __init__(self, ipf_graph, parent=None):
