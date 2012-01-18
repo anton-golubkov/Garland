@@ -64,7 +64,7 @@ def save_image(input):
     
     
 class process_morphology_1i_1o(object):
-    # Decorator class for processing morphologi operation 
+    # Decorator class for processing morphology operation 
     # on one 3-channel input image and one output image
     def __init__(self, f):
         self.f = f
@@ -408,3 +408,23 @@ def find_chessboard(input):
         output = {"output_array" : []}
     return output
 
+
+
+def sobel(input):
+    input_image = input["input_image"]
+    xorder = input["xorder"]
+    yorder = input["yorder"]
+    kernel_size = input["kernel_size"]
+    if not image_empty(input_image):
+        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
+        temp_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_16S, 3)
+        cv.Sobel(input_image, 
+                 temp_image, 
+                 xorder,
+                 yorder,
+                 kernel_size)
+        cv.ConvertScale(temp_image, output_image)
+        output = {"output_image" : output_image}
+    else:
+        output = {"output_image" : zero_image()}
+    return output
