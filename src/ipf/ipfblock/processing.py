@@ -462,3 +462,36 @@ def canny(input):
     else:
         output = {"output_image" : zero_image()}
     return output
+
+
+def find_circles(input):
+    input_image = input["input_image"]
+    accum_divider = input["accum_divider"]
+    min_distance = input["min_distance"]
+    threshold = input["threshold"]
+    accum_threshold = input["accum_threshold"]
+    min_radius = input["min_radius"]
+    max_radius = input["max_radius"]
+
+
+    mat = cv.CreateMat( 1000, 1, cv.CV_32FC3 )
+    cv.SetZero(mat)
+    if not image_empty(input_image):
+        cv.HoughCircles( input_image, 
+                         mat, 
+                         cv.CV_HOUGH_GRADIENT, 
+                         accum_divider, 
+                         min_distance, 
+                         threshold, 
+                         accum_threshold,
+                         min_radius, 
+                         max_radius)
+        out = []
+        for i in range(mat.rows):
+            out.append(mat[i, 0])
+        
+        output = {"output_array" : out}
+    else:
+        output = {"output_array" : []}
+    return output 
+    
