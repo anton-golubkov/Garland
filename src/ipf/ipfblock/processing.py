@@ -493,5 +493,34 @@ def find_circles(input):
         output = {"output_array" : out}
     else:
         output = {"output_array" : []}
-    return output 
+    return output
+
+
+def find_lines(input):
+    input_image = input["input_image"]
+    distance_resolution = input["distance_resolution"]
+    angle_resolution = input["angle_resolution"]
+    threshold = input["threshold"]
+    min_length = input["min_length"]
+    max_gap = input["max_gap"]
+
+
+    storage = cv.CreateMemStorage(0)
+    
+    if not image_empty(input_image):
+        lines = cv.HoughLines2(input_image, 
+                               storage, 
+                               cv.CV_HOUGH_PROBABILISTIC, 
+                               distance_resolution,
+                               angle_resolution, 
+                               threshold,
+                               min_length,
+                               max_gap)
+        
+        # Copy array for store outside function
+        l = [ line for line in lines]
+        output = {"output_array" : l}
+    else:
+        output = {"output_array" : []}
+    return output
     
