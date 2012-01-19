@@ -444,3 +444,21 @@ def laplace(input):
     else:
         output = {"output_image" : zero_image()}
     return output
+
+
+def canny(input):
+    input_image = input["input_image"]
+    kernel_size = input["kernel_size"]
+    low_threshold = input["low_threshold"]
+    high_threshold = input["high_threshold"]
+    if not image_empty(input_image):
+        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
+        cv.Canny(input_image, 
+                 output_image,
+                 low_threshold,
+                 high_threshold,
+                 kernel_size)
+        output = {"output_image" : output_image}
+    else:
+        output = {"output_image" : zero_image()}
+    return output
