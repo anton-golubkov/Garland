@@ -428,3 +428,19 @@ def sobel(input):
     else:
         output = {"output_image" : zero_image()}
     return output
+
+
+def laplace(input):
+    input_image = input["input_image"]
+    kernel_size = input["kernel_size"]
+    if not image_empty(input_image):
+        output_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
+        temp_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_16S, 3)
+        cv.Laplace(input_image, 
+                   temp_image, 
+                   kernel_size)
+        cv.ConvertScale(temp_image, output_image)
+        output = {"output_image" : output_image}
+    else:
+        output = {"output_image" : zero_image()}
+    return output
