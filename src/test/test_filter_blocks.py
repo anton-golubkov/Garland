@@ -24,6 +24,7 @@ import ipf.ipfblock.threshold
 import ipf.ipfblock.adaptivethreshold
 import ipf.ipfblock.threshold_otsu
 import ipf.ipfblock.smooth
+import ipf.ipfblock.sobel
 
 
 # Base test class for filters blocks
@@ -151,6 +152,20 @@ class TestSmoothBlock(TestFilterBlock):
         self.block.properties["smoothing_type"].set_value("Gaussian")
         self.block.properties["aperture_width"].set_value("7")
         self.block.properties["aperture_height"].set_value("9")
+
+
+
+class TestSobelBlock(TestFilterBlock):
+    test_class = ipf.ipfblock.sobel.Sobel
+    test_file_name = "sobel"
+    input_channel_count = 3
+    output_channel_count = 3
+
+    def setup_properties(self):
+        self.block.properties["xorder"].set_value(2)
+        self.block.properties["yorder"].set_value(2)
+        self.block.properties["kernel_size"].set_value("5")
+
 
 
 if __name__ == '__main__':
