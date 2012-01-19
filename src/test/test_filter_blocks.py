@@ -26,6 +26,7 @@ import ipf.ipfblock.threshold_otsu
 import ipf.ipfblock.smooth
 import ipf.ipfblock.sobel
 import ipf.ipfblock.laplace
+import ipf.ipfblock.canny
 
 
 # Base test class for filters blocks
@@ -178,6 +179,16 @@ class TestLaplaceBlock(TestFilterBlock):
         self.block.properties["kernel_size"].set_value("5")
 
 
+class TestCannyBlock(TestFilterBlock):
+    test_class = ipf.ipfblock.canny.Canny
+    test_file_name = "canny"
+    input_channel_count = 1
+    output_channel_count = 1
+
+    def setup_properties(self):
+        self.block.properties["kernel_size"].set_value("5")
+        self.block.properties["low_threshold"].set_value(100)
+        self.block.properties["high_threshold"].set_value(150)
 
 
 if __name__ == '__main__':
