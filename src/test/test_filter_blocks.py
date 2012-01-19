@@ -25,6 +25,7 @@ import ipf.ipfblock.adaptivethreshold
 import ipf.ipfblock.threshold_otsu
 import ipf.ipfblock.smooth
 import ipf.ipfblock.sobel
+import ipf.ipfblock.laplace
 
 
 # Base test class for filters blocks
@@ -165,6 +166,17 @@ class TestSobelBlock(TestFilterBlock):
         self.block.properties["xorder"].set_value(2)
         self.block.properties["yorder"].set_value(2)
         self.block.properties["kernel_size"].set_value("5")
+
+
+class TestLaplaceBlock(TestFilterBlock):
+    test_class = ipf.ipfblock.laplace.Laplace
+    test_file_name = "laplace"
+    input_channel_count = 3
+    output_channel_count = 3
+
+    def setup_properties(self):
+        self.block.properties["kernel_size"].set_value("5")
+
 
 
 
