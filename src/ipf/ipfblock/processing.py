@@ -524,3 +524,34 @@ def find_lines(input):
         output = {"output_array" : []}
     return output
     
+    
+def match_template(input):
+    input_image_1 = input["input_image_1"]
+    input_image_2 = input["input_image_2"]
+    method = input["method"]
+    if not image_empty(input_image_1) and \
+       not image_empty(input_image_2):
+        W, H = cv.GetSize(input_image_1)
+        w, h = cv.GetSize(input_image_2)
+        
+        # Test image is bigger than template
+        if W < w or H < h:
+            output = {"output_image" : zero_image()}
+            return output
+        
+        out_size = W - w + 1, H - h + 1 
+        out = cv.CreateImage(out_size, cv.IPL_DEPTH_32F, 1)
+        output_image = cv.CreateImage(out_size, cv.IPL_DEPTH_8U, 1)
+        
+        cv.MatchTemplate(input_image_1,
+                         input_image_2,
+                         out,
+                         method)
+        cv.ConvertScale(out, output_image)
+        output = {"output_image" : output_image}
+    else:
+        output = {"output_image" : zero_image()}
+    return output
+
+
+
