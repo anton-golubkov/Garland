@@ -54,9 +54,12 @@ class GraphBlock(QtGui.QGraphicsWidget):
         for oport in self.ipf_block_ref().output_ports:
             self.output_ports_items[oport] = \
                 PortPrimitive(self, self.ipf_block_ref().output_ports[oport])
-    
-        self.adjust_ports(self.input_ports_items.values(), 0)
-        self.adjust_ports(self.output_ports_items.values(), self.block_height)    
+        
+        
+        self.adjust_ports( 
+            [self.input_ports_items[key] for key in sorted(self.input_ports_items)], 0)
+        self.adjust_ports(
+            [self.output_ports_items[key] for key in sorted(self.output_ports_items)], self.block_height)    
         
         self.setAcceptedMouseButtons(QtCore.Qt.LeftButton)
         
