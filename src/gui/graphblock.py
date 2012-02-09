@@ -50,10 +50,14 @@ class GraphBlock(QtGui.QGraphicsWidget):
         self.output_ports_items = dict()
         for iport in self.ipf_block_ref().input_ports:
             self.input_ports_items[iport] = \
-                PortPrimitive(self, self.ipf_block_ref().input_ports[iport])
+                PortPrimitive(self, 
+                              self.ipf_block_ref().input_ports[iport], 
+                              iport)
         for oport in self.ipf_block_ref().output_ports:
             self.output_ports_items[oport] = \
-                PortPrimitive(self, self.ipf_block_ref().output_ports[oport])
+                PortPrimitive(self, 
+                              self.ipf_block_ref().output_ports[oport], 
+                              oport)
         
         
         self.adjust_ports( 
@@ -62,7 +66,6 @@ class GraphBlock(QtGui.QGraphicsWidget):
             [self.output_ports_items[key] for key in sorted(self.output_ports_items)], self.block_height)    
         
         self.setAcceptedMouseButtons(QtCore.Qt.LeftButton)
-        
         
         
     
@@ -107,9 +110,10 @@ class PortPrimitive(QtGui.QGraphicsEllipseItem):
     
     port_size = 20
     
-    def __init__(self, parent, ipf_port):
+    def __init__(self, parent, ipf_port, port_name):
         super(PortPrimitive, self).__init__(parent)
         self.ipf_port = ipf_port
+        self.port_name = port_name
         brush = self.brush()
         brush.setStyle(QtCore.Qt.SolidPattern)
         brush.setColor(QtCore.Qt.white)
@@ -123,6 +127,7 @@ class PortPrimitive(QtGui.QGraphicsEllipseItem):
         icon_x = (self.port_size - rect.width()) / 2
         icon_y = (self.port_size - rect.height()) / 2
         self.icon.setPos(icon_x, icon_y)
+        self.setToolTip(self.port_name)
          
     
     
@@ -196,6 +201,7 @@ class BlockPrimitive(QtGui.QGraphicsRectItem):
                                y + 10)
         
         self.preview_pixmap = QtGui.QPixmap()
+        self.setToolTip( self.parentItem().ipf_block_ref().type)
         
     
     def paint(self, painter, option, widget):
