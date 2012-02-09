@@ -158,6 +158,29 @@ def split(input):
     return output
 
 
+def rgb2hsv(input):
+    input_image = input["input_image"]
+    if not image_empty(input_image):
+        output_H = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
+        output_S = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
+        output_V = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 1)
+        temp_image = cv.CreateImage(cv.GetSize(input_image), cv.IPL_DEPTH_8U, 3)
+        cv.CvtColor(input_image, temp_image, cv.CV_BGR2HSV)
+        cv.Split(temp_image, 
+                 output_H, 
+                 output_S,
+                 output_V,
+                 None)
+        output = {"output_H": output_H,
+                  "output_S": output_S,
+                  "output_V": output_V,}
+    else:
+        output = {"output_H" : zero_image_1c()}
+        output = {"output_S" : zero_image_1c()}
+        output = {"output_V" : zero_image_1c()}
+    return output
+
+
 def merge(input):
     input_image_1 = input["input_image_1"]
     input_image_2 = input["input_image_2"]
