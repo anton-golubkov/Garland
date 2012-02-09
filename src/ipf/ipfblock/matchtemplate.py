@@ -11,13 +11,14 @@
 # -*- coding: utf-8 -*-
 
 import ipf.ipfblock.processing
-from ipf.ipfblock.arithmetic import Arithmetic
+import ipfblock
+from ipf.ipftype.ipfimage3ctype import IPFImage3cType
 from ipf.ipftype.ipfimage1ctype import IPFImage1cType
 import ioport
 from ipf.ipftype.ipfmatchtemplatemethodtype import IPFMatchTemplateMethodType
 from property import Property
 
-class MatchTemplate(Arithmetic):
+class MatchTemplate(ipfblock.IPFBlock):
     """ Calculate template correlation map 
     
     """
@@ -27,8 +28,14 @@ class MatchTemplate(Arithmetic):
     
     def __init__(self):
         super(MatchTemplate, self).__init__()
+        self.input_ports["input_image"] = ioport.IPort(self, IPFImage3cType)
+        self.input_ports["input_template"] = ioport.IPort(self, IPFImage3cType)
         self.output_ports["output_image"] = ioport.OPort(self, IPFImage1cType)
         self.properties["method"] = Property(IPFMatchTemplateMethodType)
         self.processing_function = ipf.ipfblock.processing.match_template
+        
+    
+    def get_preview_image(self):
+        return self.output_ports["output_image"]._value 
 
 

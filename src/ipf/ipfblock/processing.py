@@ -549,15 +549,15 @@ def find_lines(input):
     
     
 def match_template(input):
-    input_image_1 = input["input_image_1"]
-    input_image_2 = input["input_image_2"]
+    input_image = input["input_image"]
+    input_template = input["input_template"]
     method = input["method"]
-    if not image_empty(input_image_1) and \
-       not image_empty(input_image_2):
-        W, H = cv.GetSize(input_image_1)
-        w, h = cv.GetSize(input_image_2)
+    if not image_empty(input_image) and \
+       not image_empty(input_template):
+        W, H = cv.GetSize(input_image)
+        w, h = cv.GetSize(input_template)
         
-        # Test image is bigger than template
+        # Check, that image is bigger than template
         if W < w or H < h:
             output = {"output_image" : zero_image()}
             return output
@@ -566,8 +566,8 @@ def match_template(input):
         out = cv.CreateImage(out_size, cv.IPL_DEPTH_32F, 1)
         output_image = cv.CreateImage(out_size, cv.IPL_DEPTH_8U, 1)
         
-        cv.MatchTemplate(input_image_1,
-                         input_image_2,
+        cv.MatchTemplate(input_image,
+                         input_template,
                          out,
                          method)
         cv.ConvertScale(out, output_image)
