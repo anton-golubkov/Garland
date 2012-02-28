@@ -576,5 +576,43 @@ def match_template(input):
         output = {"output_image" : zero_image()}
     return output
 
+# Video capture object for function get_video_image
+class CaptureObject:
+    
+    def __init__(self, file_name):
+        try:
+            self.capture = cv.CaptureFromFile(file_name)
+        except IOError:
+            # file not found, returns zero image
+            self.error_open = True
+        self.error_open = False
+        self.last_frame = -1
+        
+    
+    def get_frame(self, frame): 
+        if self.last_frame != (frame - 1):
+            # Next frame not in sequence
+            cv.SetCaptureProperty(self.capture, cv.CV_CAP_PROP_POS_FRAMES, frame)
+        return cv.QueryFrame(self.capture)
+    
+
+def get_video_image(input):
+    file_name = input["file_name"]
+    frame = input["frame"]
+    if file_name not in get_video_image.capture_pool:
+        capture = CaptureObject(file_name)
+        if capture.error_open:
+            output = {"output_image": zero_image()}
+            return output
+        get_video_image.capture_pool[file_name] = capture 
+    
+    output_image = get_video_image.capture_pool[file_name].get_frame(frame)
+    output = {"output_image" : output_image}
+    return output    
+
+# Static variable for store all capture object for video input
+get_video_image.capture_pool = dict()
 
 
+             
+    
