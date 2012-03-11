@@ -580,33 +580,47 @@ def match_template(input):
 class CaptureObject:
     
     def __init__(self, file_name):
-        try:
-            self.capture = cv.CaptureFromFile(file_name)
-        except IOError:
-            # file not found, returns zero image
+        self.capture = cv.CaptureFromFile(file_name)
+        # Test query frame for detect error opening file 
+        image = cv.QueryFrame(self.capture)
+        # Rewind capture frame to beginning
+        cv.SetCaptureProperty(self.capture, cv.CV_CAP_PROP_POS_FRAMES, 0)
+        if image is None:
             self.error_open = True
-        self.error_open = False
-        self.last_frame = -1
-        
+        else:
+            self.error_open = False
+            self.last_frame = -1
+            self.file_name = file_name
+            
     
     def get_frame(self, frame): 
+        if self.error_open:
+            # Test for error capture object and return empty image
+            return zero_image()
+        
         if self.last_frame != (frame - 1):
             # Next frame not in sequence
             cv.SetCaptureProperty(self.capture, cv.CV_CAP_PROP_POS_FRAMES, frame)
-        return cv.QueryFrame(self.capture)
+        query_image = cv.QueryFrame(self.capture)
+        output_image = cv.CreateImage(cv.GetSize(query_image), cv.IPL_DEPTH_8U, 3)
+        cv.Copy(query_image, output_image)
+        return output_image
     
 
 def get_video_image(input):
     file_name = input["file_name"]
     frame = input["frame"]
-    if file_name not in get_video_image.capture_pool:
+    frame_shift = input["frame_shift"]
+    if file_name not in get_video_image.capture_pool :
         capture = CaptureObject(file_name)
         if capture.error_open:
+            # Test for error capture object and return empty image    
             output = {"output_image": zero_image()}
             return output
-        get_video_image.capture_pool[file_name] = capture 
-    
-    output_image = get_video_image.capture_pool[file_name].get_frame(frame)
+        else:
+            get_video_image.capture_pool[file_name] = capture
+   
+    output_image = get_video_image.capture_pool[file_name].get_frame(frame + frame_shift)
     output = {"output_image" : output_image}
     return output    
 
@@ -615,4 +629,3 @@ get_video_image.capture_pool = dict()
 
 
              
-    

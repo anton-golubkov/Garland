@@ -37,6 +37,7 @@ class VideoInput(ipfblock.IPFBlock):
         self.processing_function = processing.get_video_image
         self.properties["file_name"] = Property(IPFStringType)
         self.properties["frame"] = Property(IPFIntType, 0)
+        self.properties["frame_shift"] = Property(IPFIntType, 0)
         
         
     def get_preview_image(self):
